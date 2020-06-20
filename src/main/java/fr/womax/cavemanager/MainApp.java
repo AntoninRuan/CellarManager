@@ -33,8 +33,6 @@ import java.util.Optional;
  */
 public class MainApp extends Application {
 
-    //FIXME bug lors de la recherche par type: Toutes les bouteilles sont séléctionnés
-
     //FIXME tenter de corriger le bug avec les spinners de selection. La valeur entrée au clavier n'est pas pris en compte dans le .getValue();
     //FIXME fix temporaire -> l'édition au clavier est désactivé
 

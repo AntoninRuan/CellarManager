@@ -65,7 +65,7 @@ public class BottleFilter {
                             highlight = true;
                         break;
                     case "Type":
-                        if (bottle.getType().toString().toLowerCase().contains(s.toLowerCase()));
+                        if (bottle.getType().toString().toLowerCase().contains(s.toLowerCase()))
                             highlight = true;
                         break;
                     case "Édition":
