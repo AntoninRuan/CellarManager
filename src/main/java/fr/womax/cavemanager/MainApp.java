@@ -132,17 +132,6 @@ public class MainApp extends Application {
 
         initCompartementDisplayLayout();
 
-        if(preferenceJson.get("check_update") == null) {
-            preferenceJson.addProperty("check_update", true);
-        }
-
-        if(preferenceJson.get("check_update").getAsBoolean()) {
-            boolean newUpdate = Updater.checkUpdate();
-            if(newUpdate) {
-                DialogUtils.updateAvailable(true);
-            }
-        }
-
         //Récupération du fichier de sauvegarde
 
         try {
@@ -171,6 +160,17 @@ public class MainApp extends Application {
 
         }  catch (IOException e) {
             DialogUtils.sendErrorWindow(e);
+        }
+
+        if(preferenceJson.get("check_update") == null) {
+            preferenceJson.addProperty("check_update", true);
+        }
+
+        if(preferenceJson.get("check_update").getAsBoolean()) {
+            boolean newUpdate = Updater.checkUpdate();
+            if(newUpdate) {
+                DialogUtils.updateAvailable(true);
+            }
         }
 
     }
