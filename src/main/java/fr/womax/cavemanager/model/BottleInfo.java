@@ -1,6 +1,5 @@
 package fr.womax.cavemanager.model;
 
-import com.google.gson.JsonObject;
 import fr.womax.cavemanager.MainApp;
 
 /**
@@ -14,20 +13,22 @@ public class BottleInfo {
     private String edition;
     private String comment;
     private int year;
+    private int consumeYear;
     private WineType type;
 
-    public BottleInfo(String name, String region, String domain, String edition, String comment, int year, WineType type) {
+    public BottleInfo(String name, String region, String domain, String edition, String comment, int year, int consumeYear, WineType type) {
         this.name = name;
         this.region = region;
         this.domain = domain;
         this.edition = edition;
         this.comment = comment;
         this.year = year;
+        this.consumeYear = consumeYear;
         this.type = type;
     }
 
     public Bottle createBottle() {
-        Bottle bottle = new Bottle(name, region, domain, edition, comment, year, type);
+        Bottle bottle = new Bottle(name, region, domain, edition, comment, year, consumeYear, type);
         MainApp.getBottles().put(bottle.getId(), bottle);
         return bottle;
     }
@@ -38,13 +39,9 @@ public class BottleInfo {
         bottle.setDomain(domain);
         bottle.setEdition(edition);
         bottle.setComment(comment);
-        bottle.setYear(String.valueOf(year));
+        bottle.setYear(year);
+        bottle.setConsumeYear(consumeYear);
         bottle.setType(type);
     }
 
-    public static BottleInfo fromJson(JsonObject object) {
-        return new BottleInfo(object.get("name").getAsString(), object.get("region").getAsString(), object.get("domain").getAsString(),
-                object.get("edition").getAsString(), object.get("comment").getAsString(), object.get("year").getAsInt(),
-                WineType.valueOf(object.get("type").getAsString()));
-    }
 }

@@ -19,10 +19,11 @@ public class Bottle {
     private StringProperty domain;
     private String comment;
     private StringProperty year;
+    private StringProperty consumeYear;
     private ObjectProperty <WineType> type;
     private StringProperty count = new SimpleStringProperty();
 
-    public Bottle(int id, String name, String region, String edition, String domain, String comment, int year, WineType type) {
+    public Bottle(int id, String name, String region, String edition, String domain, String comment, int year, int consumeYear, WineType type) {
         this.id = id;
         this.id = MainApp.nextBottleId();
         this.name = new SimpleStringProperty(name);
@@ -31,11 +32,12 @@ public class Bottle {
         this.domain = new SimpleStringProperty(domain);
         this.comment = comment;
         this.year = new SimpleStringProperty(String.valueOf(year));
+        this.consumeYear = new SimpleStringProperty(String.valueOf(consumeYear));
         this.type = new SimpleObjectProperty <>(type);
     }
 
 
-    public Bottle(String name, String region, String edition, String domain, String comment, int year, WineType type) {
+    public Bottle(String name, String region, String edition, String domain, String comment, int year, int consumeYear, WineType type) {
         this.id = MainApp.nextBottleId();
         this.name = new SimpleStringProperty(name);
         this.region = new SimpleStringProperty(region);
@@ -43,6 +45,7 @@ public class Bottle {
         this.domain = new SimpleStringProperty(domain);
         this.comment = comment;
         this.year = new SimpleStringProperty(String.valueOf(year));
+        this.consumeYear = new SimpleStringProperty(String.valueOf(consumeYear));
         this.type = new SimpleObjectProperty <>(type);
     }
 
@@ -94,6 +97,14 @@ public class Bottle {
         return year;
     }
 
+    public int getConsumeYear() {
+        return Integer.parseInt(consumeYear.get());
+    }
+
+    public StringProperty consumeYearProperty() {
+        return consumeYear;
+    }
+
     public WineType getType() {
         return type.get();
     }
@@ -131,8 +142,12 @@ public class Bottle {
         this.comment = comment;
     }
 
-    public void setYear(String year) {
-        this.year.set(year);
+    public void setYear(int year) {
+        this.year.set(String.valueOf(year));
+    }
+
+    public void setConsumeYear(int consumeYear) {
+        this.consumeYear.set(String.valueOf(consumeYear));
     }
 
     public void setType(WineType type) {
@@ -147,6 +162,7 @@ public class Bottle {
         object.addProperty("domain", domain.getValue());
         object.addProperty("comment", comment);
         object.addProperty("year", year.getValue());
+        object.addProperty("consume_year", consumeYear.getValue());
         object.addProperty("type", type.getValue().toString());
         return object;
     }
@@ -158,8 +174,13 @@ public class Bottle {
         String domain = jsonObject.get("domain").getAsString();
         String comment = jsonObject.get("comment").getAsString();
         int year = jsonObject.get("year").getAsInt();
+        int consumeYear;
+        if(jsonObject.has("consume_year"))
+            consumeYear = jsonObject.get("consume_year").getAsInt();
+        else
+            consumeYear = year;
         WineType type = WineType.valueOf(jsonObject.get("type").getAsString());
-        return new Bottle(id, name, region, edition, domain, comment, year, type);
+        return new Bottle(id, name, region, edition, domain, comment, year, consumeYear, type);
     }
 
     @Override

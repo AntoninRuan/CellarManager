@@ -36,6 +36,7 @@ public class MainApp extends Application {
     //FIXME tenter de corriger le bug avec les spinners de selection. La valeur entrée au clavier n'est pas pris en compte dans le .getValue();
     //FIXME fix temporaire -> l'édition au clavier est désactivé
 
+    //TODO changer la couleur affiché de la bouteille selon son type
     //TODO ajouter la possibilité de modifier le nombre de ligne/colonne d'une étagère
     //TODO ajouter mon nom/prénom au menu à propos
 
@@ -266,7 +267,6 @@ public class MainApp extends Application {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choissisez un fichier pour sauvegarder votre cave");
         File currentJar = new File(MainApp.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-        System.out.println(currentJar.getAbsolutePath());
         fileChooser.setInitialDirectory(currentJar.getParentFile());
         fileChooser.setInitialFileName("ma_cave");
         fileChooser.getExtensionFilters().addAll(
@@ -355,7 +355,6 @@ public class MainApp extends Application {
         List<Spot> spots = new ArrayList <>();
 
         for(Spot spot : MainApp.spots) {
-//            System.out.println("id spot=" + spot.getBottle().getId() + ", id bottle=" + bottle.getId());
             if (!spot.isEmpty()) {
                 if (spot.getBottle().getId() == bottle.getId()) {
                     spots.add(spot);

@@ -1,24 +1,14 @@
 package fr.womax.cavemanager.view;
 
 import fr.womax.cavemanager.MainApp;
-import fr.womax.cavemanager.model.Bottle;
 import fr.womax.cavemanager.model.Compartement;
 import fr.womax.cavemanager.model.Spot;
 import fr.womax.cavemanager.utils.BottleFilter;
 import fr.womax.cavemanager.utils.DialogUtils;
 import fr.womax.cavemanager.utils.Updater;
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.*;
-
-import java.util.Optional;
+import javafx.scene.layout.BorderPane;
 
 /**
  * @author Antonin Ruan
@@ -80,6 +70,7 @@ public class RootLayoutController {
                 "Domaine: " + spot.getBottle().getDomain() + "\n"+
                 "Edition: " + spot.getBottle().getEdition() + "\n"+
                 "Année: " + spot.getBottle().getYear() + "\n"+
+                "Année de consommation: " + spot.getBottle().getConsumeYear() + "\n" +
                 "Type: " + spot.getBottle().getType() + "\n"+
                 "Région: " + spot.getBottle().getRegion() + "\n"+
                 "Commentaire: " + spot.getBottle().getComment() + "\n");

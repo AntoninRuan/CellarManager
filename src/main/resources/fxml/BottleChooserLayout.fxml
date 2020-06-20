@@ -10,9 +10,9 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.womax.cavemanager.view.BottleChooserController">
    <children>
-      <VBox prefHeight="600.0" prefWidth="1050.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox prefHeight="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <TableView fx:id="tableView" prefHeight="700.0" prefWidth="1050.0">
+            <TableView fx:id="tableView" prefHeight="700.0">
               <columns>
                 <TableColumn fx:id="nameColumn" editable="false" prefWidth="150.0" resizable="false" text="Nom" />
                 <TableColumn fx:id="editionColumn" editable="false" prefWidth="150.0" resizable="false" text="Edition" />
@@ -20,10 +20,11 @@
                   <TableColumn fx:id="regionColumn" prefWidth="150.0" text="Région" />
                   <TableColumn fx:id="yearColumn" prefWidth="150.0" resizable="false" text="Année" />
                   <TableColumn fx:id="typeColumn" prefWidth="150.0" resizable="false" text="Type" />
-                  <TableColumn fx:id="countColumn" prefWidth="150.0" resizable="false" text="Nombre" />
+                  <TableColumn fx:id="consumeYearColumn" prefWidth="150.0" text="Année de consommation" />
+                  <TableColumn fx:id="countColumn" prefWidth="100.0" resizable="false" text="Nombre" />
               </columns>
             </TableView>
-            <ButtonBar prefHeight="0.0" prefWidth="900.0">
+            <ButtonBar>
               <buttons>
                 <Button mnemonicParsing="false" onAction="#handleNew" text="Nouveau" />
                   <Button defaultButton="true" layoutX="525.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleOk" text="Ok" />

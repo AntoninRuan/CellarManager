@@ -17,7 +17,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
 import java.time.Duration;
@@ -146,6 +145,7 @@ public class CompartementDisplayController {
                                         Optional<Bottle> result = DialogUtils.chooseBottle(true);
                                         result.ifPresent(bottle -> {
                                             spot.setBottle(bottle);
+                                            BottleFilter.research();
                                             MainApp.getController().showBottleDetails(spot);
                                         });
                                     });
@@ -218,7 +218,6 @@ public class CompartementDisplayController {
 
                     ImageView view = new ImageView(new Image(CompartementDisplayController.class.getClassLoader().getResource("img/check.png").toString()));
                     view.setPreserveRatio(true);
-                    System.out.println(modifyNameTextField.getHeight());
                     view.setFitHeight(name.getHeight());
 
                     Button okButton = new Button("", view);

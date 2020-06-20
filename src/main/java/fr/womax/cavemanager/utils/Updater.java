@@ -97,17 +97,11 @@ public class Updater {
 
                 long fileSize = getFileSize(url);
 
-                System.out.println("File size=" + fileSize);
-
                 ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
 
                 FileOutputStream fileOutputStream = new FileOutputStream(currentJar);
 
                 fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-
-                /*System.out.println("delete=" + currentJar.delete());
-
-                System.out.println(download.renameTo(currentJar));*/
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Mise à jour télécharger");

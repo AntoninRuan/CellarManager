@@ -12,7 +12,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -165,6 +164,10 @@ public class DialogUtils {
             year = bottle.getYear();
         }
 
+        int consumeYear = year;
+        if(bottle != null)
+            consumeYear = bottle.getConsumeYear();
+
         TextField name = new TextField();
         name.setPromptText("Nom");
         TextField region = new TextField();
@@ -176,6 +179,7 @@ public class DialogUtils {
         TextField comment = new TextField();
         comment.setPromptText("Commentaire");
         Spinner<Integer> yearSpinner = new Spinner <>(1950, 3000, year, 1);
+        Spinner<Integer> consumeYearSpinner = new Spinner <>(1950, 3000, consumeYear, 1);
         ChoiceBox<WineType> wineType = new ChoiceBox <>();
         wineType.setItems(FXCollections.observableArrayList(WineType.values()));
 
@@ -196,7 +200,8 @@ public class DialogUtils {
         gridPane.add(new Label("Domaine:"), 0, 3);
         gridPane.add(new Label("Commentaire:"), 0,4);
         gridPane.add(new Label("Année:"), 0, 5);
-        gridPane.add(new Label("Type:"), 0, 6);
+        gridPane.add(new Label("Année de consommation:"), 0, 6);
+        gridPane.add(new Label("Type:"), 0, 7);
 
         gridPane.add(name, 1, 0);
         gridPane.add(region, 1, 1);
@@ -204,7 +209,8 @@ public class DialogUtils {
         gridPane.add(domain, 1, 3);
         gridPane.add(comment, 1, 4);
         gridPane.add(yearSpinner, 1, 5);
-        gridPane.add(wineType, 1, 6);
+        gridPane.add(consumeYearSpinner, 1, 6);
+        gridPane.add(wineType, 1, 7);
 
         dialog.getDialogPane().setContent(gridPane);
         ((Stage)dialog.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
@@ -212,7 +218,7 @@ public class DialogUtils {
         dialog.setResultConverter(dialogButton -> {
             if(dialogButton == validationButtonType) {
                 BottleInfo bottleInfo = new BottleInfo(name.getText(), region.getText(), edition.getText(),
-                        domain.getText(), comment.getText(), yearSpinner.getValue(), wineType.getValue());
+                        domain.getText(), comment.getText(), yearSpinner.getValue(), consumeYearSpinner.getValue(), wineType.getValue());
                 return bottleInfo;
             }
             return null;
@@ -255,7 +261,7 @@ public class DialogUtils {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Pas de mise à jour disponible");
         alert.setHeaderText(null);
-        alert.setContentText("Aucune mise à jour n'a été trouvé");
+        alert.setContentText("Aucune mise à jour n'a été trouvée");
 
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
 
