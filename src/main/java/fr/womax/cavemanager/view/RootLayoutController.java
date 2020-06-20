@@ -28,6 +28,9 @@ public class RootLayoutController {
     private MainApp mainApp;
 
     @FXML
+    private BorderPane layout;
+
+    @FXML
     private MenuItem versionMenuItem;
 
     @FXML

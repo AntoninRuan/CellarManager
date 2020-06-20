@@ -6,28 +6,34 @@ import fr.womax.cavemanager.model.Compartement;
 import fr.womax.cavemanager.model.Spot;
 import fr.womax.cavemanager.utils.BottleFilter;
 import fr.womax.cavemanager.utils.DialogUtils;
-import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Pagination;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
  * @author Antonin Ruan
  */
 public class CompartementDisplayController {
+
+    @FXML
+    private VBox layout;
+
+    @FXML
+    private VBox vBox;
 
     @FXML
     private Label name;
@@ -49,6 +55,7 @@ public class CompartementDisplayController {
 
             if(!MainApp.getCompartements().isEmpty()) {
                 Compartement toDisplay = MainApp.getCompartements().get(index);
+                name.setText(toDisplay.getName());
 
                 Spot[][] spots = toDisplay.getSpots();
 
@@ -186,6 +193,56 @@ public class CompartementDisplayController {
             return new AnchorPane();
         });
         pagination.setCurrentPageIndex(0);
+
+        final LocalDateTime[] lastClick = {LocalDateTime.now()};
+        final boolean[] doubleClick = {false};
+        name.setOnMouseClicked(event -> {
+            if(event.getButton() == MouseButton.PRIMARY) {
+
+                Duration delta = Duration.between(lastClick[0], LocalDateTime.now());
+
+                if(delta.toMillis() < 500 && !doubleClick[0]) {
+                    doubleClick[0] = true;
+
+                    HBox modifyNameHbox = new HBox();
+                    modifyNameHbox.setPrefWidth(compartementDisplay.getWidth());
+                    modifyNameHbox.setFillHeight(true);
+                    modifyNameHbox.setSpacing(5);
+
+                    TextField modifyNameTextField = new TextField(MainApp.getCompartements().get(getCurrentCompartementDisplayed()).getName());
+                    modifyNameTextField.setFont(Font.font(Font.getDefault().getFamily(), 16));
+                    modifyNameTextField.setPromptText("Nom");
+                    modifyNameTextField.setAlignment(Pos.CENTER);
+                    modifyNameTextField.setPrefWidth(compartementDisplay.getWidth() - modifyNameTextField.getHeight());
+                    modifyNameTextField.setPrefHeight(name.getHeight());
+
+                    ImageView view = new ImageView(new Image(CompartementDisplayController.class.getClassLoader().getResource("img/check.png").toString()));
+                    view.setPreserveRatio(true);
+                    System.out.println(modifyNameTextField.getHeight());
+                    view.setFitHeight(name.getHeight());
+
+                    Button okButton = new Button("", view);
+                    okButton.setBackground(new Background(new BackgroundFill(Color.valueOf("#264653"), new CornerRadii(0), new Insets(0))));
+
+                    okButton.setOnAction(event1 -> {
+                        MainApp.getCompartements().get(getCurrentCompartementDisplayed()).setName(modifyNameTextField.getText());
+                        name.setText(modifyNameTextField.getText());
+
+                        vBox.getChildren().remove(modifyNameHbox);
+                        vBox.getChildren().add(0, name);
+                    });
+
+                    modifyNameHbox.getChildren().addAll(modifyNameTextField, okButton);
+
+                    vBox.getChildren().remove(name);
+                    vBox.getChildren().add(0, modifyNameHbox);
+
+                } else
+                    doubleClick[0] = false;
+
+                lastClick[0] = LocalDateTime.now();
+            }
+        });
     }
 
     public void handleLeft() {

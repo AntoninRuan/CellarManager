@@ -116,4 +116,8 @@ public class Compartement {
     public String toString() {
         return toJson().toString();
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
