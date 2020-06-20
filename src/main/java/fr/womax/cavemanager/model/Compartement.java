@@ -10,10 +10,11 @@ public class Compartement {
 
     private int id;
 
+    private String name;
     private int row, column;
     private Spot[][] spots;
 
-    Compartement(int id, int row, int column) {
+    Compartement(int id, String name,int row, int column) {
         this.id = id;
         this.row = row;
         this.column = column;
@@ -21,7 +22,8 @@ public class Compartement {
         fillEmpty();
     }
 
-    Compartement(int row, int column) {
+    Compartement(String name, int row, int column) {
+        this.name = name;
         this.id = MainApp.nextCompartementId();
         this.row = row;
         this.column = column;
@@ -29,7 +31,8 @@ public class Compartement {
         fillEmpty();
     }
 
-    Compartement(int raw, int column, Spot[][] spots) {
+    Compartement(String name, int raw, int column, Spot[][] spots) {
+        this.name = name;
         this.id = MainApp.nextCompartementId();
         this.row = raw;
         this.column = column;
@@ -52,6 +55,10 @@ public class Compartement {
         }
     }
 
+    public String getName() {
+        return name;
+    }
+
     public int getRow() {
         return row;
     }
@@ -65,26 +72,28 @@ public class Compartement {
     }
 
     public static Compartement fromJson(JsonObject jsonObject) {
-       int row = jsonObject.get("raw_number").getAsInt();
-       int column = jsonObject.get("column_number").getAsInt();
-       JsonObject spotsJson = jsonObject.get("spots").getAsJsonObject();
-       Spot[][] spots = new Spot[row][column];
+        String name = jsonObject.get("name").getAsString();
+        int row = jsonObject.get("raw_number").getAsInt();
+        int column = jsonObject.get("column_number").getAsInt();
+        JsonObject spotsJson = jsonObject.get("spots").getAsJsonObject();
+        Spot[][] spots = new Spot[row][column];
 
-       for(int i = 0; i < row; i ++) {
+        for(int i = 0; i < row; i ++) {
 
-           for(int j = 0; j < column; j++) {
-               int id = (i * 100) + j;
-               Spot spot = Spot.fromJson(spotsJson.get(String.valueOf(id)).getAsJsonObject());
-               spots[i][j] = spot;
-           }
+            for(int j = 0; j < column; j++) {
+                int id = (i * 100) + j;
+                Spot spot = Spot.fromJson(spotsJson.get(String.valueOf(id)).getAsJsonObject());
+                spots[i][j] = spot;
+            }
 
        }
 
-       return new Compartement(row, column, spots);
+       return new Compartement(name, row, column, spots);
     }
 
     public JsonObject toJson() {
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("name", name);
         jsonObject.addProperty("raw_number", row);
         jsonObject.addProperty("column_number", column);
 

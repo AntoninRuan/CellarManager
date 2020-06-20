@@ -38,7 +38,6 @@ public class MainApp extends Application {
     //FIXME tenter de corriger le bug avec les spinners de selection. La valeur entrée au clavier n'est pas pris en compte dans le .getValue();
     //FIXME fix temporaire -> l'édition au clavier est désactivé
 
-    //TODO ajouter un nom sur les étagères et l'afficher au dessus de la grille
     //TODO ajouter mon nom/prénom au menu à propos
 
     //TODO tester la compilation JavaFX intégré à intellij voir si ça change qq chose au lancement sur une autre machine
@@ -314,9 +313,7 @@ public class MainApp extends Application {
 
         Optional<CompartementInfo> result = DialogUtils.createNewCompartement(cancelable);
 
-        result.ifPresent(compartementInfo -> {
-            compartementInfo.createCompartement(this);
-        });
+        result.ifPresent(CompartementInfo::createCompartement);
 
     }
 

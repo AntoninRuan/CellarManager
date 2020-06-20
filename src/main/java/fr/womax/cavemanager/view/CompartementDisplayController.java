@@ -11,6 +11,7 @@ import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Pagination;
 import javafx.scene.image.Image;
@@ -27,6 +28,9 @@ import java.util.Optional;
  * @author Antonin Ruan
  */
 public class CompartementDisplayController {
+
+    @FXML
+    private Label name;
 
     @FXML
     private Pagination pagination;

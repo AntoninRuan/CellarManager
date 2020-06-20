@@ -75,6 +75,9 @@ public class DialogUtils {
         gridPane.setVgap(10);
         gridPane.setPadding(new Insets(20, 150, 10, 10));
 
+        TextField name = new TextField();
+        name.setPromptText("Nom");
+
         final Spinner <Integer> raw = new Spinner <>(1, 10, 1, 1);
         final Spinner<Integer> column = new Spinner <>(1, 10, 1, 1);
 
@@ -85,12 +88,14 @@ public class DialogUtils {
         after.setSelected(true);
         after.setToggleGroup(group);
 
-        gridPane.add(new Label("Ligne"), 0, 0);
-        gridPane.add(raw, 1, 0);
-        gridPane.add(new Label("Colonne"), 0, 1);
-        gridPane.add(column, 1, 1);
-        gridPane.add(before, 0, 2);
-        gridPane.add(after, 1, 2);
+        gridPane.add(new Label("Nom"), 0, 0);
+        gridPane.add(name, 1, 0);
+        gridPane.add(new Label("Ligne"), 0, 1);
+        gridPane.add(raw, 1, 1);
+        gridPane.add(new Label("Colonne"), 0, 2);
+        gridPane.add(column, 1, 2);
+        gridPane.add(before, 0, 3);
+        gridPane.add(after, 1, 3);
 
         Node cancel = dialog.getDialogPane().lookupButton(cancelButtonType);
         cancel.setDisable(!cancelable);
@@ -100,7 +105,7 @@ public class DialogUtils {
 
         dialog.setResultConverter(dialogButton -> {
             if(dialogButton == validationButtonType) {
-                return new CompartementInfo(raw.getValue(), column.getValue(), before.isSelected());
+                return new CompartementInfo(name.getText(), raw.getValue(), column.getValue(), before.isSelected());
             }
             return null;
         });

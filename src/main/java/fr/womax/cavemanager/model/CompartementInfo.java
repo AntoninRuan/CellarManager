@@ -7,17 +7,19 @@ import fr.womax.cavemanager.MainApp;
  */
 public class CompartementInfo {
 
+    private String name;
     private int raw;
     private int column;
     private boolean before;
 
-    public CompartementInfo(int raw, int column, boolean before) {
+    public CompartementInfo(String name, int raw, int column, boolean before) {
+        this.name = name;
         this.raw = raw;
         this.column = column;
         this.before = before;
     }
 
-    public void createCompartement(MainApp mainApp) {
+    public void createCompartement() {
         int index;
         if(MainApp.getCompartements() == null  || MainApp.getCompartements().isEmpty()) {
             index = 0;
@@ -28,7 +30,7 @@ public class CompartementInfo {
             }
         }
 
-        MainApp.getCompartements().put(index, new Compartement(raw, column));
+        MainApp.getCompartements().put(index, new Compartement(name, raw, column));
         if(MainApp.getCompartementDisplayController() != null)
             MainApp.getCompartementDisplayController().setCurrentCompartementDisplayed(index);
     }
