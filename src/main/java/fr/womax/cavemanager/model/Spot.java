@@ -67,14 +67,14 @@ public class Spot {
         object.addProperty("id", (row * 100) + column);
         object.addProperty("empty", bottle == null);
         if(bottle != null)
-            object.add("bottle", bottle.toJson());
+            object.addProperty("bottle", bottle.getId());
         return object;
     }
 
     public static Spot fromJson(JsonObject object) {
         Bottle bottle;
         if(!object.get("empty").getAsBoolean()) {
-            bottle = Bottle.fromJson(object.get("bottle").getAsJsonObject());
+            bottle = MainApp.getBottles().get(object.get("bottle").getAsInt());
         } else
             bottle = null;
         int id = object.get("id").getAsInt();

@@ -1,5 +1,6 @@
 package fr.womax.cavemanager;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.womax.cavemanager.model.*;
@@ -10,6 +11,7 @@ import fr.womax.cavemanager.view.RootLayoutController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -23,6 +25,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -30,16 +33,17 @@ import java.util.Optional;
  */
 public class MainApp extends Application {
 
-    //FIXME recherche buggé à travers les pages: n'affiche les recherches que sur la page actuel. (Problèmes de render lors de l'affichage des spots)
     //FIXME recherche buggé lorsqu'une bouteille est ajouter alors qu'une rechercher en encore en cours
     //FIXME je crois qu'il y a un bug lors de la recherche par type: Toutes les bouteilles sont séléctionnés
     //FIXME tenter de corriger le bug avec les spinners de selection. La valeur entrée au clavier n'est pas pris en compte dans le .getValue();
+    //FIXME lorsqu'une bouteille est enlevé alors que la recherche est enclenché, elle réapparait avec la modif de la recherche
+    //FIXME surement un bug lorsqu'une bouteille est ajouté à un emplacement puis l'app relancer les modifs appliqué à la bouteille ne se feront pas
+    //FIXME -> stocker la bouteille dans un spot via son id et la chargé parmis la liste des bouteilles pour avoir la bonne instance
 
     //TODO ajouter un décompte des bouteilles dans le tableau des bouteilles. (Compter le nombre de chaque type de bouteilles présents dans les slots)
     //TODO ajouter un nom sur les étagères et l'afficher au dessus de la grille
     //TODO ajouter mon nom/prénom au menu à propos
 
-    //TODO ce serait pas de mal passer le projet sur du vcs
     //TODO tester la compilation JavaFX intégré à intellij voir si ça change qq chose au lancement sur une autre machine
 
     /*TODO Ajouter un menus de paramètre qui permettent
@@ -62,9 +66,11 @@ public class MainApp extends Application {
 
     public final static Image LOGO = new Image(MainApp.class.getClassLoader().getResource("img/logo.png").toString());
 
-    private final static ObservableList<Compartement> compartements = FXCollections.observableArrayList();
+    private final static ObservableMap<Integer, Compartement> compartements = FXCollections.observableHashMap();
     private final static ObservableList<Spot> spots = FXCollections.observableArrayList();
-    private final static ObservableList<Bottle> bottles = FXCollections.observableArrayList();
+    private final static ObservableMap <Integer, Bottle> bottles = FXCollections.observableHashMap();
+    private static int lastBottleId;
+    private static int lastCompartementId;
 
     public static void main(String... args) {
         System.setProperty("file.encoding", "UTF-8");
@@ -102,35 +108,6 @@ public class MainApp extends Application {
         MainApp.primaryStage.setTitle("Cave");
 
         initRootLayout();
-        //Récupération du fichier de sauvegarde
-
-        try {
-            if(preferenceJson.get("save_file") != null) {
-                openFile(new File(preferenceJson.get("save_file").getAsString()));
-            } else {
-                openedFile = null;
-                do {
-                    try {
-                        openedFile = noSaveFile();
-                    } catch (URISyntaxException e) {
-                        DialogUtils.sendErrorWindow(e);
-                    }
-                } while (openedFile == null);
-
-                if(!openedFile.exists()) {
-                    openedFile.createNewFile();
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(openedFile));
-                    writer.write("{}");
-                    writer.flush();
-                    writer.close();
-                    createNewCompartements(false);
-                }
-                preferenceJson.addProperty("save_file", openedFile.getAbsolutePath());
-            }
-
-        }  catch (IOException e) {
-            DialogUtils.sendErrorWindow(e);
-        }
 
         //Récupération du fichier contenant l'ensemble des bouteilles
 
@@ -167,6 +144,36 @@ public class MainApp extends Application {
             boolean newUpdate = Updater.checkUpdate();
         }
 
+        //Récupération du fichier de sauvegarde
+
+        try {
+            if(preferenceJson.get("save_file") != null) {
+                openFile(new File(preferenceJson.get("save_file").getAsString()));
+            } else {
+                openedFile = null;
+                do {
+                    try {
+                        openedFile = noSaveFile();
+                    } catch (URISyntaxException e) {
+                        DialogUtils.sendErrorWindow(e);
+                    }
+                } while (openedFile == null);
+
+                if(!openedFile.exists()) {
+                    openedFile.createNewFile();
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(openedFile));
+                    writer.write("{}");
+                    writer.flush();
+                    writer.close();
+                    createNewCompartements(false);
+                }
+                preferenceJson.addProperty("save_file", openedFile.getAbsolutePath());
+            }
+
+        }  catch (IOException e) {
+            DialogUtils.sendErrorWindow(e);
+        }
+
     }
 
     public static void saveFiles() {
@@ -181,7 +188,7 @@ public class MainApp extends Application {
             if(bottles == null || bottles.isEmpty()) {
                 writer.write("{}");
             } else {
-                for(Bottle bottle : bottles) {
+                for(Bottle bottle : bottles.values()) {
                     bottlesJson.add(String.valueOf(bottle.getId()), bottle.toJson());
                 }
                 writer.write(bottlesJson.toString());
@@ -195,7 +202,7 @@ public class MainApp extends Application {
             if(compartements == null || compartements.isEmpty()) {
                 writer.write("{}");
             } else {
-                for(Compartement compartement : MainApp.compartements) {
+                for(Compartement compartement : MainApp.compartements.values()) {
                     jsonObject.add(String.valueOf(compartement.getId()), compartement.toJson());
                 }
                 writer.write(jsonObject.toString());
@@ -274,12 +281,12 @@ public class MainApp extends Application {
         try {
             bottleFile = file;
             JsonObject bottles = JsonParser.parseReader(new FileReader(file)).getAsJsonObject();
-            int i = 0;
-            while (bottles.get(String.valueOf(i)) != null) {
-                JsonObject bottle = bottles.get(String.valueOf(i)).getAsJsonObject();
-                BottleInfo bottleInfo = BottleInfo.fromJson(bottle);
-                bottleInfo.createBottle();
-                i ++;
+            for(Map.Entry<String, JsonElement> entry : bottles.entrySet()) {
+                int id = Integer.valueOf(entry.getKey());
+                Bottle bottle = Bottle.fromJson(id, entry.getValue().getAsJsonObject());
+                MainApp.bottles.put(id, bottle);
+                if(MainApp.lastBottleId < id)
+                    MainApp.lastBottleId = id;
             }
         } catch (FileNotFoundException e) {
             DialogUtils.sendErrorWindow(e);
@@ -291,11 +298,14 @@ public class MainApp extends Application {
             openedFile = file;
             JsonObject object = JsonParser.parseReader(new FileReader(file)).getAsJsonObject();
 
-            int i = 0;
-            while (object.get(String.valueOf(i)) != null) {
-                Compartement compartement = Compartement.fromJson(object.get(String.valueOf(i)).getAsJsonObject());
-                compartements.add(compartement);
-                i ++;
+            for(Map.Entry<String, JsonElement> entry : object.entrySet()) {
+
+                int id = Integer.valueOf(entry.getKey());
+                Compartement compartement = Compartement.fromJson(entry.getValue().getAsJsonObject());
+                MainApp.compartements.put(id, compartement);
+                if(MainApp.lastCompartementId < id)
+                    MainApp.lastCompartementId = id;
+
             }
 
         } catch (FileNotFoundException e) {
@@ -313,7 +323,7 @@ public class MainApp extends Application {
 
     }
 
-    public static ObservableList <Compartement> getCompartements() {
+    public static ObservableMap <Integer, Compartement> getCompartements() {
         return compartements;
     }
 
@@ -321,7 +331,7 @@ public class MainApp extends Application {
         return spots;
     }
 
-    public static ObservableList<Bottle> getBottles() {
+    public static ObservableMap<Integer, Bottle> getBottles() {
         return bottles;
     }
 
@@ -350,26 +360,18 @@ public class MainApp extends Application {
 
         for(Spot spot : spots) {
             if (spot.getBottle().equals(bottle)) {
-
                 spots.add(spot);
-
             }
         }
         return spots;
     }
 
     public static int nextBottleId() {
-        if(bottles != null ) {
-            return bottles.size();
-        } else
-            return 0;
+        return lastBottleId ++;
     }
 
     public static int nextCompartementId() {
-        if(compartements != null ) {
-            return compartements.size();
-        } else
-            return 0;
+        return lastCompartementId ++;
     }
 
 }

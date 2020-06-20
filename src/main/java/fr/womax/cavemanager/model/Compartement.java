@@ -13,6 +13,14 @@ public class Compartement {
     private int row, column;
     private Spot[][] spots;
 
+    Compartement(int id, int row, int column) {
+        this.id = id;
+        this.row = row;
+        this.column = column;
+        this.spots = new Spot[row][column];
+        fillEmpty();
+    }
+
     Compartement(int row, int column) {
         this.id = MainApp.nextCompartementId();
         this.row = row;

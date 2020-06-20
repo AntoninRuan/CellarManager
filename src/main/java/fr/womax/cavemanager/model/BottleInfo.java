@@ -28,7 +28,7 @@ public class BottleInfo {
 
     public Bottle createBottle() {
         Bottle bottle = new Bottle(name, region, domain, edition, comment, year, type);
-        MainApp.getBottles().add(bottle);
+        MainApp.getBottles().put(bottle.getId(), bottle);
         return bottle;
     }
 

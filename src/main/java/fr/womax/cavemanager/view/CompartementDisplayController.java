@@ -4,8 +4,10 @@ import fr.womax.cavemanager.MainApp;
 import fr.womax.cavemanager.model.Bottle;
 import fr.womax.cavemanager.model.Compartement;
 import fr.womax.cavemanager.model.Spot;
+import fr.womax.cavemanager.utils.BottleFilter;
 import fr.womax.cavemanager.utils.DialogUtils;
 import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.ContextMenu;
@@ -35,10 +37,8 @@ public class CompartementDisplayController {
     @FXML
     private void initialize() {
         pagination.setPageCount(MainApp.getCompartements().size());
-        MainApp.getCompartements().addListener((ListChangeListener <? super Compartement>) c -> {
-            while (c.next()) {
-                pagination.setPageCount(MainApp.getCompartements().size());
-            }
+        MainApp.getCompartements().addListener((MapChangeListener <? super Integer, ? super Compartement>) c -> {
+            pagination.setPageCount(MainApp.getCompartements().size());
         });
         pagination.setPageFactory((index) -> {
 
@@ -70,8 +70,12 @@ public class CompartementDisplayController {
 
                         if(spot.isEmpty())
                             imageView.setImage(spotEmpty);
-                        else
-                            imageView.setImage(spotFill);
+                        else{
+                            if(spot.isHighlighted()) {
+                                imageView.setImage(spotHighlighted);
+                            } else
+                                imageView.setImage(spotFill);
+                        }
 
                         imageView.hoverProperty().addListener((observable, oldValue, newValue) -> {
                             if(spot.isEmpty()) {
@@ -104,6 +108,7 @@ public class CompartementDisplayController {
                                     result.ifPresent(bottle -> {
                                         spot.setBottle(bottle);
                                         imageView.setImage(spotFill);
+                                        BottleFilter.research();
                                     });
 
                                 }
@@ -134,7 +139,9 @@ public class CompartementDisplayController {
 
                                     MenuItem remove = new MenuItem("Enlever");
                                     remove.setOnAction(event1 -> {
+                                        MainApp.getSpots().remove(spot);
                                         spot.setBottle(null);
+                                        MainApp.getSpots().add(spot);
                                         imageView.setImage(spotEmpty);
                                     });
 
@@ -142,7 +149,9 @@ public class CompartementDisplayController {
                                     contextMenu.show(imageView, event.getScreenX(), event.getScreenY());
 
                                 } else if(event.getButton() == MouseButton.MIDDLE) {
+                                    MainApp.getSpots().remove(spot);
                                     spot.setBottle(null);
+                                    MainApp.getSpots().add(spot);
                                     imageView.setImage(spotEmpty);
                                 }
 

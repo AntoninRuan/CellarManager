@@ -21,6 +21,19 @@ public class Bottle {
     private StringProperty year;
     private ObjectProperty <WineType> type;
 
+    public Bottle(int id, String name, String region, String edition, String domain, String comment, int year, WineType type) {
+        this.id = id;
+        this.id = MainApp.nextBottleId();
+        this.name = new SimpleStringProperty(name);
+        this.region = new SimpleStringProperty(region);
+        this.edition = new SimpleStringProperty(edition);
+        this.domain = new SimpleStringProperty(domain);
+        this.comment = comment;
+        this.year = new SimpleStringProperty(String.valueOf(year));
+        this.type = new SimpleObjectProperty <>(type);
+    }
+
+
     public Bottle(String name, String region, String edition, String domain, String comment, int year, WineType type) {
         this.id = MainApp.nextBottleId();
         this.name = new SimpleStringProperty(name);
@@ -128,7 +141,7 @@ public class Bottle {
         return object;
     }
 
-    public static Bottle fromJson(JsonObject jsonObject) {
+    public static Bottle fromJson(int id, JsonObject jsonObject) {
         String name = jsonObject.get("name").getAsString();
         String region = jsonObject.get("region").getAsString();
         String edition = jsonObject.get("edition").getAsString();
@@ -136,7 +149,7 @@ public class Bottle {
         String comment = jsonObject.get("comment").getAsString();
         int year = jsonObject.get("year").getAsInt();
         WineType type = WineType.valueOf(jsonObject.get("type").getAsString());
-        return new Bottle(name, region, edition, domain, comment, year, type);
+        return new Bottle(id, name, region, edition, domain, comment, year, type);
     }
 
     @Override

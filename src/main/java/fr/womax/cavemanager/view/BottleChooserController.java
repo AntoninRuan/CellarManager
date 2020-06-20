@@ -5,6 +5,9 @@ import fr.womax.cavemanager.model.Bottle;
 import fr.womax.cavemanager.model.BottleInfo;
 import fr.womax.cavemanager.model.WineType;
 import fr.womax.cavemanager.utils.DialogUtils;
+import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
@@ -41,6 +44,8 @@ public class BottleChooserController {
     @FXML
     private Button cancelButton;
 
+    private ObservableList<Bottle> bottles = FXCollections.observableArrayList();
+
     private Stage dialogStage;
     private boolean okClicked = false;
     private Bottle selected;
@@ -51,6 +56,14 @@ public class BottleChooserController {
 
     @FXML
     private void initialize() {
+        bottles.addAll(MainApp.getBottles().values());
+        MainApp.getBottles().addListener((MapChangeListener <? super Integer, ? super Bottle>) change -> {
+            if(change.wasAdded()) {
+                bottles.add(change.getValueAdded());
+            } else if (change.wasRemoved())
+                bottles.add(change.getValueRemoved());
+        });
+
         nameColumn.setCellValueFactory(param -> param.getValue().nameProperty());
         editionColumn.setCellValueFactory(param -> param.getValue().editionProperty());
         domainColumn.setCellValueFactory(param -> param.getValue().domainProperty());
@@ -58,7 +71,7 @@ public class BottleChooserController {
         typeColumn.setCellValueFactory(param -> param.getValue().typeProperty());
         regionColumn.setCellValueFactory(param -> param.getValue().regionProperty());
 
-        tableView.setItems(MainApp.getBottles());
+        tableView.setItems(bottles);
         tableView.setOnMouseClicked(event -> {
 
             if(event.getButton() == MouseButton.SECONDARY) {

@@ -28,7 +28,7 @@ public class CompartementInfo {
             }
         }
 
-        MainApp.getCompartements().add(index, new Compartement(raw, column));
+        MainApp.getCompartements().put(index, new Compartement(raw, column));
         if(MainApp.getCompartementDisplayController() != null)
             MainApp.getCompartementDisplayController().setCurrentCompartementDisplayed(index);
     }

@@ -27,6 +27,11 @@ public class BottleFilter {
         }
     }
 
+    public static void research() {
+        if(!previousSearch.trim().isEmpty())
+            search(previousSearch);
+    }
+
     public static void search(String s) {
         if (!searching)
             searching = true;
