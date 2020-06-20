@@ -111,7 +111,7 @@ public class RootLayoutController {
                     MainApp.getSpots().remove(spot);
                 }
             }
-            MainApp.getCompartements().remove(compartement);
+            MainApp.getCompartements().remove(compartement.getId());
         } else {
             DialogUtils.needAtLeastOneCompartement();
         }

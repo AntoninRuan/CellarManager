@@ -76,9 +76,7 @@ public class DialogUtils {
         gridPane.setPadding(new Insets(20, 150, 10, 10));
 
         final Spinner <Integer> raw = new Spinner <>(1, 10, 1, 1);
-        raw.setEditable(true);
         final Spinner<Integer> column = new Spinner <>(1, 10, 1, 1);
-        column.setEditable(true);
 
         ToggleGroup group = new ToggleGroup();
         final RadioButton before = new RadioButton("Remplacer Actuel");
@@ -262,6 +260,17 @@ public class DialogUtils {
         alert.setContentText(null);
 
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().addAll(MainApp.LOGO);
+
+        alert.showAndWait();
+    }
+
+    public static void bottlePresentInCave() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Bouteille présente dans la cave");
+        alert.setHeaderText("Cette bouteille est présente dans votre cave");
+        alert.setContentText("Veuillez l'enlever de tous les emplacements si vous souhaitez vraiment la supprimer");
+
+        ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
 
         alert.showAndWait();
     }

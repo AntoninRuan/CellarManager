@@ -46,7 +46,9 @@ public class BottleFilter {
     private static void searchIn(ObservableList<Spot> spots, String s) {
         for (Spot spot : spots) {
 
-            spot.setHighlighted(false);
+            if(!spot.isEmpty()) {
+                spot.setHighlighted(false);
+            }
 
             if(!spot.isEmpty()) {
                 boolean highlight = false;
@@ -83,7 +85,8 @@ public class BottleFilter {
                         break;
                 }
 
-                spot.setHighlighted(highlight);
+                if(!spot.isEmpty())
+                    spot.setHighlighted(highlight);
             }
 
         }
@@ -94,7 +97,8 @@ public class BottleFilter {
             searching = false;
         previousSearch = "";
         for (Spot spot : MainApp.getSpots()) {
-            spot.setHighlighted(false);
+            if(!spot.isEmpty())
+                spot.setHighlighted(false);
         }
     }
 

@@ -20,6 +20,7 @@ public class Bottle {
     private String comment;
     private StringProperty year;
     private ObjectProperty <WineType> type;
+    private StringProperty count = new SimpleStringProperty();
 
     public Bottle(int id, String name, String region, String edition, String domain, String comment, int year, WineType type) {
         this.id = id;
@@ -99,6 +100,15 @@ public class Bottle {
 
     public ObjectProperty <WineType> typeProperty() {
         return type;
+    }
+
+    public StringProperty countProperty() {
+        count.setValue(String.valueOf(getCount()));
+        return count;
+    }
+
+    public int getCount() {
+        return MainApp.hasBottle(this).size();
     }
 
     public void setName(String name) {

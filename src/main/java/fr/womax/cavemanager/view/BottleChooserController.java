@@ -3,6 +3,7 @@ package fr.womax.cavemanager.view;
 import fr.womax.cavemanager.MainApp;
 import fr.womax.cavemanager.model.Bottle;
 import fr.womax.cavemanager.model.BottleInfo;
+import fr.womax.cavemanager.model.Spot;
 import fr.womax.cavemanager.model.WineType;
 import fr.womax.cavemanager.utils.DialogUtils;
 import javafx.collections.FXCollections;
@@ -42,6 +43,9 @@ public class BottleChooserController {
     private TableColumn<Bottle, String> regionColumn;
 
     @FXML
+    private TableColumn<Bottle, String> countColumn;
+
+    @FXML
     private Button cancelButton;
 
     private ObservableList<Bottle> bottles = FXCollections.observableArrayList();
@@ -61,7 +65,7 @@ public class BottleChooserController {
             if(change.wasAdded()) {
                 bottles.add(change.getValueAdded());
             } else if (change.wasRemoved())
-                bottles.add(change.getValueRemoved());
+                bottles.remove(change.getValueRemoved());
         });
 
         nameColumn.setCellValueFactory(param -> param.getValue().nameProperty());
@@ -70,14 +74,18 @@ public class BottleChooserController {
         yearColumn.setCellValueFactory(param -> param.getValue().yearProperty());
         typeColumn.setCellValueFactory(param -> param.getValue().typeProperty());
         regionColumn.setCellValueFactory(param -> param.getValue().regionProperty());
+        countColumn.setCellValueFactory(param -> param.getValue().countProperty());
 
         tableView.setItems(bottles);
+        ContextMenu contextMenu = new ContextMenu();
         tableView.setOnMouseClicked(event -> {
+
+            contextMenu.hide();
 
             if(event.getButton() == MouseButton.SECONDARY) {
                 Bottle bottle = tableView.getSelectionModel().getSelectedItem();
 
-                ContextMenu contextMenu = new ContextMenu();
+                contextMenu.getItems().clear();
 
                 MenuItem modify = new MenuItem("Modifier");
                 modify.setOnAction(event1 -> {
@@ -90,8 +98,10 @@ public class BottleChooserController {
 
                 MenuItem delete = new MenuItem("Supprimer");
                 delete.setOnAction(event1 -> {
-                    //FIXME que faire lorsque ce type de bouteilles est utilisé dans des slots
-                    MainApp.getBottles().remove(bottle);
+                    if(MainApp.hasBottle(bottle).size() != 0)
+                        DialogUtils.bottlePresentInCave();
+                    else
+                        MainApp.getBottles().remove(bottle.getId());
                 });
 
                 contextMenu.getItems().addAll(modify, delete);

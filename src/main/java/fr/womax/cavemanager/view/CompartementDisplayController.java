@@ -40,6 +40,7 @@ public class CompartementDisplayController {
         MainApp.getCompartements().addListener((MapChangeListener <? super Integer, ? super Compartement>) c -> {
             pagination.setPageCount(MainApp.getCompartements().size());
         });
+        ContextMenu contextMenu = new ContextMenu();
         pagination.setPageFactory((index) -> {
 
             if(!MainApp.getCompartements().isEmpty()) {
@@ -99,6 +100,9 @@ public class CompartementDisplayController {
 
                         imageView.setOnMouseClicked(event -> {
 
+                            contextMenu.hide();
+                            contextMenu.getItems().clear();
+
                             if(spot.isEmpty()) {
 
                                 if(event.getButton() == MouseButton.PRIMARY) {
@@ -120,8 +124,6 @@ public class CompartementDisplayController {
                                     MainApp.getController().showBottleDetails(spot);
 
                                 } else if (event.getButton() == MouseButton.SECONDARY) {
-
-                                    ContextMenu contextMenu = new ContextMenu();
 
                                     MenuItem show = new MenuItem("Afficher");
                                     show.setOnAction(event1 -> {

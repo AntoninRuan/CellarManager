@@ -33,14 +33,11 @@ import java.util.Optional;
  */
 public class MainApp extends Application {
 
-    //FIXME recherche buggé lorsqu'une bouteille est ajouter alors qu'une rechercher en encore en cours
-    //FIXME je crois qu'il y a un bug lors de la recherche par type: Toutes les bouteilles sont séléctionnés
-    //FIXME tenter de corriger le bug avec les spinners de selection. La valeur entrée au clavier n'est pas pris en compte dans le .getValue();
-    //FIXME lorsqu'une bouteille est enlevé alors que la recherche est enclenché, elle réapparait avec la modif de la recherche
-    //FIXME surement un bug lorsqu'une bouteille est ajouté à un emplacement puis l'app relancer les modifs appliqué à la bouteille ne se feront pas
-    //FIXME -> stocker la bouteille dans un spot via son id et la chargé parmis la liste des bouteilles pour avoir la bonne instance
+    //FIXME bug lors de la recherche par type: Toutes les bouteilles sont séléctionnés
 
-    //TODO ajouter un décompte des bouteilles dans le tableau des bouteilles. (Compter le nombre de chaque type de bouteilles présents dans les slots)
+    //FIXME tenter de corriger le bug avec les spinners de selection. La valeur entrée au clavier n'est pas pris en compte dans le .getValue();
+    //FIXME fix temporaire -> l'édition au clavier est désactivé
+
     //TODO ajouter un nom sur les étagères et l'afficher au dessus de la grille
     //TODO ajouter mon nom/prénom au menu à propos
 
@@ -358,9 +355,12 @@ public class MainApp extends Application {
     public static List<Spot> hasBottle(Bottle bottle) {
         List<Spot> spots = new ArrayList <>();
 
-        for(Spot spot : spots) {
-            if (spot.getBottle().equals(bottle)) {
-                spots.add(spot);
+        for(Spot spot : MainApp.spots) {
+//            System.out.println("id spot=" + spot.getBottle().getId() + ", id bottle=" + bottle.getId());
+            if (!spot.isEmpty()) {
+                if (spot.getBottle().getId() == bottle.getId()) {
+                    spots.add(spot);
+                }
             }
         }
         return spots;
