@@ -221,17 +221,21 @@ public class DialogUtils {
         return dialog.showAndWait();
     }
 
-    public static void updateAvailable() {
+    public static void updateAvailable(boolean neverAskButton) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Mise à jour disponible");
         alert.setHeaderText("Une nouvelle mise à jour est disponible");
         alert.setContentText("Voulez vous la faire?");
 
         ButtonType ok = new ButtonType("Oui");
-        ButtonType no = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType no = new ButtonType("Non");
         ButtonType neverAsk = new ButtonType("Ne plus me demander");
 
-        alert.getButtonTypes().setAll(ok, no, neverAsk);
+        alert.getButtonTypes().setAll(ok, no);
+        if(neverAskButton)
+            alert.getButtonTypes().add(neverAsk);
+
+        ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
 
         Optional<ButtonType> result = alert.showAndWait();
 

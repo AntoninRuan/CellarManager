@@ -100,7 +100,7 @@ public class RootLayoutController {
     public void handleCheckUpdate() {
         boolean newUpdate = Updater.checkUpdate();
         if(newUpdate) {
-            DialogUtils.updateAvailable();
+            DialogUtils.updateAvailable(false);
         } else {
             DialogUtils.noUpdateAvailable();
         }

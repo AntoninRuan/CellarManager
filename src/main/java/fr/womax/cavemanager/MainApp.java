@@ -38,6 +38,7 @@ public class MainApp extends Application {
     //FIXME tenter de corriger le bug avec les spinners de selection. La valeur entrée au clavier n'est pas pris en compte dans le .getValue();
     //FIXME fix temporaire -> l'édition au clavier est désactivé
 
+    //TODO ajouter la possibilité de modifier le nombre de ligne/colonne d'une étagère
     //TODO ajouter mon nom/prénom au menu à propos
 
     //TODO tester la compilation JavaFX intégré à intellij voir si ça change qq chose au lancement sur une autre machine
@@ -138,6 +139,9 @@ public class MainApp extends Application {
 
         if(preferenceJson.get("check_update").getAsBoolean()) {
             boolean newUpdate = Updater.checkUpdate();
+            if(newUpdate) {
+                DialogUtils.updateAvailable(true);
+            }
         }
 
         //Récupération du fichier de sauvegarde
