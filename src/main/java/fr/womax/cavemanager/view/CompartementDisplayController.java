@@ -6,6 +6,7 @@ import fr.womax.cavemanager.model.Compartement;
 import fr.womax.cavemanager.model.Spot;
 import fr.womax.cavemanager.utils.BottleFilter;
 import fr.womax.cavemanager.utils.DialogUtils;
+import fr.womax.cavemanager.utils.Saver;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -123,6 +124,7 @@ public class CompartementDisplayController {
                                         spot.setBottle(bottle);
                                         imageView.setImage(spotFill);
                                         BottleFilter.research();
+                                        Saver.doChange();
                                     });
 
                                 }
@@ -147,6 +149,7 @@ public class CompartementDisplayController {
                                             spot.setBottle(bottle);
                                             BottleFilter.research();
                                             MainApp.getController().showBottleDetails(spot);
+                                            Saver.doChange();
                                         });
                                     });
 

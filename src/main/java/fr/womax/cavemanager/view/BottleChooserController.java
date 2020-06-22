@@ -5,6 +5,7 @@ import fr.womax.cavemanager.model.Bottle;
 import fr.womax.cavemanager.model.BottleInfo;
 import fr.womax.cavemanager.model.WineType;
 import fr.womax.cavemanager.utils.DialogUtils;
+import fr.womax.cavemanager.utils.Saver;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
@@ -95,7 +96,10 @@ public class BottleChooserController {
 
                     Optional<BottleInfo> result = DialogUtils.addNewBottle(bottle);
 
-                    result.ifPresent(bottleInfo -> bottleInfo.modifyBottle(bottle));
+                    result.ifPresent(bottleInfo -> {
+                        bottleInfo.modifyBottle(bottle);
+                        Saver.doChange();
+                    });
 
                 });
 
@@ -120,6 +124,7 @@ public class BottleChooserController {
         optionalBottleInfo.ifPresent(bottleInfo -> {
             Bottle bottle = bottleInfo.createBottle();
             tableView.getSelectionModel().select(bottle);
+            Saver.doChange();
         });
     }
 

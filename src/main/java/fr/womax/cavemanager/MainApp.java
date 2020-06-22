@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.womax.cavemanager.model.*;
 import fr.womax.cavemanager.utils.DialogUtils;
+import fr.womax.cavemanager.utils.Saver;
 import fr.womax.cavemanager.utils.Updater;
 import fr.womax.cavemanager.view.CompartementDisplayController;
 import fr.womax.cavemanager.view.RootLayoutController;
@@ -38,7 +39,7 @@ public class MainApp extends Application {
     //TODO ajouter la possibilité de modifier le nombre de ligne/colonne d'une étagère
     //TODO bind les boutons importer / exporter à des actions.
 
-    /*TODO Ajouter un menus de paramètre qui permettent
+    /*TODO Ajouter un menus de paramètre qui permette
             Changer la taille des cases pour pouvoir mettre plus de ligne/colonnes sur une seule étagère
             Intégrér une gestion multilingue
             Gérer le délai du double clic
@@ -311,7 +312,10 @@ public class MainApp extends Application {
 
         Optional<CompartementInfo> result = DialogUtils.createNewCompartement(cancelable);
 
-        result.ifPresent(CompartementInfo::createCompartement);
+        result.ifPresent(compartementInfo -> {
+            compartementInfo.createCompartement();
+            Saver.doChange();
+        });
 
     }
 

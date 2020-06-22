@@ -395,6 +395,7 @@ public class DialogUtils {
         alert.setTitle("A propos");
         alert.setHeaderText(null);
         alert.setContentText("Développé par Antonin Ruan \n" +
+                "Design par Théo Lasnier \n" +
                 "Version: " + Updater.VERSION);
 
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
