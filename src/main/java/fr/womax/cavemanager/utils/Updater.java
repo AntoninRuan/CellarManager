@@ -104,8 +104,8 @@ public class Updater {
                 fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Mise à jour télécharger");
-                alert.setHeaderText("La mise à jour a été télécharger");
+                alert.setTitle("Mise à jour téléchargée");
+                alert.setHeaderText("La mise à jour a été téléchargée");
                 alert.setContentText("Le programme va s'arrêter, relancer le pour appliquer la mise à jour");
 
                 ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
@@ -121,7 +121,7 @@ public class Updater {
 
         });
 
-        thread.run();
+        thread.start();
 
 
     }
