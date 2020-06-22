@@ -3,12 +3,13 @@ package fr.womax.cavemanager.view;
 import fr.womax.cavemanager.MainApp;
 import fr.womax.cavemanager.model.Compartement;
 import fr.womax.cavemanager.model.Spot;
-import fr.womax.cavemanager.utils.BottleFilter;
-import fr.womax.cavemanager.utils.DialogUtils;
-import fr.womax.cavemanager.utils.Updater;
+import fr.womax.cavemanager.utils.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+
+import java.util.Date;
+import java.util.Optional;
 
 /**
  * @author Antonin Ruan
@@ -123,6 +124,13 @@ public class RootLayoutController {
 
     public void handleAbout() {
         DialogUtils.about();
+    }
+
+    public void handleReportBug() {
+        Optional<BugInfo> result = DialogUtils.sendBugReport(null);
+        result.ifPresent(bugInfo -> {
+            DropboxUtils.sendBugIssue(bugInfo.getTitle(), bugInfo.getDescription(), new Date(), bugInfo.getStackTrace());
+        });
     }
 
 }

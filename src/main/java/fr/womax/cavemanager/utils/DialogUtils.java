@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -57,7 +58,52 @@ public class DialogUtils {
 
         alert.getDialogPane().setExpandableContent(expContent);
 
-        alert.showAndWait();
+        ButtonType reportBug = new ButtonType("Envoyer le rapport d'erreur");
+        alert.getButtonTypes().add(reportBug);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        result.ifPresent(buttonType -> {
+            if(buttonType == reportBug) {
+                Optional<BugInfo> result1 = DialogUtils.sendBugReport(textArea.getText());
+                result1.ifPresent(bugInfo -> {
+                    DropboxUtils.sendBugIssue(e.getMessage(), bugInfo.getDescription(), bugInfo.getDate(), bugInfo.getStackTrace());
+                });
+            }
+        });
+    }
+
+    public static Optional<BugInfo> sendBugReport(String stackTrace) {
+        Dialog<BugInfo> dialog = new Dialog <>();
+        dialog.setTitle("Reporter un bug");
+        dialog.setHeaderText("Veuillez décrire votre bug");
+
+        final ButtonType validationButtonType = new ButtonType("Envoyer", ButtonBar.ButtonData.OK_DONE);
+        final ButtonType cancelButtonType = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(validationButtonType, cancelButtonType);
+
+
+        TextArea description = new TextArea();
+        description.setPromptText("Description");
+        description.setWrapText(true);
+//        description.setPrefWidth(250);
+//        description.setPrefHeight(150);
+
+        dialog.getDialogPane().setContent(description);
+        ((Stage) dialog.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
+        dialog.setResultConverter(param -> {
+            if(param == validationButtonType) {
+                return new BugInfo(null, description.getText(), stackTrace, new Date());
+            }
+            return null;
+        });
+
+        return dialog.showAndWait();
+    }
+
+    public static Optional<SuggestionInfo> sendSuggestion() {
+        Dialog<SuggestionInfo> dialog = new Dialog<>();
+
+        return dialog.showAndWait();
     }
 
     public static Optional<CompartementInfo> createNewCompartement(boolean cancelable) {
@@ -318,6 +364,17 @@ public class DialogUtils {
         alert.setHeaderText(null);
         alert.setContentText("Développé par Antonin Ruan \n" +
                 "Version: " + Updater.VERSION);
+
+        ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
+
+        alert.showAndWait();
+    }
+
+    public static void infoMessage(String title, String header, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
 
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
 

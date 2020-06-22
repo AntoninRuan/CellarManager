@@ -25,8 +25,8 @@
         <menus>
           <Menu mnemonicParsing="false" text="Fichier">
             <items>
-                  <MenuItem mnemonicParsing="false" text="Importer" />
-                  <MenuItem mnemonicParsing="false" text="Exporter" />
+                  <MenuItem disable="true" mnemonicParsing="false" text="Importer" />
+                  <MenuItem disable="true" mnemonicParsing="false" text="Exporter" />
                   <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" onAction="#handleClose" text="Fermer" />
             </items>
@@ -42,8 +42,8 @@
             <items>
               <MenuItem mnemonicParsing="false" onAction="#handleCheckUpdate" text="Recherche de mise à jour" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Envoyer un rapport de bug" />
-                  <MenuItem mnemonicParsing="false" text="Envoyer une suggestion" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleReportBug" text="Envoyer un rapport de bug" />
+                  <MenuItem disable="true" mnemonicParsing="false" text="Envoyer une suggestion" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="A propos" />
             </items>
