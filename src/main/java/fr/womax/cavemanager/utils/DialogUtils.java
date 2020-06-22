@@ -78,7 +78,19 @@ public class DialogUtils {
         name.setPromptText("Nom");
 
         final Spinner <Integer> raw = new Spinner <>(1, 10, 1, 1);
+        raw.setEditable(true);
+        raw.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(!newValue) {
+                raw.increment(0);
+            }
+        });
         final Spinner<Integer> column = new Spinner <>(1, 10, 1, 1);
+        column.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(!newValue) {
+                column.increment(0);
+            }
+        });
+        column.setEditable(true);
 
         ToggleGroup group = new ToggleGroup();
         final RadioButton before = new RadioButton("Remplacer Actuel");
@@ -179,7 +191,17 @@ public class DialogUtils {
         TextField comment = new TextField();
         comment.setPromptText("Commentaire");
         Spinner<Integer> yearSpinner = new Spinner <>(1950, 3000, year, 1);
+        yearSpinner.setEditable(true);
+        yearSpinner.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(!newValue)
+                yearSpinner.increment(0);
+        });
         Spinner<Integer> consumeYearSpinner = new Spinner <>(1950, 3000, consumeYear, 1);
+        consumeYearSpinner.setEditable(true);
+        consumeYearSpinner.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(!newValue)
+                consumeYearSpinner.increment(0);
+        });
         ChoiceBox<WineType> wineType = new ChoiceBox <>();
         wineType.setItems(FXCollections.observableArrayList(WineType.values()));
 

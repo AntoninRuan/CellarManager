@@ -33,9 +33,10 @@ import java.util.Optional;
  */
 public class MainApp extends Application {
 
-    //FIXME tenter de corriger le bug avec les spinners de selection. La valeur entrée au clavier n'est pas pris en compte dans le .getValue();
-    //FIXME fix temporaire -> l'édition au clavier est désactivé
+    //FIXME la suppresion d'étagère ne marche pas
 
+    //TODO ajouter un système de sauvegarde plus fréquent
+    //TODO ajouter un système de report de bug / suggestion
     //TODO changer la couleur affiché de la bouteille selon son type
     //TODO ajouter la possibilité de modifier le nombre de ligne/colonne d'une étagère
     //TODO ajouter mon nom/prénom au menu à propos
@@ -45,6 +46,7 @@ public class MainApp extends Application {
     /*TODO Ajouter un menus de paramètre qui permettent
             Changer la taille des cases pour pouvoir mettre plus de ligne/colonnes sur une seule étagère
             Intégrér une gestion multilingue
+            Gérer le délai du double clic
      */
 
 
