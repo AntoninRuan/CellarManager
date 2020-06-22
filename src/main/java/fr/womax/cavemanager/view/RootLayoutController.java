@@ -133,4 +133,11 @@ public class RootLayoutController {
         });
     }
 
+    public void handleSuggestIdea() {
+        Optional<SuggestionInfo> result = DialogUtils.sendSuggestion();
+        result.ifPresent(suggestionInfo -> {
+            DropboxUtils.sendSuggestion(suggestionInfo.getTitle(), suggestionInfo.getDescription(), suggestionInfo.getDate());
+        });
+    }
+
 }

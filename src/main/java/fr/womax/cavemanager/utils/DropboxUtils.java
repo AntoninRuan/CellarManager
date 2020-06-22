@@ -54,9 +54,10 @@ public class DropboxUtils {
         DbxRequestConfig config = DbxRequestConfig.newBuilder("dropbox/cave_manager").build();
         DbxClientV2 client = new DbxClientV2(config, ACCESS_TOKEN);
 
-        try (InputStream in = new ByteArrayInputStream(StandardCharsets.UTF_8.encode(object.toString()).array())){
+        try (InputStream in = IOUtils.toInputStream(object.toString(), StandardCharsets.UTF_8)){
             UUID uuid = UUID.randomUUID();
             FileMetadata metadata = client.files().uploadBuilder("/suggestion/" + uuid.toString() + ".json").uploadAndFinish(in);
+            DialogUtils.infoMessage("Suggestion envoyé", null, "Votre idée à bien été envoyée");
         } catch (IOException | DbxException e) {
             DialogUtils.sendErrorWindow(e);
         }

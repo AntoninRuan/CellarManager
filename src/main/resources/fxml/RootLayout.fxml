@@ -43,7 +43,7 @@
               <MenuItem mnemonicParsing="false" onAction="#handleCheckUpdate" text="Recherche de mise à jour" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#handleReportBug" text="Envoyer un rapport de bug" />
-                  <MenuItem disable="true" mnemonicParsing="false" text="Envoyer une suggestion" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleSuggestIdea" text="Envoyer une suggestion" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="A propos" />
             </items>

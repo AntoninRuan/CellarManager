@@ -75,20 +75,21 @@ public class DialogUtils {
     public static Optional<BugInfo> sendBugReport(String stackTrace) {
         Dialog<BugInfo> dialog = new Dialog <>();
         dialog.setTitle("Reporter un bug");
-        dialog.setHeaderText("Veuillez décrire votre bug");
+        dialog.setHeaderText("Veuillez décrire le bug que vous rencontrez");
 
         final ButtonType validationButtonType = new ButtonType("Envoyer", ButtonBar.ButtonData.OK_DONE);
         final ButtonType cancelButtonType = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(validationButtonType, cancelButtonType);
 
+        GridPane gridPane = new GridPane();
 
         TextArea description = new TextArea();
         description.setPromptText("Description");
         description.setWrapText(true);
-//        description.setPrefWidth(250);
-//        description.setPrefHeight(150);
 
-        dialog.getDialogPane().setContent(description);
+        gridPane.add(description, 0, 0);
+
+        dialog.getDialogPane().setContent(gridPane);
         ((Stage) dialog.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
         dialog.setResultConverter(param -> {
             if(param == validationButtonType) {
@@ -102,6 +103,37 @@ public class DialogUtils {
 
     public static Optional<SuggestionInfo> sendSuggestion() {
         Dialog<SuggestionInfo> dialog = new Dialog<>();
+
+        dialog.setTitle("Suggérer une idée");
+        dialog.setHeaderText("Veuillez décrire votre idée");
+
+        final ButtonType validationButtonType = new ButtonType("Envoyer", ButtonBar.ButtonData.OK_DONE);
+        final ButtonType cancelButtonType = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(validationButtonType, cancelButtonType);
+
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+
+        TextField title = new TextField();
+        title.setPromptText("Nom de l'idée");
+
+        TextArea description = new TextArea();
+        description.setPromptText("Description de l'idée");
+
+        gridPane.add(title, 0, 0);
+        gridPane.add(description, 0, 1);
+
+        dialog.getDialogPane().setContent(gridPane);
+
+        ((Stage) dialog.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
+
+        dialog.setResultConverter(param -> {
+            if(param == validationButtonType) {
+                return new SuggestionInfo(title.getText(), description.getText(), new Date());
+            }
+            return null;
+        });
 
         return dialog.showAndWait();
     }
