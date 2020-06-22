@@ -21,9 +21,6 @@ public class RootLayoutController {
     private BorderPane layout;
 
     @FXML
-    private MenuItem versionMenuItem;
-
-    @FXML
     private TitledPane descriptionPane;
 
     @FXML
@@ -35,13 +32,14 @@ public class RootLayoutController {
     @FXML
     private ChoiceBox<String> criteriaChoiceBox;
 
+    private Spot displayedSpot;
+
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
     }
 
     @FXML
     private void initialize() {
-        versionMenuItem.setText("Version: " + Updater.VERSION);
         String name = "Nom";
         String region = "Région";
         String type = "Type";
@@ -66,18 +64,24 @@ public class RootLayoutController {
 
     public void showBottleDetails(Spot spot) {
 
-        description.setText("Nom: " + spot.getBottle().getName() + "\n"+
-                "Domaine: " + spot.getBottle().getDomain() + "\n"+
-                "Edition: " + spot.getBottle().getEdition() + "\n"+
-                "Année: " + spot.getBottle().getYear() + "\n"+
-                "Année de consommation: " + spot.getBottle().getConsumeYear() + "\n" +
-                "Type: " + spot.getBottle().getType() + "\n"+
-                "Région: " + spot.getBottle().getRegion() + "\n"+
-                "Commentaire: " + spot.getBottle().getComment() + "\n");
+        if(displayedSpot != null && displayedSpot.equals(spot) && descriptionPane.isExpanded()) {
+            descriptionPane.setExpanded(false);
+        } else {
+            description.setText("Nom: " + spot.getBottle().getName() + "\n"+
+                    "Domaine: " + spot.getBottle().getDomain() + "\n"+
+                    "Edition: " + spot.getBottle().getEdition() + "\n"+
+                    "Année: " + spot.getBottle().getYear() + "\n"+
+                    "Année de consommation: " + spot.getBottle().getConsumeYear() + "\n" +
+                    "Type: " + spot.getBottle().getType() + "\n"+
+                    "Région: " + spot.getBottle().getRegion() + "\n"+
+                    "Commentaire: " + spot.getBottle().getComment() + "\n");
 
-        if(!descriptionPane.isExpanded()) {
-            descriptionPane.setExpanded(true);
+            if(!descriptionPane.isExpanded()) {
+                descriptionPane.setExpanded(true);
+            }
         }
+
+        displayedSpot = spot;
     }
 
     public void handleNewCompartement() {
@@ -117,5 +121,8 @@ public class RootLayoutController {
         MainApp.getPrimaryStage().close();
     }
 
+    public void handleAbout() {
+        DialogUtils.about();
+    }
 
 }

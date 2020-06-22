@@ -38,10 +38,14 @@
                   <MenuItem mnemonicParsing="false" onAction="#handleDeleteCompartement" text="Supprimer l'étagère" />
               </items>
             </Menu>
-          <Menu mnemonicParsing="false" text="A propos">
+          <Menu mnemonicParsing="false" text="Aide">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#handleCheckUpdate" text="Recherche de mise à jour" />
-                  <MenuItem fx:id="versionMenuItem" mnemonicParsing="false" text="Version: " />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Envoyer un rapport de bug" />
+                  <MenuItem mnemonicParsing="false" text="Envoyer une suggestion" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="A propos" />
             </items>
           </Menu>
         </menus>

@@ -37,9 +37,7 @@ public class MainApp extends Application {
     //TODO ajouter un système de report de bug / suggestion
     //TODO changer la couleur affiché de la bouteille selon son type
     //TODO ajouter la possibilité de modifier le nombre de ligne/colonne d'une étagère
-    //TODO ajouter mon nom/prénom au menu à propos
-
-    //TODO tester la compilation JavaFX intégré à intellij voir si ça change qq chose au lancement sur une autre machine
+    //TODO bind les boutons importer / exporter à des actions.
 
     /*TODO Ajouter un menus de paramètre qui permettent
             Changer la taille des cases pour pouvoir mettre plus de ligne/colonnes sur une seule étagère

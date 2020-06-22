@@ -312,4 +312,16 @@ public class DialogUtils {
         alert.showAndWait();
     }
 
+    public static void about() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("A propos");
+        alert.setHeaderText(null);
+        alert.setContentText("Développé par Antonin Ruan \n" +
+                "Version: " + Updater.VERSION);
+
+        ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
+
+        alert.showAndWait();
+    }
+
 }
