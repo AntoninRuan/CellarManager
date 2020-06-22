@@ -30,6 +30,16 @@ public class CompartementInfo {
             }
         }
 
+        if(before) {
+            Compartement compartement = MainApp.getCompartements().get(MainApp.getCompartementDisplayController().getCurrentCompartementDisplayed());
+            for(Spot[] spotColumn : compartement.getSpots()) {
+                for(Spot spot : spotColumn) {
+                    MainApp.getSpots().remove(spot);
+                }
+            }
+            MainApp.getCompartements().remove(MainApp.getCompartementDisplayController().getCurrentCompartementDisplayed());
+        }
+
         MainApp.getCompartements().put(index, new Compartement(name, raw, column));
         if(MainApp.getCompartementDisplayController() != null)
             MainApp.getCompartementDisplayController().setCurrentCompartementDisplayed(index);

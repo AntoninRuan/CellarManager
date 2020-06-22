@@ -23,7 +23,7 @@ public class Compartement {
     }
 
     Compartement(String name, int row, int column) {
-        this.name = name;
+        this.name = name.trim().isEmpty() ? "Etagère" : name;
         this.id = MainApp.nextCompartementId();
         this.row = row;
         this.column = column;

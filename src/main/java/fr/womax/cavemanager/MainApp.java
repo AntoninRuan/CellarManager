@@ -33,8 +33,7 @@ import java.util.Optional;
  * @author Antonin RUAN
  */
 public class MainApp extends Application {
-
-    //TODO ajouter un système de sauvegarde plus fréquent
+    
     //TODO changer la couleur affiché de la bouteille selon son type
     //TODO ajouter la possibilité de modifier le nombre de ligne/colonne d'une étagère
     //TODO bind les boutons importer / exporter à des actions.
