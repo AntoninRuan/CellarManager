@@ -116,7 +116,7 @@ public class DialogUtils {
 
         dialog.setResultConverter(dialogButton -> {
             if(dialogButton == validationButtonType) {
-                return new CompartementInfo(name.getText(), raw.getValue(), column.getValue(), before.isSelected());
+                return new CompartementInfo(name.getText() == null ? "Etagère" : name.getText(), raw.getValue(), column.getValue(), before.isSelected());
             }
             return null;
         });

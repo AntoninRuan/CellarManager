@@ -33,8 +33,6 @@ import java.util.Optional;
  */
 public class MainApp extends Application {
 
-    //FIXME la suppresion d'étagère ne marche pas
-
     //TODO ajouter un système de sauvegarde plus fréquent
     //TODO ajouter un système de report de bug / suggestion
     //TODO changer la couleur affiché de la bouteille selon son type
