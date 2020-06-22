@@ -34,8 +34,6 @@ import java.util.Optional;
 public class MainApp extends Application {
 
     //TODO ajouter un système de sauvegarde plus fréquent
-    //TODO ajouter un système de report de bug / suggestion
-    //TODO ajouter un bouton à la fenêtre d'erreur un bouton pour report le bug
     //TODO changer la couleur affiché de la bouteille selon son type
     //TODO ajouter la possibilité de modifier le nombre de ligne/colonne d'une étagère
     //TODO bind les boutons importer / exporter à des actions.
@@ -45,7 +43,6 @@ public class MainApp extends Application {
             Intégrér une gestion multilingue
             Gérer le délai du double clic
      */
-
 
     private static Stage primaryStage;
     private static BorderPane rootLayout;

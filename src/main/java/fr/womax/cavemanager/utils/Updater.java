@@ -42,7 +42,7 @@ public class Updater {
     public static boolean checkUpdate() {
 
         try {
-            URL url = new URL("https://dl.dropboxusercontent.com/s/5gzei6yrm83hopg/remote.info?dl=0");
+            URL url = new URL("https://dl.dropboxusercontent.com/s/evfes8955i9rjfs/remote.info?dl=0");
 
             InputStreamReader inputStreamReader = new InputStreamReader(url.openStream());
 
@@ -93,7 +93,7 @@ public class Updater {
 
                 File download = new File(filePath.toString());
 
-                URL url = new URL("https://dl.dropboxusercontent.com/s/nq8bt1dndc1pc0z/CaveManager.jar?dl=1");
+                URL url = new URL("https://dl.dropboxusercontent.com/s/dkq5ztmazo6ok4w/CaveManager.jar?dl=1");
 
                 long fileSize = getFileSize(url);
 
