@@ -39,4 +39,9 @@ public class Saver {
         }
     }
 
+    public static void cancelTask() {
+        timer.purge();
+        timer.cancel();
+    }
+
 }

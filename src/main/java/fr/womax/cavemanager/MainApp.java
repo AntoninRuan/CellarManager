@@ -210,6 +210,7 @@ public class MainApp extends Application {
 
     public void stop() {
         saveFiles();
+        Saver.cancelTask();
     }
 
     private void initRootLayout() {

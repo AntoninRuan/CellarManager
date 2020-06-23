@@ -4,9 +4,12 @@ import fr.womax.cavemanager.MainApp;
 import fr.womax.cavemanager.model.Bottle;
 import fr.womax.cavemanager.model.Compartement;
 import fr.womax.cavemanager.model.Spot;
+import fr.womax.cavemanager.model.WineType;
 import fr.womax.cavemanager.utils.BottleFilter;
 import fr.womax.cavemanager.utils.DialogUtils;
 import fr.womax.cavemanager.utils.Saver;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -45,6 +48,18 @@ public class CompartementDisplayController {
     @FXML
     private GridPane compartementDisplay;
 
+    private Image spotFill = new Image(this.getClass().getClassLoader().getResource("img/spot_fill.png").toString());
+    private Image spotEmpty = new Image(this.getClass().getClassLoader().getResource("img/spot_empty.png").toString());
+    private Image spotAdd = new Image(this.getClass().getClassLoader().getResource("img/spot_add.png").toString());
+
+    private Image spotRed = new Image(this.getClass().getClassLoader().getResource("img/spot_red.png").toString());
+    private Image spotRose = new Image(this.getClass().getClassLoader().getResource("img/spot_rose.png").toString());
+    private Image spotChampagne = new Image(this.getClass().getClassLoader().getResource("img/spot_champagne.png").toString());
+    private Image spotWhite = new Image(this.getClass().getClassLoader().getResource("img/spot_white.png").toString());
+
+    private Image hover = new Image(this.getClass().getClassLoader().getResource("img/hover.png").toString());
+    private Image highlight = new Image(this.getClass().getClassLoader().getResource("img/highlight.png").toString());
+
     @FXML
     private void initialize() {
         pagination.setPageCount(MainApp.getCompartements().size());
@@ -68,29 +83,62 @@ public class CompartementDisplayController {
                     compartementDisplay.getColumnConstraints().add(new ColumnConstraints(64));
                 }
 
-                Image spotFill = new Image(this.getClass().getClassLoader().getResource("img/spot_fill.png").toString());
-                Image spotEmpty = new Image(this.getClass().getClassLoader().getResource("img/spot_empty.png").toString());
-                Image spotAdd = new Image(this.getClass().getClassLoader().getResource("img/spot_add.png").toString());
-                Image spotFillHover = new Image(this.getClass().getClassLoader().getResource("img/spot_fill_hover.png").toString());
-                Image spotHighlighted = new Image(this.getClass().getClassLoader().getResource("img/spot_highlighted.png").toString());
-
                 for(int i = 0; i < toDisplay.getRow(); i ++) {
                     compartementDisplay.getRowConstraints().add(new RowConstraints(64));
                     for(int j = 0; j < toDisplay.getColumn(); j++) {
                         Spot spot = spots[i][j];
-                        ImageView imageView = new ImageView();
-                        imageView.setCursor(Cursor.HAND);
+                        StackPane stackPane = new StackPane();
+                        stackPane.setPrefSize(64, 64);
+                        stackPane.setCursor(Cursor.HAND);
 
-                        if(spot.isEmpty())
+                        ImageView hoverView = new ImageView(hover);
+                        hoverView.setFitWidth(64);
+                        hoverView.setFitHeight(64);
+                        hoverView.setVisible(false);
+                        hoverView.setTranslateY(1);
+
+                        ImageView highlightView = new ImageView(highlight);
+                        highlightView.setFitHeight(64);
+                        highlightView.setFitWidth(64);
+                        highlightView.setVisible(false);
+                        highlightView.setTranslateY(1);
+
+                        ImageView imageView = new ImageView();
+
+                        stackPane.getChildren().addAll(imageView, highlightView, hoverView);
+
+                        WineTypeChangeListener changeListener = new WineTypeChangeListener(imageView);
+
+                        if(spot.isEmpty()) {
                             imageView.setImage(spotEmpty);
+                        }
                         else{
                             if(spot.isHighlighted()) {
-                                imageView.setImage(spotHighlighted);
-                            } else
-                                imageView.setImage(spotFill);
+                                highlightView.setVisible(true);
+                            } else {
+//                                imageView.setImage(spotFill);
+                                spot.getBottle().typeProperty().addListener(changeListener);
+                                switch (spot.getBottle().getType()) {
+                                    case ROSE:
+                                        imageView.setImage(spotRose);
+                                        break;
+                                    case BLANC:
+                                        imageView.setImage(spotWhite);
+                                        break;
+                                    case ROUGE:
+                                        imageView.setImage(spotRed);
+                                        break;
+                                    case CHAMPAGNE:
+                                        imageView.setImage(spotChampagne);
+                                        break;
+                                    case AUTRES:
+                                        imageView.setImage(spotFill);
+                                        break;
+                                }
+                            }
                         }
 
-                        imageView.hoverProperty().addListener((observable, oldValue, newValue) -> {
+                        stackPane.hoverProperty().addListener((observable, oldValue, newValue) -> {
                             if(spot.isEmpty()) {
                                 if(newValue) {
                                     imageView.setImage(spotAdd);
@@ -99,18 +147,11 @@ public class CompartementDisplayController {
                                     imageView.setImage(spotEmpty);
                                 }
                             } else {
-                                if(newValue) {
-                                    imageView.setImage(spotFillHover);
-                                } else {
-                                    if(spot.isHighlighted())
-                                        imageView.setImage(spotHighlighted);
-                                    else
-                                        imageView.setImage(spotFill);
-                                }
+                                hoverView.setVisible(newValue);
                             }
                         });
 
-                        imageView.setOnMouseClicked(event -> {
+                        stackPane.setOnMouseClicked(event -> {
 
                             contextMenu.hide();
                             contextMenu.getItems().clear();
@@ -123,7 +164,24 @@ public class CompartementDisplayController {
 
                                     result.ifPresent(bottle -> {
                                         spot.setBottle(bottle);
-                                        imageView.setImage(spotFill);
+                                        spot.getBottle().typeProperty().addListener(changeListener);
+                                        switch (bottle.getType()) {
+                                            case ROSE:
+                                                imageView.setImage(spotRose);
+                                                break;
+                                            case BLANC:
+                                                imageView.setImage(spotWhite);
+                                                break;
+                                            case ROUGE:
+                                                imageView.setImage(spotRed);
+                                                break;
+                                            case CHAMPAGNE:
+                                                imageView.setImage(spotChampagne);
+                                                break;
+                                            case AUTRES:
+                                                imageView.setImage(spotFill);
+                                                break;
+                                        }
                                         BottleFilter.research();
                                         Saver.doChange();
                                     });
@@ -147,7 +205,26 @@ public class CompartementDisplayController {
                                     modify.setOnAction(event1 -> {
                                         Optional<Bottle> result = DialogUtils.chooseBottle(true);
                                         result.ifPresent(bottle -> {
+                                            spot.getBottle().typeProperty().removeListener(changeListener);
                                             spot.setBottle(bottle);
+                                            spot.getBottle().typeProperty().addListener(changeListener);
+                                            switch (spot.getBottle().getType()) {
+                                                case ROSE:
+                                                    imageView.setImage(spotRose);
+                                                    break;
+                                                case BLANC:
+                                                    imageView.setImage(spotWhite);
+                                                    break;
+                                                case ROUGE:
+                                                    imageView.setImage(spotRed);
+                                                    break;
+                                                case CHAMPAGNE:
+                                                    imageView.setImage(spotChampagne);
+                                                    break;
+                                                case AUTRES:
+                                                    imageView.setImage(spotFill);
+                                                    break;
+                                            }
                                             BottleFilter.research();
                                             MainApp.getController().showBottleDetails(spot);
                                             Saver.doChange();
@@ -157,8 +234,11 @@ public class CompartementDisplayController {
                                     MenuItem remove = new MenuItem("Enlever");
                                     remove.setOnAction(event1 -> {
                                         MainApp.getSpots().remove(spot);
+                                        spot.getBottle().typeProperty().removeListener(changeListener);
                                         spot.setBottle(null);
                                         MainApp.getSpots().add(spot);
+                                        hoverView.setVisible(false);
+                                        highlightView.setVisible(false);
                                         imageView.setImage(spotEmpty);
                                     });
 
@@ -169,6 +249,8 @@ public class CompartementDisplayController {
                                     MainApp.getSpots().remove(spot);
                                     spot.setBottle(null);
                                     MainApp.getSpots().add(spot);
+                                    hoverView.setVisible(false);
+                                    highlightView.setVisible(false);
                                     imageView.setImage(spotEmpty);
                                 }
 
@@ -180,14 +262,10 @@ public class CompartementDisplayController {
                         imageView.setFitHeight(64);
 
                         spot.highlightedProperty().addListener((observable, oldValue, newValue) -> {
-                            if(newValue) {
-                                imageView.setImage(spotHighlighted);
-                            } else {
-                                imageView.setImage(spotFill);
-                            }
+                            highlightView.setVisible(newValue);
                         });
 
-                        compartementDisplay.add(imageView, j, i);
+                        compartementDisplay.add(stackPane, j, i);
 
                     }
                 }
@@ -280,6 +358,36 @@ public class CompartementDisplayController {
         if(index == pagination.getCurrentPageIndex())
             pagination.getPageFactory().call(index);
         pagination.setCurrentPageIndex(index);
+    }
+
+    private class WineTypeChangeListener implements ChangeListener <WineType> {
+
+        private ImageView imageView;
+
+        public WineTypeChangeListener(ImageView imageView) {
+            this.imageView = imageView;
+        }
+
+        @Override
+        public void changed(ObservableValue <? extends WineType> observable, WineType oldValue, WineType newValue) {
+            switch (newValue) {
+                case ROSE:
+                    imageView.setImage(spotRose);
+                    break;
+                case BLANC:
+                    imageView.setImage(spotWhite);
+                    break;
+                case ROUGE:
+                    imageView.setImage(spotRed);
+                    break;
+                case CHAMPAGNE:
+                    imageView.setImage(spotChampagne);
+                    break;
+                case AUTRES:
+                    imageView.setImage(spotFill);
+                    break;
+            }
+        }
     }
 
 }
