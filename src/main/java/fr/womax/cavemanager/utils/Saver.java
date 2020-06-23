@@ -35,7 +35,7 @@ public class Saver {
                     MainApp.saveFiles();
                     changeCount --;
                 }
-            },30 * 1000);
+            },30L * 1000L);
         }
     }
 

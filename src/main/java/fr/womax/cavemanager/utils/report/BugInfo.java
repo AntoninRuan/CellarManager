@@ -1,18 +1,19 @@
-package fr.womax.cavemanager.utils;
+package fr.womax.cavemanager.utils.report;
 
 import java.util.Date;
 
 /**
  * @author Antonin Ruan
  */
-public class SuggestionInfo {
+public class BugInfo {
 
-    private String title, description;
+    private String title, description, stackTrace;
     private Date date;
 
-    public SuggestionInfo(String title, String description, Date date) {
+    public BugInfo(String title, String description, String stackTrace, Date date) {
         this.title = title;
         this.description = description;
+        this.stackTrace = stackTrace;
         this.date = date;
     }
 
@@ -22,6 +23,10 @@ public class SuggestionInfo {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getStackTrace() {
+        return stackTrace;
     }
 
     public Date getDate() {

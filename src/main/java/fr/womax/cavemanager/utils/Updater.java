@@ -117,7 +117,7 @@ public class Updater {
 
 
             } catch (URISyntaxException | IOException e) {
-                e.printStackTrace();
+                DialogUtils.sendErrorWindow(e);
             }
 
         });

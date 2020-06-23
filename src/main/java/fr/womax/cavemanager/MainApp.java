@@ -37,6 +37,7 @@ public class MainApp extends Application {
     //TODO drag & drop les bouteilles pour les déplacer
     //TODO ajouter la possibilité de modifier le nombre de ligne/colonne d'une étagère
     //TODO bind les boutons importer / exporter à des actions.
+    //TODO pouvoir changer l'ordre des étagères.
 
     /*TODO Ajouter un menus de paramètre qui permette
             Changer la taille des cases pour pouvoir mettre plus de ligne/colonnes sur une seule étagère
@@ -120,10 +121,10 @@ public class MainApp extends Application {
 
                 if(!openedFile.exists()) {
                     openedFile.createNewFile();
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(openedFile));
-                    writer.write("{}");
-                    writer.flush();
-                    writer.close();
+                    try(BufferedWriter writer = new BufferedWriter(new FileWriter(openedFile))) {
+                        writer.write("{}");
+                        writer.flush();
+                    }
                     createNewCompartements(false);
                 }
                 preferenceJson.addProperty("save_file", openedFile.getAbsolutePath());
@@ -198,7 +199,7 @@ public class MainApp extends Application {
             }
             writer.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            DialogUtils.sendErrorWindow(e);
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(openedFile))){
             JsonObject jsonObject = new JsonObject();
@@ -212,7 +213,7 @@ public class MainApp extends Application {
             }
             writer.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            DialogUtils.sendErrorWindow(e);
         }
     }
 
@@ -255,7 +256,7 @@ public class MainApp extends Application {
             compartementDisplayController = loader.getController();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            DialogUtils.sendErrorWindow(e);
         }
     }
 
@@ -312,7 +313,7 @@ public class MainApp extends Application {
             }
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            DialogUtils.sendErrorWindow(e);
         }
     }
 

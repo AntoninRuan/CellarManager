@@ -13,6 +13,7 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -33,7 +34,10 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Edition">
               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#handleOpenBottleList" text="Bouteille" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleOpenBottleList" text="Bouteille">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="B" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#handleDeleteCompartement" text="Supprimer l'étagère" />
               </items>

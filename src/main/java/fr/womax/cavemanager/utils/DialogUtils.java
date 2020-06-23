@@ -5,6 +5,9 @@ import fr.womax.cavemanager.model.Bottle;
 import fr.womax.cavemanager.model.BottleInfo;
 import fr.womax.cavemanager.model.CompartementInfo;
 import fr.womax.cavemanager.model.WineType;
+import fr.womax.cavemanager.utils.report.BugInfo;
+import fr.womax.cavemanager.utils.report.DropboxUtils;
+import fr.womax.cavemanager.utils.report.SuggestionInfo;
 import fr.womax.cavemanager.view.BottleChooserController;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
@@ -230,7 +233,7 @@ public class DialogUtils {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            DialogUtils.sendErrorWindow(e);
         }
         return result;
     }

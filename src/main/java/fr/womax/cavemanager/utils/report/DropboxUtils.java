@@ -1,10 +1,11 @@
-package fr.womax.cavemanager.utils;
+package fr.womax.cavemanager.utils.report;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.google.gson.JsonObject;
+import fr.womax.cavemanager.utils.DialogUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.ByteArrayInputStream;
