@@ -76,6 +76,7 @@ public class Updater {
     public static void update() {
 
         MainApp.saveFiles();
+        Saver.cancelTask();
 
         Thread thread = new Thread(() -> {
 

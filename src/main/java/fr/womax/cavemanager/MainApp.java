@@ -158,6 +158,8 @@ public class MainApp extends Application {
             DialogUtils.sendErrorWindow(e);
         }
 
+        MainApp.primaryStage.setTitle("Ma Cave - " + openedFile.getName());
+
         if(preferenceJson.get("check_update") == null) {
             preferenceJson.addProperty("check_update", true);
         }
