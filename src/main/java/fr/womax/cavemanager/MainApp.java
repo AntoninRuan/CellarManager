@@ -33,8 +33,8 @@ import java.util.Optional;
  * @author Antonin RUAN
  */
 public class MainApp extends Application {
-    
-    //TODO changer la couleur affiché de la bouteille selon son type
+
+    //TODO drag & drop les bouteilles pour les déplacer
     //TODO ajouter la possibilité de modifier le nombre de ligne/colonne d'une étagère
     //TODO bind les boutons importer / exporter à des actions.
 

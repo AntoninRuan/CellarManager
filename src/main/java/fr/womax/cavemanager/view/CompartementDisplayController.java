@@ -101,7 +101,6 @@ public class CompartementDisplayController {
                         highlightView.setFitHeight(64);
                         highlightView.setFitWidth(64);
                         highlightView.setVisible(false);
-                        highlightView.setTranslateY(1);
 
                         ImageView imageView = new ImageView();
 
