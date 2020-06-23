@@ -282,6 +282,7 @@ public class DialogUtils {
         });
         ChoiceBox<WineType> wineType = new ChoiceBox <>();
         wineType.setItems(FXCollections.observableArrayList(WineType.values()));
+        wineType.setValue(WineType.ROUGE);
 
         if (bottle != null) {
 
