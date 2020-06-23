@@ -116,24 +116,7 @@ public class CompartementDisplayController {
                                 highlightView.setVisible(true);
                             } else {
 //                                imageView.setImage(spotFill);
-                                spot.getBottle().typeProperty().addListener(changeListener);
-                                switch (spot.getBottle().getType()) {
-                                    case ROSE:
-                                        imageView.setImage(spotRose);
-                                        break;
-                                    case BLANC:
-                                        imageView.setImage(spotWhite);
-                                        break;
-                                    case ROUGE:
-                                        imageView.setImage(spotRed);
-                                        break;
-                                    case CHAMPAGNE:
-                                        imageView.setImage(spotChampagne);
-                                        break;
-                                    case AUTRES:
-                                        imageView.setImage(spotFill);
-                                        break;
-                                }
+                                renderBottle(spot, imageView, changeListener);
                             }
                         }
 
@@ -206,24 +189,7 @@ public class CompartementDisplayController {
                                         result.ifPresent(bottle -> {
                                             spot.getBottle().typeProperty().removeListener(changeListener);
                                             spot.setBottle(bottle);
-                                            spot.getBottle().typeProperty().addListener(changeListener);
-                                            switch (spot.getBottle().getType()) {
-                                                case ROSE:
-                                                    imageView.setImage(spotRose);
-                                                    break;
-                                                case BLANC:
-                                                    imageView.setImage(spotWhite);
-                                                    break;
-                                                case ROUGE:
-                                                    imageView.setImage(spotRed);
-                                                    break;
-                                                case CHAMPAGNE:
-                                                    imageView.setImage(spotChampagne);
-                                                    break;
-                                                case AUTRES:
-                                                    imageView.setImage(spotFill);
-                                                    break;
-                                            }
+                                            renderBottle(spot, imageView, changeListener);
                                             BottleFilter.research();
                                             MainApp.getController().showBottleDetails(spot);
                                             Saver.doChange();
@@ -331,6 +297,27 @@ public class CompartementDisplayController {
                 lastClick[0] = LocalDateTime.now();
             }
         });
+    }
+
+    private void renderBottle(Spot spot, ImageView imageView, WineTypeChangeListener changeListener) {
+        spot.getBottle().typeProperty().addListener(changeListener);
+        switch (spot.getBottle().getType()) {
+            case ROSE:
+                imageView.setImage(spotRose);
+                break;
+            case BLANC:
+                imageView.setImage(spotWhite);
+                break;
+            case ROUGE:
+                imageView.setImage(spotRed);
+                break;
+            case CHAMPAGNE:
+                imageView.setImage(spotChampagne);
+                break;
+            case AUTRES:
+                imageView.setImage(spotFill);
+                break;
+        }
     }
 
     public void handleLeft() {
