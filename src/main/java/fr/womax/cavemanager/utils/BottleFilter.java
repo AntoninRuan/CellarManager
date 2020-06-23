@@ -80,6 +80,10 @@ public class BottleFilter {
                         if (String.valueOf(bottle.getYear()).toLowerCase().contains(s.toLowerCase()))
                             highlight = true;
                         break;
+                    case "Année de consommation":
+                        if(String.valueOf(bottle.getConsumeYear()).toLowerCase().contains(s.toLowerCase()))
+                            highlight = true;
+                        break;
 
                     default:
                         break;

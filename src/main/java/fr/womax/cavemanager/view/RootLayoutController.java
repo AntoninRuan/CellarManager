@@ -47,7 +47,8 @@ public class RootLayoutController {
         String edition = "Édition";
         String domain = "Domaine";
         String year = "Année";
-        criteriaChoiceBox.getItems().addAll(name, region, type, edition, domain, year);
+        String consumerYear = "Année de consommation";
+        criteriaChoiceBox.getItems().addAll(name, region, type, edition, domain, year, consumerYear);
         criteriaChoiceBox.setValue(name);
         BottleFilter.setCriteria(name);
         criteriaChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
