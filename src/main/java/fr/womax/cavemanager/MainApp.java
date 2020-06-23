@@ -100,6 +100,38 @@ public class MainApp extends Application {
         MainApp.primaryStage.setTitle("Cave");
 
         initRootLayout();
+        //Récupération du fichier de sauvegarde
+
+        boolean newFile = true;
+
+        try {
+            if(preferenceJson.get("save_file") != null) {
+                newFile = false;
+                openedFile = new File(preferenceJson.get("save_file").getAsString());
+            } else {
+                openedFile = null;
+                do {
+                    try {
+                        openedFile = noSaveFile();
+                    } catch (URISyntaxException e) {
+                        DialogUtils.sendErrorWindow(e);
+                    }
+                } while (openedFile == null);
+
+                if(!openedFile.exists()) {
+                    openedFile.createNewFile();
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(openedFile));
+                    writer.write("{}");
+                    writer.flush();
+                    writer.close();
+                    createNewCompartements(false);
+                }
+                preferenceJson.addProperty("save_file", openedFile.getAbsolutePath());
+            }
+
+        }  catch (IOException e) {
+            DialogUtils.sendErrorWindow(e);
+        }
 
         //Récupération du fichier contenant l'ensemble des bouteilles
 
@@ -128,34 +160,8 @@ public class MainApp extends Application {
 
         initCompartementDisplayLayout();
 
-        //Récupération du fichier de sauvegarde
-
-        try {
-            if(preferenceJson.get("save_file") != null) {
-                openFile(new File(preferenceJson.get("save_file").getAsString()));
-            } else {
-                openedFile = null;
-                do {
-                    try {
-                        openedFile = noSaveFile();
-                    } catch (URISyntaxException e) {
-                        DialogUtils.sendErrorWindow(e);
-                    }
-                } while (openedFile == null);
-
-                if(!openedFile.exists()) {
-                    openedFile.createNewFile();
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(openedFile));
-                    writer.write("{}");
-                    writer.flush();
-                    writer.close();
-                    createNewCompartements(false);
-                }
-                preferenceJson.addProperty("save_file", openedFile.getAbsolutePath());
-            }
-
-        }  catch (IOException e) {
-            DialogUtils.sendErrorWindow(e);
+        if(!newFile) {
+            openFile(openedFile);
         }
 
         MainApp.primaryStage.setTitle("Ma Cave - " + openedFile.getName());

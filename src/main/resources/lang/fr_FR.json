@@ -1,0 +1,20 @@
+{
+  "no_save_file_detected": "Aucun fichier de sauvegarde détécté",
+  "select_save_file": "Veuillez choisir le fichier de sauvegarde pour votre cave",
+  "select_save_file_title": "Choississez un fichier de sauvegarde pour votre cave",
+  "initial_save_file_name": "ma_cave",
+  "ma_cave_file_type": "Fichier MaCave",
+
+  "name": "Nom",
+  "region": "Région",
+  "type": "Type",
+  "edition": "Edition",
+  "domain": "Domaine",
+  "year": "Année",
+  "consume_year": "Année de consommation",
+
+  "error": "Erreur",
+  "error_message": "Message d'erreur",
+  "send_error_report": "Envoyer le message d'erreur"
+
+}
