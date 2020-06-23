@@ -15,6 +15,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -238,6 +239,14 @@ public class CompartementDisplayController {
 
                     vBox.getChildren().remove(name);
                     vBox.getChildren().add(0, modifyNameHbox);
+
+                    modifyNameTextField.requestFocus();
+
+                    modifyNameTextField.setOnKeyPressed(event1 -> {
+                        if(event1.getCode() == KeyCode.ENTER) {
+                            okButton.fire();
+                        }
+                    });
 
                 } else
                     doubleClick[0] = false;
