@@ -13,37 +13,40 @@ public class BottleFilter {
 
     private static boolean searching = false;
     private static String previousSearch = "";
+    private static boolean previousSearchInSpots = true;
     private static ObservableList<Spot> previousResult = FXCollections.observableArrayList();
-    private static String criteria;
+    private static SearchCriteria criteria;
 
-    public static String getCriteria() {
+    public static SearchCriteria getCriteria() {
         return criteria;
     }
 
-    public static void setCriteria(String criteria) {
+    public static void setCriteria(SearchCriteria criteria) {
         BottleFilter.criteria = criteria;
-        if(!previousSearch.isEmpty()) {
-            search(previousSearch);
+        if(!previousSearch.isEmpty() && previousSearchInSpots) {
+            searchInSpots(previousSearch);
+        } else if(!previousSearch.isEmpty()) {
+            searchInBottles(previousSearch);
         }
     }
 
-    public static void research() {
+    public static void researchInSpot() {
         if(!previousSearch.trim().isEmpty())
-            search(previousSearch);
+            searchInSpots(previousSearch);
     }
 
-    public static void search(String s) {
+    public static void searchInSpots(String s) {
         if (!searching)
             searching = true;
 
         //TODO potentiel amélioration pour restreindre les recherches en fonction du résultat précédent
 
-        searchIn(MainApp.getSpots(), s);
+        searchInSpots(MainApp.getSpots(), s);
 
         previousSearch = s;
     }
 
-    private static void searchIn(ObservableList<Spot> spots, String s) {
+    private static void searchInSpots(ObservableList<Spot> spots, String s) {
         for (Spot spot : spots) {
 
             if(!spot.isEmpty()) {
@@ -56,31 +59,31 @@ public class BottleFilter {
                 Bottle bottle = spot.getBottle();
 
                 switch (criteria) {
-                    case "Nom":
+                    case NAME:
                         if(bottle.getName().toLowerCase().contains(s.toLowerCase()))
                             highlight = true;
                         break;
-                    case "Région":
+                    case REGION:
                         if(bottle.getRegion().toLowerCase().contains(s.toLowerCase()))
                             highlight = true;
                         break;
-                    case "Type":
+                    case TYPE:
                         if (bottle.getType().toString().toLowerCase().contains(s.toLowerCase()))
                             highlight = true;
                         break;
-                    case "Édition":
+                    case EDITION:
                         if(bottle.getEdition().toLowerCase().contains(s.toLowerCase()))
                             highlight = true;
                         break;
-                    case "Domaine":
+                    case DOMAIN:
                         if(bottle.getDomain().toLowerCase().contains(s.toLowerCase()))
                             highlight = true;
                         break;
-                    case "Année":
+                    case YEAR:
                         if (String.valueOf(bottle.getYear()).toLowerCase().contains(s.toLowerCase()))
                             highlight = true;
                         break;
-                    case "Année de consommation":
+                    case APOGEE:
                         if(String.valueOf(bottle.getConsumeYear()).toLowerCase().contains(s.toLowerCase()))
                             highlight = true;
                         break;
@@ -96,6 +99,50 @@ public class BottleFilter {
         }
     }
 
+    public static ObservableList<Bottle> searchInBottles(String s) {
+        ObservableList<Bottle> result = FXCollections.observableArrayList();
+        for(Bottle bottle : MainApp.getBottles().values()) {
+
+            switch (criteria) {
+                case NAME:
+                    if(bottle.getName().toLowerCase().contains(s.toLowerCase()))
+                        result.add(bottle);
+                    break;
+                case TYPE:
+                    if(bottle.getType().toString().toLowerCase().contains(s.toLowerCase()))
+                        result.add(bottle);
+                    break;
+                case YEAR:
+                    if(Integer.toString(bottle.getYear()).toLowerCase().contains(s.toLowerCase()))
+                        result.add(bottle);
+                    break;
+                case APOGEE:
+                    if(Integer.toString(bottle.getConsumeYear()).toLowerCase().contains(s.toLowerCase()))
+                        result.add(bottle);
+                case DOMAIN:
+                    if(bottle.getDomain().toLowerCase().contains(s.toLowerCase()))
+                        result.add(bottle);
+                    break;
+                case REGION:
+                    if(bottle.getRegion().toLowerCase().contains(s.toLowerCase()))
+                        result.add(bottle);
+                    break;
+                case EDITION:
+                    if(bottle.getEdition().toLowerCase().contains(s.toLowerCase()))
+                        result.add(bottle);
+                    break;
+            }
+
+        }
+        return result;
+    }
+
+    public static ObservableList<Bottle> researchInBottles() {
+        if(!previousSearch.trim().isEmpty())
+            return searchInBottles(previousSearch);
+        return null;
+    }
+
     public static void endSearching() {
         if(searching)
             searching = false;
@@ -104,6 +151,37 @@ public class BottleFilter {
             if(!spot.isEmpty())
                 spot.setHighlighted(false);
         }
+    }
+
+    public enum SearchCriteria {
+
+        NAME("Nom"),
+        REGION("Région"),
+        TYPE("Type"),
+        EDITION("Edition"),
+        DOMAIN("Domaine"),
+        YEAR("Année"),
+        APOGEE("Apogée");
+
+        String name;
+
+        SearchCriteria(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public static SearchCriteria fromName(String name) {
+            for(SearchCriteria criteria : SearchCriteria.values()) {
+                if (criteria.getName().equals(name)) {
+                    return criteria;
+                }
+            }
+            return null;
+        }
+
     }
 
 }

@@ -10,6 +10,7 @@ import fr.womax.cavemanager.utils.report.SuggestionInfo;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.util.StringConverter;
 
 import java.util.Date;
 import java.util.Optional;
@@ -34,7 +35,7 @@ public class RootLayoutController {
     private TextField searchField;
 
     @FXML
-    private ChoiceBox<String> criteriaChoiceBox;
+    private ChoiceBox<BottleFilter.SearchCriteria> criteriaChoiceBox;
 
     @FXML
     private CheckMenuItem checkUpdate;
@@ -47,16 +48,20 @@ public class RootLayoutController {
 
     @FXML
     private void initialize() {
-        String name = "Nom";
-        String region = "Région";
-        String type = "Type";
-        String edition = "Édition";
-        String domain = "Domaine";
-        String year = "Année";
-        String consumerYear = "Année de consommation";
-        criteriaChoiceBox.getItems().addAll(name, region, type, edition, domain, year, consumerYear);
-        criteriaChoiceBox.setValue(name);
-        BottleFilter.setCriteria(name);
+        criteriaChoiceBox.getItems().setAll(BottleFilter.SearchCriteria.values());
+        criteriaChoiceBox.setValue(BottleFilter.SearchCriteria.NAME);
+        criteriaChoiceBox.setConverter(new StringConverter <BottleFilter.SearchCriteria>() {
+            @Override
+            public String toString(BottleFilter.SearchCriteria object) {
+                return object.getName();
+            }
+
+            @Override
+            public BottleFilter.SearchCriteria fromString(String string) {
+                return BottleFilter.SearchCriteria.fromName(string);
+            }
+        });
+        BottleFilter.setCriteria(BottleFilter.SearchCriteria.NAME);
         criteriaChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             BottleFilter.setCriteria(newValue);
         });
@@ -65,7 +70,7 @@ public class RootLayoutController {
             if(newValue.trim().isEmpty()) {
                 BottleFilter.endSearching();
             } else
-                BottleFilter.search(newValue);
+                BottleFilter.searchInSpots(newValue);
 
         });
         checkUpdate.setSelected(MainApp.PREFERENCE_JSON.get("check_update").getAsBoolean());

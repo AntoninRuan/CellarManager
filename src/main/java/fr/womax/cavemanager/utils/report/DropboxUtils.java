@@ -58,7 +58,7 @@ public class DropboxUtils {
         try (InputStream in = IOUtils.toInputStream(object.toString(), StandardCharsets.UTF_8)){
             UUID uuid = UUID.randomUUID();
             FileMetadata metadata = client.files().uploadBuilder("/suggestion/" + uuid.toString() + ".json").uploadAndFinish(in);
-            DialogUtils.infoMessage("Suggestion envoyé", null, "Votre idée à bien été envoyée");
+            DialogUtils.infoMessage("Suggestion envoyée", null, "Votre idée a bien été envoyée");
         } catch (IOException | DbxException e) {
             DialogUtils.sendErrorWindow(e);
         }

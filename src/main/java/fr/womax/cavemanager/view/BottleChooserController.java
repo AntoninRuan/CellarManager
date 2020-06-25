@@ -4,6 +4,7 @@ import fr.womax.cavemanager.MainApp;
 import fr.womax.cavemanager.model.Bottle;
 import fr.womax.cavemanager.model.BottleInfo;
 import fr.womax.cavemanager.model.WineType;
+import fr.womax.cavemanager.utils.BottleFilter;
 import fr.womax.cavemanager.utils.DialogUtils;
 import fr.womax.cavemanager.utils.Saver;
 import javafx.collections.FXCollections;
@@ -13,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 import java.util.Optional;
 
@@ -50,6 +52,12 @@ public class BottleChooserController {
 
     @FXML
     private Button cancelButton;
+
+    @FXML
+    private TextField searchField;
+
+    @FXML
+    private ChoiceBox<BottleFilter.SearchCriteria> criteriaChoiceBox;
 
     private ObservableList<Bottle> bottles = FXCollections.observableArrayList();
 
@@ -115,6 +123,40 @@ public class BottleChooserController {
                 contextMenu.show(tableView, event.getScreenX(), event.getScreenY());
             }
 
+        });
+        tableView.setPlaceholder(new Label("Aucun résultat trouvé"));
+
+        criteriaChoiceBox.getItems().setAll(BottleFilter.SearchCriteria.values());
+        criteriaChoiceBox.setValue(BottleFilter.SearchCriteria.NAME);
+        criteriaChoiceBox.setConverter(new StringConverter <BottleFilter.SearchCriteria>() {
+            @Override
+            public String toString(BottleFilter.SearchCriteria object) {
+                return object.getName();
+            }
+
+            @Override
+            public BottleFilter.SearchCriteria fromString(String string) {
+                return BottleFilter.SearchCriteria.fromName(string);
+            }
+        });
+        criteriaChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            BottleFilter.setCriteria(newValue);
+            if(!searchField.getText().trim().isEmpty()) {
+                ObservableList<Bottle> result = BottleFilter.researchInBottles();
+                if(result != null && !result.isEmpty())
+                    bottles.setAll(result);
+                else
+                    bottles.clear();
+            }
+
+        });
+
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!newValue.trim().isEmpty()) {
+                bottles.setAll(BottleFilter.searchInBottles(newValue));
+            } else {
+                bottles.setAll(MainApp.getBottles().values());
+            }
         });
     }
 

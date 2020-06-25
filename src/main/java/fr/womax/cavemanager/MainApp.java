@@ -37,6 +37,7 @@ public class MainApp extends Application {
     //TODO bind les boutons importer / exporter à des actions.
     //TODO ajouter la possibilité de modifier le nombre de ligne/colonne d'une étagère
     //TODO pouvoir changer l'ordre des étagères.
+    //TODO lorsque des bouteilles sont trouvés sur étagère différent de celle courante. Afficher quelque chose qui permettent de le comprendre
 
     /*TODO Ajouter un menus de paramètre qui permette
             Changer la taille des cases pour pouvoir mettre plus de ligne/colonnes sur une seule étagère

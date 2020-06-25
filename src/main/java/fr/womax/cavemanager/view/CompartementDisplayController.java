@@ -171,7 +171,7 @@ public class CompartementDisplayController {
                                                 imageView.setImage(spotFill);
                                                 break;
                                         }
-                                        BottleFilter.research();
+                                        BottleFilter.researchInSpot();
                                         Saver.doChange();
                                     });
 
@@ -197,7 +197,7 @@ public class CompartementDisplayController {
                                             spot.getBottle().typeProperty().removeListener(changeListener);
                                             spot.setBottle(bottle);
 //                                            renderBottle(spot, imageView, changeListener);
-                                            BottleFilter.research();
+                                            BottleFilter.researchInSpot();
                                             MainApp.getController().showBottleDetails(spot);
                                             Saver.doChange();
                                         });
