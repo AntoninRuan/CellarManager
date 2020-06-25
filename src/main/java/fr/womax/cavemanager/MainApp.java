@@ -35,8 +35,8 @@ import java.util.Optional;
 public class MainApp extends Application {
 
     //TODO drag & drop les bouteilles pour les déplacer
-    //TODO ajouter la possibilité de modifier le nombre de ligne/colonne d'une étagère
     //TODO bind les boutons importer / exporter à des actions.
+    //TODO ajouter la possibilité de modifier le nombre de ligne/colonne d'une étagère
     //TODO pouvoir changer l'ordre des étagères.
 
     /*TODO Ajouter un menus de paramètre qui permette

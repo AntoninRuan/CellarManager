@@ -18,8 +18,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -120,6 +119,14 @@ public class CompartementDisplayController {
                             }
                         }
 
+                        spot.bottleProperty().addListener((observable, oldValue, newValue) -> {
+                            if(newValue == null) {
+                                imageView.setImage(spotEmpty);
+                            } else {
+                                renderBottle(spot, imageView, changeListener);
+                            }
+                        });
+
                         stackPane.hoverProperty().addListener((observable, oldValue, newValue) -> {
                             if(spot.isEmpty()) {
                                 if(newValue) {
@@ -189,7 +196,7 @@ public class CompartementDisplayController {
                                         result.ifPresent(bottle -> {
                                             spot.getBottle().typeProperty().removeListener(changeListener);
                                             spot.setBottle(bottle);
-                                            renderBottle(spot, imageView, changeListener);
+//                                            renderBottle(spot, imageView, changeListener);
                                             BottleFilter.research();
                                             MainApp.getController().showBottleDetails(spot);
                                             Saver.doChange();
@@ -221,6 +228,55 @@ public class CompartementDisplayController {
 
                             }
 
+                        });
+
+                        stackPane.setOnDragDetected(event -> {
+                            if(spot.getBottle() == null)
+                                return;
+
+                            Dragboard dragboard = stackPane.startDragAndDrop(TransferMode.MOVE);
+                            ClipboardContent content = new ClipboardContent();
+                            content.putString(Integer.toString(spot.getId()));
+                            dragboard.setContent(content);
+                        });
+
+                        stackPane.setOnDragOver(event -> {
+                            if(event.getGestureSource() != stackPane && event.getDragboard().hasString()) {
+                                event.acceptTransferModes(TransferMode.MOVE);
+                            }
+                            event.consume();
+                        });
+
+                        stackPane.setOnDragEntered(event -> {
+                            if(event.getGestureSource() != stackPane && event.getDragboard().hasString()) {
+                                stackPane.setOpacity(.3);
+                            }
+                        });
+
+                        stackPane.setOnDragExited(event -> {
+                            if(event.getGestureSource() != stackPane && event.getDragboard().hasString()) {
+                                stackPane.setOpacity(1);
+                            }
+                        });
+
+                        stackPane.setOnDragDropped(event -> {
+                            if(spot.getBottle() != null)
+                                return;
+
+                            Dragboard db = event.getDragboard();
+                            boolean success;
+                            if(db.hasString()) {
+                                int id = Integer.parseInt(db.getString());
+                                int row = id / 100;
+                                int column = id - (row * 100);
+
+                                Spot src = spots[row][column];
+
+                                spot.setBottle(src.getBottle());
+
+                                src.setBottle(null);
+
+                            }
                         });
 
                         imageView.setFitWidth(64);

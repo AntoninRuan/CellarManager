@@ -3,14 +3,16 @@ package fr.womax.cavemanager.model;
 import com.google.gson.JsonObject;
 import fr.womax.cavemanager.MainApp;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 /**
  * @author Antonin Ruan
  */
 public class Spot {
 
-    private Bottle bottle;
+    private ObjectProperty<Bottle> bottle;
     private int row, column;
     private BooleanProperty highlighted;
 
@@ -19,14 +21,14 @@ public class Spot {
     }
 
     protected Spot(Bottle bottle, int row, int column) {
-        this.bottle = bottle;
+        this.bottle = new SimpleObjectProperty <>(bottle);
         this.row = row;
         this.column = column;
         highlighted = new SimpleBooleanProperty(false);
         MainApp.getSpots().add(this);
     }
 
-    protected int getId() {
+    public int getId() {
         return row * 100 + column;
     }
 
@@ -39,11 +41,15 @@ public class Spot {
     }
 
     public Bottle getBottle() {
-        return bottle;
+        return bottle.getValue();
     }
 
     public void setBottle(Bottle bottle) {
-        this.bottle = bottle;
+        this.bottle.setValue(bottle);
+    }
+
+    public ObjectProperty<Bottle> bottleProperty() {
+        return bottle;
     }
 
     public boolean isHighlighted() {
@@ -59,15 +65,15 @@ public class Spot {
     }
 
     public boolean isEmpty() {
-        return bottle == null;
+        return bottle.getValue() == null;
     }
 
     public JsonObject toJson() {
         JsonObject object = new JsonObject();
         object.addProperty("id", (row * 100) + column);
-        object.addProperty("empty", bottle == null);
-        if(bottle != null)
-            object.addProperty("bottle", bottle.getId());
+        object.addProperty("empty", bottle.getValue() == null);
+        if(bottle.getValue() != null)
+            object.addProperty("bottle", bottle.getValue().getId());
         return object;
     }
 
@@ -78,9 +84,9 @@ public class Spot {
         } else
             bottle = null;
         int id = object.get("id").getAsInt();
-        int raw = id / 100;
-        int column = id - (raw * 100);
-        return new Spot(bottle, raw, column);
+        int row = id / 100;
+        int column = id - (row * 100);
+        return new Spot(bottle, row, column);
     }
 
     @Override
