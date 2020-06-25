@@ -3,7 +3,9 @@ package fr.womax.cavemanager.utils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.womax.cavemanager.MainApp;
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -78,6 +80,8 @@ public class Updater {
         MainApp.saveFiles();
         Saver.cancelTask();
 
+        ProgressBar progressBar = DialogUtils.downloadInfo();
+
         Thread thread = new Thread(() -> {
 
             try {
@@ -100,11 +104,21 @@ public class Updater {
 
                 ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
 
-                FileOutputStream fileOutputStream = new FileOutputStream(currentJar);
+                FileOutputStream fileOutputStream = new FileOutputStream(download);
 
-                fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+//                fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
 
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                int i = 0;
+                long dl;
+
+                do {
+                    dl = fileOutputStream.getChannel().transferFrom(readableByteChannel, i , 2048);
+                    i += 2048;
+                    int finalI = i;
+                    Platform.runLater(() -> progressBar.setProgress((double) finalI / (double) fileSize));
+                } while (dl != 0);
+
+                /*Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Mise à jour téléchargée");
                 alert.setHeaderText("La mise à jour a été téléchargée");
                 alert.setContentText("Le programme va s'arrêter, relancer le pour appliquer la mise à jour");
@@ -113,7 +127,7 @@ public class Updater {
 
 
                 alert.showAndWait();
-                System.exit(0);
+                System.exit(0);*/
 
 
             } catch (URISyntaxException | IOException e) {

@@ -36,6 +36,9 @@ public class RootLayoutController {
     @FXML
     private ChoiceBox<String> criteriaChoiceBox;
 
+    @FXML
+    private CheckMenuItem checkUpdate;
+
     private Spot displayedSpot;
 
     public void setMainApp(MainApp mainApp) {
@@ -64,6 +67,10 @@ public class RootLayoutController {
             } else
                 BottleFilter.search(newValue);
 
+        });
+        checkUpdate.setSelected(MainApp.PREFERENCE_JSON.get("check_update").getAsBoolean());
+        checkUpdate.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            MainApp.PREFERENCE_JSON.addProperty("check_update", newValue);
         });
     }
 

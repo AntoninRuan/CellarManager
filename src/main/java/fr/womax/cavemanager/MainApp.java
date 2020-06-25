@@ -55,8 +55,8 @@ public class MainApp extends Application {
     private static File openedFile = null;
     private static File bottleFile = null;
     private static final File preferences = new File("ma_cave.preference");
-    private static JsonObject preferenceJson;
 
+    public static JsonObject PREFERENCE_JSON;
     public final static Image LOGO = new Image(MainApp.class.getClassLoader().getResource("img/logo.png").toString());
 
     private final static ObservableMap<Integer, Compartement> compartements = FXCollections.observableHashMap();
@@ -86,7 +86,7 @@ public class MainApp extends Application {
         }
 
         try {
-            preferenceJson = JsonParser.parseReader(new FileReader(preferences)).getAsJsonObject();
+            PREFERENCE_JSON = JsonParser.parseReader(new FileReader(preferences)).getAsJsonObject();
         } catch (FileNotFoundException e) {
             DialogUtils.sendErrorWindow(e);
         }
@@ -106,9 +106,9 @@ public class MainApp extends Application {
         boolean newFile = true;
 
         try {
-            if(preferenceJson.get("save_file") != null) {
+            if(PREFERENCE_JSON.get("save_file") != null) {
                 newFile = false;
-                openedFile = new File(preferenceJson.get("save_file").getAsString());
+                openedFile = new File(PREFERENCE_JSON.get("save_file").getAsString());
             } else {
                 openedFile = null;
                 do {
@@ -127,7 +127,7 @@ public class MainApp extends Application {
                     }
                     createNewCompartements(false);
                 }
-                preferenceJson.addProperty("save_file", openedFile.getAbsolutePath());
+                PREFERENCE_JSON.addProperty("save_file", openedFile.getAbsolutePath());
             }
 
         }  catch (IOException e) {
@@ -136,8 +136,8 @@ public class MainApp extends Application {
 
         //Récupération du fichier contenant l'ensemble des bouteilles
 
-        if(preferenceJson.get("bottle_file") != null) {
-            registerBottle(new File(preferenceJson.get("bottle_file").getAsString()));
+        if(PREFERENCE_JSON.get("bottle_file") != null) {
+            registerBottle(new File(PREFERENCE_JSON.get("bottle_file").getAsString()));
         } else {
             File file = new File(openedFile.getParent() + File.separator + "bottle_file.mcv");
             if(!file.exists()) {
@@ -156,7 +156,7 @@ public class MainApp extends Application {
             } else {
                 registerBottle(file);
             }
-            preferenceJson.addProperty("bottle_file", file.getAbsolutePath());
+            PREFERENCE_JSON.addProperty("bottle_file", file.getAbsolutePath());
         }
 
         initCompartementDisplayLayout();
@@ -167,11 +167,11 @@ public class MainApp extends Application {
 
         MainApp.primaryStage.setTitle("Ma Cave - " + openedFile.getName());
 
-        if(preferenceJson.get("check_update") == null) {
-            preferenceJson.addProperty("check_update", true);
+        if(PREFERENCE_JSON.get("check_update") == null) {
+            PREFERENCE_JSON.addProperty("check_update", true);
         }
 
-        if(preferenceJson.get("check_update").getAsBoolean()) {
+        if(PREFERENCE_JSON.get("check_update").getAsBoolean()) {
             boolean newUpdate = Updater.checkUpdate();
             if(newUpdate) {
                 DialogUtils.updateAvailable(true);
@@ -182,7 +182,7 @@ public class MainApp extends Application {
 
     public static void saveFiles() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(preferences));){
-            writer.write(preferenceJson.toString());
+            writer.write(PREFERENCE_JSON.toString());
             writer.flush();
         } catch (IOException e) {
             DialogUtils.sendErrorWindow(e);
@@ -357,7 +357,7 @@ public class MainApp extends Application {
     }
 
     public static JsonObject getPreferenceJson() {
-        return preferenceJson;
+        return PREFERENCE_JSON;
     }
 
     public static List<Spot> hasBottle(Bottle bottle) {

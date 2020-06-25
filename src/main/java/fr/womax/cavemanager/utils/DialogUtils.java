@@ -9,23 +9,28 @@ import fr.womax.cavemanager.utils.report.BugInfo;
 import fr.womax.cavemanager.utils.report.DropboxUtils;
 import fr.womax.cavemanager.utils.report.SuggestionInfo;
 import fr.womax.cavemanager.view.BottleChooserController;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author Antonin Ruan
@@ -416,6 +421,61 @@ public class DialogUtils {
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
 
         alert.showAndWait();
+    }
+
+    public static ProgressBar downloadInfo() {
+
+        Stage stage = new Stage();
+        stage.setTitle("Téléchargement en cours");
+        stage.initOwner(MainApp.getPrimaryStage());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.getIcons().add(MainApp.LOGO);
+        stage.initStyle(StageStyle.UNIFIED);
+        stage.setResizable(false);
+        stage.setOnCloseRequest(Event::consume);
+
+        VBox vBox = new VBox();
+        vBox.setSpacing(5d);
+        vBox.setPrefSize(375, 50);
+        vBox.setPadding(new Insets(5));
+        vBox.setFillWidth(true);
+        vBox.setAlignment(Pos.CENTER);
+
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setPrefWidth(Double.MAX_VALUE);
+
+        final boolean[] displayed = {false};
+
+        progressBar.progressProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.doubleValue() >= 1 && !displayed[0]) {
+                ButtonBar buttonBar = new ButtonBar();
+
+                Button ok = new Button("Oui");
+                ok.setOnAction(event -> {
+                    System.exit(0);
+                });
+
+                buttonBar.getButtons().setAll(ok);
+
+                Label label = new Label("Le programme va s'arrêter, relancer le pour appliquer la mise à jour");
+                label.setWrapText(true);
+
+                vBox.getChildren().setAll(label, buttonBar);
+                displayed[0] = true;
+                stage.setOnCloseRequest(event -> {
+                    Platform.exit();
+                });
+            }
+        });
+
+        vBox.getChildren().addAll(progressBar, new Label("Téléchargement en cours"));
+
+        Scene scene = new Scene(vBox);
+        stage.setScene(scene);
+
+        stage.show();
+
+        return progressBar;
     }
 
 }
