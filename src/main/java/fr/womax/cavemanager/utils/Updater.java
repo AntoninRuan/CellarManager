@@ -104,7 +104,7 @@ public class Updater {
 
                 ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
 
-                FileOutputStream fileOutputStream = new FileOutputStream(download);
+                FileOutputStream fileOutputStream = new FileOutputStream(currentJar);
 
 //                fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
 
