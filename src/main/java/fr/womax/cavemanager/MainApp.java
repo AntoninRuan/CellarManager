@@ -34,13 +34,20 @@ import java.util.Optional;
  */
 public class MainApp extends Application {
 
+    //FIXME position du bouton pour ajouter une étagère peu intuitive
+
     //TODO bind les boutons importer / exporter à des actions.
     //TODO ajouter la possibilité de modifier le nombre de ligne/colonne d'une étagère
     //TODO pouvoir changer l'ordre des étagères.
-    //TODO lorsque des bouteilles sont trouvés sur étagère différent de celle courante. Afficher quelque chose qui permettent de le comprendre
+    //TODO ajouter un message (tooltips par exemple) lorsqu'une valeur est tronquée dans les spinners
+    //TODO ajouter un copier coller des bouteilles sur les étagères
+    //TODO pouvoir laisser l'année de consomation vide
+    //TODO lorsque des bouteilles sont trouvés sur étagère différent de celle courante. Afficher quelque chose qui permettent de le voir
+    //TODO ajouter un bind à une appli mobile pour afficher la bouteille séléctionner sur ordinateur sur un téléphone
+    //TODO ajouter un plan global de la cave ou l'on puisse placer les étagères
 
     /*TODO Ajouter un menus de paramètre qui permette
-            Changer la taille des cases pour pouvoir mettre plus de ligne/colonnes sur une seule étagère
+            Changer la taille des cases pour pouvoir mettre plus de ligne/colonnes sur une seule étagère (pas sur que ce soit une bonne idée)
             Intégrér une gestion multilingue
             Gérer le délai du double clic
      */

@@ -278,12 +278,13 @@ public class DialogUtils {
         comment.setPromptText("Commentaire");
         Spinner<Integer> yearSpinner = new Spinner <>(1950, 3000, year, 1);
         yearSpinner.setEditable(true);
+        Spinner<Integer> consumeYearSpinner = new Spinner <>(1950, 3000, consumeYear, 1);
+        consumeYearSpinner.setEditable(true);
         yearSpinner.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue)
                 yearSpinner.increment(0);
+            ((SpinnerValueFactory.IntegerSpinnerValueFactory) consumeYearSpinner.getValueFactory()).setMin(yearSpinner.getValue());
         });
-        Spinner<Integer> consumeYearSpinner = new Spinner <>(1950, 3000, consumeYear, 1);
-        consumeYearSpinner.setEditable(true);
         consumeYearSpinner.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue)
                 consumeYearSpinner.increment(0);
@@ -326,8 +327,8 @@ public class DialogUtils {
 
         dialog.setResultConverter(dialogButton -> {
             if(dialogButton == validationButtonType) {
-                BottleInfo bottleInfo = new BottleInfo(name.getText(), region.getText(), edition.getText(),
-                        domain.getText(), comment.getText(), yearSpinner.getValue(), consumeYearSpinner.getValue(), wineType.getValue());
+                BottleInfo bottleInfo = new BottleInfo(name.getText(), region.getText(), domain.getText(),
+                        edition.getText(), comment.getText(), yearSpinner.getValue(), consumeYearSpinner.getValue(), wineType.getValue());
                 return bottleInfo;
             }
             return null;
