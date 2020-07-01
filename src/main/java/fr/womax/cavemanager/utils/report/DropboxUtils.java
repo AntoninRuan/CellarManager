@@ -2,6 +2,7 @@ package fr.womax.cavemanager.utils.report;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
+import com.dropbox.core.NetworkIOException;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.google.gson.JsonObject;
@@ -40,6 +41,8 @@ public class DropboxUtils {
             UUID uuid = UUID.randomUUID();
             FileMetadata metadata = client.files().uploadBuilder("/bug-issues/" + uuid.toString() + ".json").uploadAndFinish(in);
             DialogUtils.infoMessage("Rapport de bug envoyé", null, "Votre rapport de bug a bien été envoyé");
+        } catch (NetworkIOException e) {
+            DialogUtils.networkConnectionError();
         } catch (IOException | DbxException e) {
             DialogUtils.sendErrorWindow(e);
         }
@@ -55,10 +58,12 @@ public class DropboxUtils {
         DbxRequestConfig config = DbxRequestConfig.newBuilder("dropbox/cave_manager").build();
         DbxClientV2 client = new DbxClientV2(config, ACCESS_TOKEN);
 
-        try (InputStream in = IOUtils.toInputStream(object.toString(), StandardCharsets.UTF_8)){
+        try (InputStream in = IOUtils.toInputStream(object.toString(), StandardCharsets.UTF_8)) {
             UUID uuid = UUID.randomUUID();
             FileMetadata metadata = client.files().uploadBuilder("/suggestion/" + uuid.toString() + ".json").uploadAndFinish(in);
             DialogUtils.infoMessage("Suggestion envoyée", null, "Votre idée a bien été envoyée");
+        } catch (NetworkIOException e) {
+            DialogUtils.networkConnectionError();
         } catch (IOException | DbxException e) {
             DialogUtils.sendErrorWindow(e);
         }

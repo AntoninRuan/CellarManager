@@ -231,12 +231,19 @@ public class CompartementDisplayController {
                         });
 
                         stackPane.setOnDragDetected(event -> {
+                            if(event.getButton() == MouseButton.SECONDARY)
+                                return;
+
                             if(spot.getBottle() == null)
                                 return;
 
+                            boolean copy = false;
+                            if(event.getButton() == MouseButton.MIDDLE)
+                                copy = true;
+
                             Dragboard dragboard = stackPane.startDragAndDrop(TransferMode.MOVE);
                             ClipboardContent content = new ClipboardContent();
-                            content.putString(Integer.toString(spot.getId()));
+                            content.putString(spot.getId() + ";" + copy);
                             dragboard.setContent(content);
                         });
 
@@ -264,9 +271,9 @@ public class CompartementDisplayController {
                                 return;
 
                             Dragboard db = event.getDragboard();
-                            boolean success;
                             if(db.hasString()) {
-                                int id = Integer.parseInt(db.getString());
+                                String[] s = db.getString().split(";");
+                                int id = Integer.parseInt(s[0]);
                                 int row = id / 100;
                                 int column = id - (row * 100);
 
@@ -274,7 +281,8 @@ public class CompartementDisplayController {
 
                                 spot.setBottle(src.getBottle());
 
-                                src.setBottle(null);
+                                if(!Boolean.parseBoolean(s[1]))
+                                    src.setBottle(null);
 
                             }
                         });

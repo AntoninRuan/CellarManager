@@ -424,6 +424,17 @@ public class DialogUtils {
         alert.showAndWait();
     }
 
+    public static void networkConnectionError() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Erreur de connection");
+        alert.setHeaderText(null);
+        alert.setContentText("Une erreur de connection s'est produite, veuillez vérifiez votre connection et réessayer");
+
+        ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
+
+        alert.showAndWait();
+    }
+
     public static ProgressBar downloadInfo() {
 
         Stage stage = new Stage();
