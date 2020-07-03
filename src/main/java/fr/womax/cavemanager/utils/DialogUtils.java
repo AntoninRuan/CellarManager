@@ -13,27 +13,28 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.*;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Pair;
-import sun.security.krb5.internal.crypto.Des;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
@@ -172,11 +173,11 @@ public class DialogUtils {
         TextField name = new TextField();
         name.setPromptText("Nom");
 
-        final Spinner <Integer> raw = new Spinner <>(1, 10, 1, 1);
-        raw.setEditable(true);
-        raw.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        final Spinner <Integer> row = new Spinner <>(1, 10, 1, 1);
+        row.setEditable(true);
+        row.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue) {
-                raw.increment(0);
+                row.increment(0);
             }
         });
         final Spinner<Integer> column = new Spinner <>(1, 10, 1, 1);
@@ -197,7 +198,7 @@ public class DialogUtils {
         gridPane.add(new Label("Nom"), 0, 0);
         gridPane.add(name, 1, 0);
         gridPane.add(new Label("Ligne"), 0, 1);
-        gridPane.add(raw, 1, 1);
+        gridPane.add(row, 1, 1);
         gridPane.add(new Label("Colonne"), 0, 2);
         gridPane.add(column, 1, 2);
         gridPane.add(before, 0, 3);
@@ -211,7 +212,7 @@ public class DialogUtils {
 
         dialog.setResultConverter(dialogButton -> {
             if(dialogButton == validationButtonType) {
-                return new CompartementInfo(name.getText() == null ? "Etagère" : name.getText(), raw.getValue(), column.getValue(), before.isSelected());
+                return new CompartementInfo(name.getText() == null ? "Etagère" : name.getText(), row.getValue(), column.getValue(), before.isSelected());
             }
             return null;
         });

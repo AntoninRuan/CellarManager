@@ -4,23 +4,19 @@ import fr.womax.cavemanager.MainApp;
 import fr.womax.cavemanager.model.Bottle;
 import fr.womax.cavemanager.model.Compartement;
 import fr.womax.cavemanager.model.Spot;
-import fr.womax.cavemanager.utils.*;
+import fr.womax.cavemanager.utils.BottleFilter;
+import fr.womax.cavemanager.utils.DialogUtils;
+import fr.womax.cavemanager.utils.Updater;
 import fr.womax.cavemanager.utils.report.BugInfo;
 import fr.womax.cavemanager.utils.report.DropboxUtils;
 import fr.womax.cavemanager.utils.report.SuggestionInfo;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.util.StringConverter;
 
-import java.awt.*;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Date;
 import java.util.Optional;
 
