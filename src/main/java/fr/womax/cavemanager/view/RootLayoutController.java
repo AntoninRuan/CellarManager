@@ -1,6 +1,7 @@
 package fr.womax.cavemanager.view;
 
 import fr.womax.cavemanager.MainApp;
+import fr.womax.cavemanager.model.Bottle;
 import fr.womax.cavemanager.model.Compartement;
 import fr.womax.cavemanager.model.Spot;
 import fr.womax.cavemanager.utils.*;
@@ -9,6 +10,8 @@ import fr.womax.cavemanager.utils.report.DropboxUtils;
 import fr.womax.cavemanager.utils.report.SuggestionInfo;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.util.StringConverter;
 
@@ -42,12 +45,49 @@ public class RootLayoutController {
 
     private Spot displayedSpot;
 
+    private final ClipboardContent clipboardContent = new ClipboardContent();
+
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
     }
 
     @FXML
     private void initialize() {
+
+        boolean[] ctrlPressed = {false};
+
+        layout.setOnKeyPressed(event -> {
+            if(event.getCode() == KeyCode.CONTROL) {
+                ctrlPressed[0] = true;
+            }
+            if(ctrlPressed[0]) {
+                if(event.getCode() == KeyCode.V) {
+
+                    if(clipboardContent.hasString()) {
+                        if(MainApp.getCompartementDisplayController().getSelectedSpot() != null) {
+                            MainApp.getCompartementDisplayController().getSelectedSpot().setBottle(MainApp.getBottles().get(Integer.valueOf(clipboardContent.getString())));
+                            BottleFilter.researchInSpot();
+                        }
+                    }
+
+                } else if (event.getCode() == KeyCode.C) {
+                    if(MainApp.getCompartementDisplayController().getSelectedSpot() == null)
+                        return;
+
+                    Bottle selectedBottle = MainApp.getCompartementDisplayController().getSelectedSpot().getBottle();
+                    if(selectedBottle != null) {
+                        clipboardContent.putString(String.valueOf(selectedBottle.getId()));
+                    }
+                }
+            }
+        });
+
+        layout.setOnKeyReleased(event -> {
+            if(event.getCode() == KeyCode.CONTROL) {
+                ctrlPressed[0] = false;
+            }
+        });
+
         criteriaChoiceBox.getItems().setAll(BottleFilter.SearchCriteria.values());
         criteriaChoiceBox.setValue(BottleFilter.SearchCriteria.NAME);
         criteriaChoiceBox.setConverter(new StringConverter <BottleFilter.SearchCriteria>() {

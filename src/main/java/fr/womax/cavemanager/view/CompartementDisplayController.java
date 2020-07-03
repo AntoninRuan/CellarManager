@@ -59,6 +59,8 @@ public class CompartementDisplayController {
     private Image hover = new Image(this.getClass().getClassLoader().getResource("img/hover.png").toString());
     private Image highlight = new Image(this.getClass().getClassLoader().getResource("img/highlight.png").toString());
 
+    private Spot selectedSpot;
+
     @FXML
     private void initialize() {
         pagination.setPageCount(MainApp.getCompartements().size());
@@ -284,7 +286,18 @@ public class CompartementDisplayController {
                                 if(!Boolean.parseBoolean(s[1]))
                                     src.setBottle(null);
 
+                                BottleFilter.researchInSpot();
                             }
+                        });
+
+                        stackPane.setOnMouseEntered(event -> {
+                            selectedSpot = spot;
+                            stackPane.requestFocus();
+                        });
+
+                        stackPane.setOnMouseExited(event -> {
+                            if(selectedSpot.equals(spot))
+                                selectedSpot = null;
                         });
 
                         imageView.setFitWidth(64);
@@ -440,4 +453,7 @@ public class CompartementDisplayController {
         }
     }
 
+    public Spot getSelectedSpot() {
+        return selectedSpot;
+    }
 }
