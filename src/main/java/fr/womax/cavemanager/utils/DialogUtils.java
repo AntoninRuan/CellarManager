@@ -24,9 +24,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Timer;
@@ -341,7 +341,7 @@ public class DialogUtils {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Mise à jour disponible");
         alert.setHeaderText("Une nouvelle mise à jour est disponible");
-        alert.setContentText("Voulez vous la faire?");
+        alert.setContentText("Voulez vous la faire? (Cliquez pour consulter le change log)");
 
         ButtonType ok = new ButtonType("Oui");
         ButtonType no = new ButtonType("Non");
@@ -350,6 +350,40 @@ public class DialogUtils {
         alert.getButtonTypes().setAll(ok, no);
         if(neverAskButton)
             alert.getButtonTypes().add(neverAsk);
+
+
+        TextArea textArea = new TextArea();
+        textArea.setWrapText(true);
+        textArea.setEditable(false);
+
+        int i = 0;
+
+        try {
+            URL url = new URL("https://dl.dropboxusercontent.com/s/txszhrxthcuw1bw/change_log.txt?dl=0");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            for(Object o : reader.lines().toArray()) {
+                if(o instanceof String) {
+                    textArea.appendText(o + "\n");
+                    i += 12;
+                }
+            }
+
+        } catch (IOException e) {
+            sendErrorWindow(e);
+        }
+
+        textArea.positionCaret(0);
+
+        GridPane.setVgrow(textArea, Priority.ALWAYS);
+        GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+        GridPane expContent = new GridPane();
+        expContent.setMaxWidth(Double.MAX_VALUE);
+        expContent.add(textArea,0 ,0);
+
+        alert.getDialogPane().setExpandableContent(expContent);
 
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
 
