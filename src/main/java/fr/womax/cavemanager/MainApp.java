@@ -36,7 +36,6 @@ public class MainApp extends Application {
 
     //FIXME position du bouton pour ajouter une étagère peu intuitive
 
-    //TODO ajouter un changelog lors des mises à jour
     //TODO bind les boutons importer / exporter à des actions.
     //TODO ajouter la possibilité de modifier le nombre de ligne/colonne d'une étagère
     //TODO pouvoir changer l'ordre des étagères.
@@ -83,7 +82,7 @@ public class MainApp extends Application {
             }
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(preferences));){
-                writer.write("{}");
+                writer.write("{\"check_update\": true}");
                 writer.flush();
             } catch (IOException e) {
                 DialogUtils.sendErrorWindow(e);

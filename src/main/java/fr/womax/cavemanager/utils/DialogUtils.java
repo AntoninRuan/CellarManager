@@ -18,14 +18,23 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
+import sun.security.krb5.internal.crypto.Des;
 
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.io.*;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Optional;
@@ -438,9 +447,48 @@ public class DialogUtils {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("A propos");
         alert.setHeaderText(null);
-        alert.setContentText("Développé par Antonin Ruan \n" +
+       /* alert.setContentText("Développé par Antonin Ruan \n" +
                 "Design par Théo Lasnier \n" +
-                "Version: " + Updater.VERSION);
+                "Version: " + Updater.VERSION);*/
+
+        VBox vBox = new VBox();
+        vBox.setSpacing(3);
+        vBox.setPrefWidth(424.0);
+
+        vBox.getChildren().addAll(new Label("Développé par Antonin Ruan"),
+                new Label("Design par Théo Lasnier"),
+                new Label("Version: " + Updater.VERSION));
+
+        Hyperlink changelog = new Hyperlink("Change Log");
+        changelog.setOnAction(event -> {
+            try {
+                final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+                if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                    Desktop.getDesktop().browse(new URL("https://dl.dropboxusercontent.com/s/txszhrxthcuw1bw/change_log.txt?dl=0").toURI());
+                } else {
+                    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection("https://dl.dropboxusercontent.com/s/txszhrxthcuw1bw/change_log.txt?dl=0"), null);
+                    Tooltip tooltip = new Tooltip("Le lien a bien été copié");
+                    tooltip.show(alert.getDialogPane().getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y - 30);
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            Platform.runLater(tooltip::hide);
+                            timer.cancel();
+                        }
+                    }, 750);
+                }
+            } catch (IOException | URISyntaxException e) {
+                sendErrorWindow(e);
+            }
+            changelog.setVisited(false);
+        });
+
+        vBox.getChildren().add(changelog);
+
+        alert.getDialogPane().setContent(vBox);
+
+        alert.setWidth(424.0);
 
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
 
