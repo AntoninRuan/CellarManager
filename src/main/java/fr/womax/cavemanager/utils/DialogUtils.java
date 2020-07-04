@@ -13,7 +13,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -278,12 +277,20 @@ public class DialogUtils {
 
         TextField name = new TextField();
         name.setPromptText("Nom");
+        SuggestionMenu.addSuggestionMenu(name, SuggestionMenu.getAllBottlesName());
+
         TextField region = new TextField();
         region.setPromptText("Région");
+        SuggestionMenu.addSuggestionMenu(region, SuggestionMenu.getAllBottleRegions());
+
         TextField edition = new TextField();
         edition.setPromptText("Édition (ou Cuvée)");
+        SuggestionMenu.addSuggestionMenu(edition, SuggestionMenu.getAllBottlesEdition());
+
         TextField domain = new TextField();
         domain.setPromptText("Domaine");
+        SuggestionMenu.addSuggestionMenu(domain, SuggestionMenu.getAllBottlesDomain());
+
         TextField comment = new TextField();
         comment.setPromptText("Commentaire");
         Spinner<Integer> yearSpinner = new Spinner <>(1950, 3000, year, 1);
@@ -448,9 +455,6 @@ public class DialogUtils {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("A propos");
         alert.setHeaderText(null);
-       /* alert.setContentText("Développé par Antonin Ruan \n" +
-                "Design par Théo Lasnier \n" +
-                "Version: " + Updater.VERSION);*/
 
         VBox vBox = new VBox();
         vBox.setSpacing(3);
