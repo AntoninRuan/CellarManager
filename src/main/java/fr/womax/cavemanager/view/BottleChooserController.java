@@ -111,6 +111,14 @@ public class BottleChooserController {
 
                 });
 
+                MenuItem duplicate = new MenuItem("Dupliquer");
+                duplicate.setOnAction(event1 -> {
+                    BottleInfo bottleInfo = new BottleInfo(bottle.getName(), bottle.getRegion(), bottle.getDomain(),
+                            bottle.getEdition(), bottle.getComment(), bottle.getYear(), bottle.getConsumeYear(), bottle.getType());
+
+                    bottleInfo.createBottle();
+                });
+
                 MenuItem delete = new MenuItem("Supprimer");
                 delete.setOnAction(event1 -> {
                     if(MainApp.hasBottle(bottle).size() != 0)
@@ -119,7 +127,7 @@ public class BottleChooserController {
                         MainApp.getBottles().remove(bottle.getId());
                 });
 
-                contextMenu.getItems().addAll(modify, delete);
+                contextMenu.getItems().addAll(modify, duplicate, new SeparatorMenuItem(), delete);
                 contextMenu.show(tableView, event.getScreenX(), event.getScreenY());
             }
 
