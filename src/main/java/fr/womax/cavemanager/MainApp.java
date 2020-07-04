@@ -43,7 +43,6 @@ public class MainApp extends Application {
     //TODO lorsque des bouteilles sont trouvés sur étagère différent de celle courante. Afficher quelque chose qui permettent de le voir
     //TODO ajouter un bind à une appli mobile pour afficher la bouteille séléctionner sur ordinateur sur un téléphone
     //TODO ajouter un plan global de la cave ou l'on puisse placer les étagères
-    //TODO ajouter un historique des changements afin de pouvoir annuler une modification
 
     /*TODO Ajouter un menu de paramètre qui permette:
             Changer la taille des cases pour pouvoir mettre plus de ligne/colonnes sur une seule étagère (pas sur que ce soit une bonne idée)
