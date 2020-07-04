@@ -49,6 +49,8 @@ public class RootLayoutController {
 
     private final ClipboardContent clipboardContent = new ClipboardContent();
 
+    private boolean shiftPressed = false;
+
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
     }
@@ -61,6 +63,8 @@ public class RootLayoutController {
         layout.setOnKeyPressed(event -> {
             if(event.getCode() == KeyCode.CONTROL) {
                 ctrlPressed[0] = true;
+            } else if(event.getCode() == KeyCode.SHIFT) {
+                shiftPressed = true;
             }
             if(ctrlPressed[0]) {
                 if(event.getCode() == KeyCode.V) {
@@ -87,6 +91,8 @@ public class RootLayoutController {
         layout.setOnKeyReleased(event -> {
             if(event.getCode() == KeyCode.CONTROL) {
                 ctrlPressed[0] = false;
+            } else if (event.getCode() == KeyCode.SHIFT) {
+                shiftPressed = false;
             }
         });
 
@@ -119,6 +125,10 @@ public class RootLayoutController {
         checkUpdate.selectedProperty().addListener((observable, oldValue, newValue) -> {
             MainApp.PREFERENCE_JSON.addProperty("check_update", newValue);
         });
+    }
+
+    public boolean isShiftPressed() {
+        return shiftPressed;
     }
 
     public void showBottleDetails(Spot spot) {

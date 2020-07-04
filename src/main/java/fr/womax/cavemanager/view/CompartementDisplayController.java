@@ -47,17 +47,17 @@ public class CompartementDisplayController {
     @FXML
     private GridPane compartementDisplay;
 
-    private Image spotFill = new Image(this.getClass().getClassLoader().getResource("img/spot_fill.png").toString());
-    private Image spotEmpty = new Image(this.getClass().getClassLoader().getResource("img/spot_empty.png").toString());
-    private Image spotAdd = new Image(this.getClass().getClassLoader().getResource("img/spot_add.png").toString());
+    private final Image spotFill = new Image(this.getClass().getClassLoader().getResource("img/spot_fill.png").toString());
+    private final Image spotEmpty = new Image(this.getClass().getClassLoader().getResource("img/spot_empty.png").toString());
+    private final Image spotAdd = new Image(this.getClass().getClassLoader().getResource("img/spot_add.png").toString());
 
-    private Image spotRed = new Image(this.getClass().getClassLoader().getResource("img/spot_red.png").toString());
-    private Image spotRose = new Image(this.getClass().getClassLoader().getResource("img/spot_rose.png").toString());
-    private Image spotChampagne = new Image(this.getClass().getClassLoader().getResource("img/spot_champagne.png").toString());
-    private Image spotWhite = new Image(this.getClass().getClassLoader().getResource("img/spot_white.png").toString());
+    private final Image spotRed = new Image(this.getClass().getClassLoader().getResource("img/spot_red.png").toString());
+    private final Image spotRose = new Image(this.getClass().getClassLoader().getResource("img/spot_rose.png").toString());
+    private final Image spotChampagne = new Image(this.getClass().getClassLoader().getResource("img/spot_champagne.png").toString());
+    private final Image spotWhite = new Image(this.getClass().getClassLoader().getResource("img/spot_white.png").toString());
 
-    private Image hover = new Image(this.getClass().getClassLoader().getResource("img/hover.png").toString());
-    private Image highlight = new Image(this.getClass().getClassLoader().getResource("img/highlight.png").toString());
+    private final Image hover = new Image(this.getClass().getClassLoader().getResource("img/hover.png").toString());
+    private final Image highlight = new Image(this.getClass().getClassLoader().getResource("img/highlight.png").toString());
 
     private Spot selectedSpot;
 
@@ -241,6 +241,9 @@ public class CompartementDisplayController {
 
                             boolean copy = false;
                             if(event.getButton() == MouseButton.MIDDLE)
+                                copy = true;
+
+                            if(MainApp.getController().isShiftPressed())
                                 copy = true;
 
                             Dragboard dragboard = stackPane.startDragAndDrop(TransferMode.MOVE);
