@@ -8,6 +8,7 @@ import fr.womax.cavemanager.model.WineType;
 import fr.womax.cavemanager.utils.BottleFilter;
 import fr.womax.cavemanager.utils.DialogUtils;
 import fr.womax.cavemanager.utils.Saver;
+import fr.womax.cavemanager.utils.change.Change;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.MapChangeListener;
@@ -155,6 +156,7 @@ public class CompartementDisplayController {
 
                                     result.ifPresent(bottle -> {
                                         spot.setBottle(bottle);
+                                        new Change(Change.ChangeType.SPOT_FILLED, spot, spot, bottle);
                                         spot.getBottle().typeProperty().addListener(changeListener);
                                         switch (bottle.getType()) {
                                             case ROSE:
@@ -198,6 +200,7 @@ public class CompartementDisplayController {
                                         result.ifPresent(bottle -> {
                                             spot.getBottle().typeProperty().removeListener(changeListener);
                                             spot.setBottle(bottle);
+                                            new Change(Change.ChangeType.SPOT_FILLED, spot, spot, bottle);
 //                                            renderBottle(spot, imageView, changeListener);
                                             BottleFilter.researchInSpot();
                                             MainApp.getController().showBottleDetails(spot);
@@ -208,6 +211,7 @@ public class CompartementDisplayController {
                                     MenuItem remove = new MenuItem("Enlever");
                                     remove.setOnAction(event1 -> {
                                         MainApp.getSpots().remove(spot);
+                                        new Change(Change.ChangeType.SPOT_EMPTIED, spot, spot, spot.getBottle());
                                         spot.getBottle().typeProperty().removeListener(changeListener);
                                         spot.setBottle(null);
                                         MainApp.getSpots().add(spot);
@@ -221,6 +225,7 @@ public class CompartementDisplayController {
 
                                 } else if(event.getButton() == MouseButton.MIDDLE) {
                                     MainApp.getSpots().remove(spot);
+                                    new Change(Change.ChangeType.SPOT_EMPTIED, spot, spot, spot.getBottle());
                                     spot.setBottle(null);
                                     MainApp.getSpots().add(spot);
                                     hoverView.setVisible(false);
@@ -286,8 +291,14 @@ public class CompartementDisplayController {
 
                                 spot.setBottle(src.getBottle());
 
-                                if(!Boolean.parseBoolean(s[1]))
+                                if(!Boolean.parseBoolean(s[1])) {
+                                    System.out.println("bottle moved");
+                                    new Change(Change.ChangeType.BOTTLE_MOVED, src, spot, spot.getBottle());
                                     src.setBottle(null);
+                                } else {
+                                    System.out.println("spot filled");
+                                    new Change(Change.ChangeType.SPOT_FILLED, spot, src, spot.getBottle());
+                                }
 
                                 BottleFilter.researchInSpot();
                             }

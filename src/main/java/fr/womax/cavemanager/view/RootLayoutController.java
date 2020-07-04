@@ -7,9 +7,12 @@ import fr.womax.cavemanager.model.Spot;
 import fr.womax.cavemanager.utils.BottleFilter;
 import fr.womax.cavemanager.utils.DialogUtils;
 import fr.womax.cavemanager.utils.Updater;
+import fr.womax.cavemanager.utils.change.Change;
 import fr.womax.cavemanager.utils.report.BugInfo;
 import fr.womax.cavemanager.utils.report.DropboxUtils;
 import fr.womax.cavemanager.utils.report.SuggestionInfo;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.ClipboardContent;
@@ -17,6 +20,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.util.StringConverter;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
 
@@ -45,6 +49,9 @@ public class RootLayoutController {
     @FXML
     private CheckMenuItem checkUpdate;
 
+    @FXML
+    private MenuItem cancelMenu;
+
     private Spot displayedSpot;
 
     private final ClipboardContent clipboardContent = new ClipboardContent();
@@ -71,7 +78,12 @@ public class RootLayoutController {
 
                     if(clipboardContent.hasString()) {
                         if(MainApp.getCompartementDisplayController().getSelectedSpot() != null) {
-                            MainApp.getCompartementDisplayController().getSelectedSpot().setBottle(MainApp.getBottles().get(Integer.valueOf(clipboardContent.getString())));
+                            Spot selectedSpot = MainApp.getCompartementDisplayController().getSelectedSpot();
+                            if(selectedSpot.isEmpty())
+                                new Change(Change.ChangeType.SPOT_FILLED, selectedSpot, selectedSpot, null);
+                            else
+                                new Change(Change.ChangeType.BOTTLE_CHANGED, selectedSpot, selectedSpot, selectedSpot.getBottle());
+                            selectedSpot.setBottle(MainApp.getBottles().get(Integer.valueOf(clipboardContent.getString())));
                             BottleFilter.researchInSpot();
                         }
                     }
@@ -125,6 +137,12 @@ public class RootLayoutController {
         checkUpdate.selectedProperty().addListener((observable, oldValue, newValue) -> {
             MainApp.PREFERENCE_JSON.addProperty("check_update", newValue);
         });
+
+        cancelMenu.setDisable(Change.getChangeHistory().size() == 0);
+
+        Change.getChangeHistory().addListener((ListChangeListener <? super Change>) c -> {
+            cancelMenu.setDisable(Change.getChangeHistory().size() == 0);
+        });
     }
 
     public boolean isShiftPressed() {
@@ -159,6 +177,13 @@ public class RootLayoutController {
 
     public void handleOpenBottleList() {
         DialogUtils.chooseBottle(false);
+    }
+
+    public void handleCancel() {
+        ObservableList <Change> changeHistory = Change.getChangeHistory();
+        Change lastChange = changeHistory.get(changeHistory.size() - 1);
+        lastChange.undo();
+        changeHistory.remove(lastChange);
     }
 
     public void handleCheckUpdate() {

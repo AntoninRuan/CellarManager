@@ -24,7 +24,7 @@ public class Saver {
 
     public static void doChange() {
         changeCount ++;
-        if(changeCount == 5) {
+        if(changeCount == 10) {
             changeCount = 0;
             MainApp.saveFiles();
             timer.purge();
@@ -33,7 +33,8 @@ public class Saver {
                 @Override
                 public void run() {
                     MainApp.saveFiles();
-                    changeCount --;
+                    changeCount = 0;
+                    timer.purge();
                 }
             },30L * 1000L);
         }

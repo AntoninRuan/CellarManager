@@ -35,6 +35,12 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Edition">
               <items>
+                  <MenuItem fx:id="cancelMenu" mnemonicParsing="false" onAction="#handleCancel" text="Annuler">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#handleOpenBottleList" text="Bouteille">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="B" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
