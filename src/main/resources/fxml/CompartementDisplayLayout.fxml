@@ -32,7 +32,7 @@
             </Button>
             <HBox alignment="CENTER" fillHeight="false" prefHeight="750.0" prefWidth="700.0">
                <children>
-                  <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #264653;">
+                  <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" stylesheets="@../style/scroll_pane.css">
                      <content>
                         <VBox fx:id="vBox" alignment="CENTER" spacing="10.0" style="-fx-background-color: #264653;">
                            <children>
@@ -76,6 +76,6 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
       </HBox>
-      <Pagination fx:id="pagination" pageCount="1" style="-fx-arrows-visible: false; -fx-page-information-visible: false;" />
+      <Pagination fx:id="pagination" centerShape="false" pageCount="1" scaleX="1.3" scaleY="1.3" stylesheets="@../style/pagination.css" />
    </children>
 </VBox>

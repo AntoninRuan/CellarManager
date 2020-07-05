@@ -42,12 +42,14 @@ public class CompartementInfo {
 
         Compartement compartement = new Compartement(name, raw, column, index);
         System.out.println("id=" + compartement.getId() + ", index=" + index);
-        MainApp.getCompartements().put(compartement.getId(), compartement);
-        for(Compartement c : MainApp.getCompartements().values()) {
-            if(c.getIndex() > index) {
-                c.setIndex(c.getIndex() + 1);
+        if(!before) {
+            for(Compartement c : MainApp.getCompartements().values()) {
+                if(c.getIndex() >= index) {
+                    c.setIndex(c.getIndex() + 1);
+                }
             }
         }
+        MainApp.getCompartements().put(compartement.getId(), compartement);
         if(MainApp.getCompartementDisplayController() != null)
             MainApp.getCompartementDisplayController().setCurrentCompartementDisplayed(index);
     }

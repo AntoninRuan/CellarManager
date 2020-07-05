@@ -73,7 +73,6 @@ public class CompartementDisplayController {
         pagination.setPageCount(MainApp.getCompartements().size());
         MainApp.getCompartements().addListener((MapChangeListener <? super Integer, ? super Compartement>) c -> {
             pagination.setPageCount(MainApp.getCompartements().size());
-            updatePaginationStyle();
         });
         ContextMenu contextMenu = new ContextMenu();
         pagination.setPageFactory(index -> {
@@ -333,7 +332,7 @@ public class CompartementDisplayController {
                     }
                 }
 
-                for(Node n : scrollPane.lookupAll(".scroll-bar")) {
+                /*for(Node n : scrollPane.lookupAll(".scroll-bar")) {
                     if(n instanceof ScrollBar) {
                         ScrollBar scrollBar = (ScrollBar) n;
                         if(scrollBar.getOrientation() == Orientation.VERTICAL) {
@@ -343,19 +342,17 @@ public class CompartementDisplayController {
                             style += "-fx-border-radius: 2px;";
                             scrollBar.setStyle(style);
                             for(Node n1 : scrollBar.lookupAll(".thumb")) {
-                                n1.setStyle("-fx-background-color: #1f1f23;");
+                                n1.setStyle("-fx-background-color: #70b0b5;");
                             }
                         }
                     }
-                }
+                }*/
 
             }
 
             return new AnchorPane();
         });
         pagination.setCurrentPageIndex(0);
-
-        updatePaginationStyle();
 
         final LocalDateTime[] lastClick = {LocalDateTime.now()};
         final boolean[] doubleClick = {false};
@@ -372,12 +369,13 @@ public class CompartementDisplayController {
                     modifyNameHbox.setFillHeight(true);
                     modifyNameHbox.setSpacing(5);
 
-                    TextField modifyNameTextField = new TextField(MainApp.getCompartements().get(getCurrentCompartementDisplayed()).getName());
+                    TextField modifyNameTextField = new TextField(MainApp.getCompartement(getCurrentCompartementDisplayed()).getName());
                     modifyNameTextField.setFont(Font.font(Font.getDefault().getFamily(), 16));
                     modifyNameTextField.setPromptText("Nom");
                     modifyNameTextField.setAlignment(Pos.CENTER);
-                    modifyNameTextField.setPrefWidth(compartementDisplay.getWidth() - modifyNameTextField.getHeight());
+                    modifyNameTextField.setPrefWidth(compartementDisplay.getWidth() - name.getHeight());
                     modifyNameTextField.setPrefHeight(name.getHeight());
+                    modifyNameTextField.positionCaret(modifyNameTextField.getText().length());
 
                     ImageView view = new ImageView(new Image(CompartementDisplayController.class.getClassLoader().getResource("img/check.png").toString()));
                     view.setPreserveRatio(true);
@@ -387,7 +385,7 @@ public class CompartementDisplayController {
                     okButton.setBackground(new Background(new BackgroundFill(Color.valueOf("#264653"), new CornerRadii(0), new Insets(0))));
 
                     okButton.setOnAction(event1 -> {
-                        MainApp.getCompartements().get(getCurrentCompartementDisplayed()).setName(modifyNameTextField.getText());
+                        MainApp.getCompartement(getCurrentCompartementDisplayed()).setName(modifyNameTextField.getText());
                         name.setText(modifyNameTextField.getText());
 
                         vBox.getChildren().remove(modifyNameHbox);
@@ -411,28 +409,6 @@ public class CompartementDisplayController {
                     doubleClick[0] = false;
 
                 lastClick[0] = LocalDateTime.now();
-            }
-        });
-    }
-
-    private void updatePaginationStyle() {
-        Platform.runLater(() ->  {
-            for(Node n : pagination.lookupAll(".pagination-control")) {
-                for(Node n1 : n.lookupAll(".number-button")) {
-                    final String[] style = {""};
-                    style[0] += "-fx-background-color: #264653;";
-                    style[0] += "-fx-border-color: #70b0b5;";
-                    style[0] += "-fx-border-radius: 5px;";
-                    n1.setStyle(style[0] + (((ToggleButton) n1).isSelected() ? "-fx-text-fill: #70b0b5;" : "-fx-text-fill: aliceblue;"));
-                    ((ToggleButton) n1).selectedProperty().addListener((observable, oldValue, newValue) -> {
-                        if(newValue) {
-                            style[0] += "-fx-text-fill: #70b0b5;";
-                        } else {
-                            style[0] += "-fx-text-fill: aliceblue;";
-                        }
-                        n1.setStyle(style[0]);
-                    });
-                }
             }
         });
     }

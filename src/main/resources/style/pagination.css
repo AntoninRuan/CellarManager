@@ -1,0 +1,15 @@
+.pagination {
+    -fx-arrows-visible: false;
+    -fx-page-information-visible: false;
+}
+
+.pagination .pagination-control .number-button {
+    -fx-background-color: #264653;
+    -fx-border-color: #70b0b5;
+    -fx-border-radius: 5px;
+    -fx-text-fill: aliceblue;
+}
+
+.pagination .pagination-control .number-button:selected {
+    -fx-text-fill: #70b0b5;
+}
