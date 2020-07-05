@@ -116,7 +116,14 @@ public class BottleChooserController {
                     BottleInfo bottleInfo = new BottleInfo(bottle.getName(), bottle.getRegion(), bottle.getDomain(),
                             bottle.getEdition(), bottle.getComment(), bottle.getYear(), bottle.getConsumeYear(), bottle.getType());
 
-                    bottleInfo.createBottle();
+                    Bottle bottle1 = bottleInfo.createBottle();
+                    Optional<BottleInfo> result = DialogUtils.addNewBottle(bottle1);
+                    if(result.isPresent()) {
+                        result.get().modifyBottle(bottle1);
+                    } else {
+                        MainApp.getBottles().remove(bottle1.getId());
+                    }
+
                 });
 
                 MenuItem delete = new MenuItem("Supprimer");

@@ -277,19 +277,15 @@ public class DialogUtils {
 
         TextField name = new TextField();
         name.setPromptText("Nom");
-        SuggestionMenu.addSuggestionMenu(name, SuggestionMenu.getAllBottlesName());
 
         TextField region = new TextField();
         region.setPromptText("Région");
-        SuggestionMenu.addSuggestionMenu(region, SuggestionMenu.getAllBottleRegions());
 
         TextField edition = new TextField();
         edition.setPromptText("Édition (ou Cuvée)");
-        SuggestionMenu.addSuggestionMenu(edition, SuggestionMenu.getAllBottlesEdition());
 
         TextField domain = new TextField();
         domain.setPromptText("Domaine");
-        SuggestionMenu.addSuggestionMenu(domain, SuggestionMenu.getAllBottlesDomain());
 
         TextField comment = new TextField();
         comment.setPromptText("Commentaire");
@@ -320,6 +316,11 @@ public class DialogUtils {
             wineType.setValue(bottle.getType());
 
         }
+
+        SuggestionMenu.addSuggestionMenu(name, SuggestionMenu.getAllBottlesName());
+        SuggestionMenu.addSuggestionMenu(region, SuggestionMenu.getAllBottleRegions());
+        SuggestionMenu.addSuggestionMenu(edition, SuggestionMenu.getAllBottlesEdition());
+        SuggestionMenu.addSuggestionMenu(domain, SuggestionMenu.getAllBottlesDomain());
 
         gridPane.add(new Label("Nom:"), 0, 0);
         gridPane.add(new Label("Région:"), 0, 1);
