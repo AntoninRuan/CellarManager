@@ -5,6 +5,7 @@ import fr.womax.cavemanager.model.Bottle;
 import fr.womax.cavemanager.model.BottleInfo;
 import fr.womax.cavemanager.model.CompartementInfo;
 import fr.womax.cavemanager.model.WineType;
+import fr.womax.cavemanager.utils.javafx.CustomSpinnerValueFactory;
 import fr.womax.cavemanager.utils.report.BugInfo;
 import fr.womax.cavemanager.utils.report.DropboxUtils;
 import fr.womax.cavemanager.utils.report.SuggestionInfo;
@@ -172,14 +173,16 @@ public class DialogUtils {
         TextField name = new TextField();
         name.setPromptText("Nom");
 
-        final Spinner <Integer> row = new Spinner <>(1, 10, 1, 1);
+        final Spinner <Integer> row = new Spinner <>(new CustomSpinnerValueFactory(1, 10, 1));
         row.setEditable(true);
         row.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue) {
                 row.increment(0);
             }
         });
-        final Spinner<Integer> column = new Spinner <>(1, 10, 1, 1);
+        ((CustomSpinnerValueFactory) row.getValueFactory()).setSpinner(row);
+        final Spinner<Integer> column = new Spinner <>(new CustomSpinnerValueFactory(1, 10, 1));
+        ((CustomSpinnerValueFactory) column.getValueFactory()).setSpinner(column);
         column.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue) {
                 column.increment(0);

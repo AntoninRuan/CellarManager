@@ -1,6 +1,7 @@
 package fr.womax.cavemanager.model;
 
 import fr.womax.cavemanager.MainApp;
+import fr.womax.cavemanager.utils.Saver;
 
 /**
  * @author Antonin Ruan
@@ -30,6 +31,7 @@ public class BottleInfo {
     public Bottle createBottle() {
         Bottle bottle = new Bottle(name, region, edition, domain, comment, year, consumeYear, type);
         MainApp.getBottles().put(bottle.getId(), bottle);
+        Saver.doChange();
         return bottle;
     }
 
@@ -42,6 +44,7 @@ public class BottleInfo {
         bottle.setYear(year);
         bottle.setConsumeYear(consumeYear);
         bottle.setType(type);
+        Saver.doChange();
     }
 
 }
