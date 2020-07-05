@@ -76,10 +76,10 @@ public class CompartementDisplayController {
             updatePaginationStyle();
         });
         ContextMenu contextMenu = new ContextMenu();
-        pagination.setPageFactory((index) -> {
+        pagination.setPageFactory(index -> {
 
             if(!MainApp.getCompartements().isEmpty()) {
-                Compartement toDisplay = MainApp.getCompartements().get(index);
+                Compartement toDisplay = MainApp.getCompartement(index);
                 name.setText(toDisplay.getName());
 
                 Spot[][] spots = toDisplay.getSpots();

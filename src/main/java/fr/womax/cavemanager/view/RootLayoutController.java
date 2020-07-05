@@ -197,13 +197,19 @@ public class RootLayoutController {
 
     public void handleDeleteCompartement() {
         if(MainApp.getCompartements().size() != 1) {
-            Compartement compartement = MainApp.getCompartements().get(MainApp.getCompartementDisplayController().getCurrentCompartementDisplayed());
+            Compartement compartement = MainApp.getCompartement(MainApp.getCompartementDisplayController().getCurrentCompartementDisplayed());
             for(Spot[] spotColumn : compartement.getSpots()) {
                 for(Spot spot : spotColumn) {
                     MainApp.getSpots().remove(spot);
                 }
             }
-            MainApp.getCompartements().remove(MainApp.getCompartementDisplayController().getCurrentCompartementDisplayed());
+            MainApp.getCompartements().remove(compartement.getId());
+            for(Compartement c : MainApp.getCompartements().values()) {
+                if(c.getIndex() > compartement.getIndex()) {
+                    c.setIndex(c.getIndex() - 1);
+                }
+            }
+            MainApp.getCompartementDisplayController().setCurrentCompartementDisplayed(compartement.getIndex());
         } else {
             DialogUtils.needAtLeastOneCompartement();
         }

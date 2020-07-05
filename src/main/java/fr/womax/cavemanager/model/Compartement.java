@@ -10,6 +10,7 @@ public class Compartement {
 
     private int id;
 
+    private int index;
     private String name;
     private int row, column;
     private Spot[][] spots;
@@ -22,25 +23,35 @@ public class Compartement {
         fillEmpty();
     }
 
-    Compartement(String name, int row, int column) {
+    Compartement(String name, int row, int column, int index) {
         this.name = name.trim().isEmpty() ? "Etagère" : name;
         this.id = MainApp.nextCompartementId();
         this.row = row;
         this.column = column;
         this.spots = new Spot[row][column];
+        this.index = index;
         fillEmpty();
     }
 
-    Compartement(String name, int raw, int column, Spot[][] spots) {
+    Compartement(int id, String name, int raw, int column, Spot[][] spots, int index) {
         this.name = name;
-        this.id = MainApp.nextCompartementId();
+        this.id = id;
         this.row = raw;
         this.column = column;
         this.spots = spots;
+        this.index = index;
     }
 
     public int getId() {
         return id;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     private void fillEmpty() {
@@ -71,8 +82,9 @@ public class Compartement {
         return spots;
     }
 
-    public static Compartement fromJson(JsonObject jsonObject) {
+    public static Compartement fromJson(JsonObject jsonObject, int ids) {
         String name = jsonObject.get("name").getAsString();
+        int index = jsonObject.has("index") ? jsonObject.get("index").getAsInt() : ids;
         int row = jsonObject.get("raw_number").getAsInt();
         int column = jsonObject.get("column_number").getAsInt();
         JsonObject spotsJson = jsonObject.get("spots").getAsJsonObject();
@@ -88,12 +100,13 @@ public class Compartement {
 
        }
 
-       return new Compartement(name, row, column, spots);
+       return new Compartement(ids, name, row, column, spots, index);
     }
 
     public JsonObject toJson() {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("name", name);
+        jsonObject.addProperty("index", index);
         jsonObject.addProperty("raw_number", row);
         jsonObject.addProperty("column_number", column);
 

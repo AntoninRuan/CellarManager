@@ -309,12 +309,14 @@ public class MainApp extends Application {
             for(Map.Entry<String, JsonElement> entry : object.entrySet()) {
 
                 int id = Integer.valueOf(entry.getKey());
-                Compartement compartement = Compartement.fromJson(entry.getValue().getAsJsonObject());
+                Compartement compartement = Compartement.fromJson(entry.getValue().getAsJsonObject(), id);
                 MainApp.compartements.put(id, compartement);
                 if(MainApp.lastCompartementId < id)
                     MainApp.lastCompartementId = id;
 
             }
+
+            lastCompartementId ++;
 
         } catch (FileNotFoundException e) {
             DialogUtils.sendErrorWindow(e);
@@ -334,6 +336,15 @@ public class MainApp extends Application {
 
     public static ObservableMap <Integer, Compartement> getCompartements() {
         return compartements;
+    }
+
+    public static Compartement getCompartement(int index) {
+        for(Compartement compartement : compartements.values()) {
+            if(compartement.getIndex() == index) {
+                return compartement;
+            }
+        }
+        return null;
     }
 
     public static ObservableList <Spot> getSpots() {

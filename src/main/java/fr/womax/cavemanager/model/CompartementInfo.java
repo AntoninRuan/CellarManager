@@ -31,16 +31,23 @@ public class CompartementInfo {
         }
 
         if(before) {
-            Compartement compartement = MainApp.getCompartements().get(MainApp.getCompartementDisplayController().getCurrentCompartementDisplayed());
+            Compartement compartement = MainApp.getCompartement(MainApp.getCompartementDisplayController().getCurrentCompartementDisplayed());
             for(Spot[] spotColumn : compartement.getSpots()) {
                 for(Spot spot : spotColumn) {
                     MainApp.getSpots().remove(spot);
                 }
             }
-            MainApp.getCompartements().remove(MainApp.getCompartementDisplayController().getCurrentCompartementDisplayed());
+            MainApp.getCompartements().remove(compartement.getId());
         }
 
-        MainApp.getCompartements().put(index, new Compartement(name, raw, column));
+        Compartement compartement = new Compartement(name, raw, column, index);
+        System.out.println("id=" + compartement.getId() + ", index=" + index);
+        MainApp.getCompartements().put(compartement.getId(), compartement);
+        for(Compartement c : MainApp.getCompartements().values()) {
+            if(c.getIndex() > index) {
+                c.setIndex(c.getIndex() + 1);
+            }
+        }
         if(MainApp.getCompartementDisplayController() != null)
             MainApp.getCompartementDisplayController().setCurrentCompartementDisplayed(index);
     }
