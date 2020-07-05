@@ -39,7 +39,6 @@ public class MainApp extends Application {
     //TODO bind les boutons importer / exporter à des actions.
     //TODO ajouter la possibilité de modifier le nombre de ligne/colonne d'une étagère
     //TODO pouvoir changer l'ordre des étagères.
-    //TODO ajouter un message (tooltips par exemple) lorsqu'une valeur est tronquée dans les spinners
     //TODO lorsque des bouteilles sont trouvés sur étagère différent de celle courante. Afficher quelque chose qui permettent de le voir
     //TODO ajouter un bind à une appli mobile pour afficher la bouteille séléctionner sur ordinateur sur un téléphone
     //TODO ajouter un plan global de la cave ou l'on puisse placer les étagères

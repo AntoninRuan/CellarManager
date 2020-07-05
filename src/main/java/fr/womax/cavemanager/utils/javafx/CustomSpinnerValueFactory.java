@@ -33,8 +33,6 @@ public class CustomSpinnerValueFactory extends SpinnerValueFactory<Integer> {
 
         valueProperty().addListener((observable, oldValue, newValue) -> {
 
-            System.out.println(newValue);
-
             if(newValue < min) {
                 setValue(min);
                 unauthorizedValue();
@@ -75,7 +73,6 @@ public class CustomSpinnerValueFactory extends SpinnerValueFactory<Integer> {
             style += "-fx-border-radius: 2px;";
 //            style += "-fx-border-insets: 1px;";
 
-            System.out.println(spinner.getWidth());
             spinner.getEditor().setStyle(style);
 
             Tooltip tooltip = new Tooltip("La valeur doit être comprise entre " + min + " et " + max);

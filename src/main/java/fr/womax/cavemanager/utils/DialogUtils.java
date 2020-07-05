@@ -173,7 +173,7 @@ public class DialogUtils {
         TextField name = new TextField();
         name.setPromptText("Nom");
 
-        final Spinner <Integer> row = new Spinner <>(new CustomSpinnerValueFactory(1, 10, 1));
+        final Spinner <Integer> row = new Spinner <>(new CustomSpinnerValueFactory(1, 40, 1));
         row.setEditable(true);
         row.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue) {

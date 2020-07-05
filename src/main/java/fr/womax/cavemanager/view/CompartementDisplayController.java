@@ -9,13 +9,16 @@ import fr.womax.cavemanager.utils.BottleFilter;
 import fr.womax.cavemanager.utils.DialogUtils;
 import fr.womax.cavemanager.utils.Saver;
 import fr.womax.cavemanager.utils.change.Change;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -48,6 +51,9 @@ public class CompartementDisplayController {
     @FXML
     private GridPane compartementDisplay;
 
+    @FXML
+    private ScrollPane scrollPane;
+
     private final Image spotFill = new Image(this.getClass().getClassLoader().getResource("img/spot_fill.png").toString());
     private final Image spotEmpty = new Image(this.getClass().getClassLoader().getResource("img/spot_empty.png").toString());
     private final Image spotAdd = new Image(this.getClass().getClassLoader().getResource("img/spot_add.png").toString());
@@ -67,6 +73,7 @@ public class CompartementDisplayController {
         pagination.setPageCount(MainApp.getCompartements().size());
         MainApp.getCompartements().addListener((MapChangeListener <? super Integer, ? super Compartement>) c -> {
             pagination.setPageCount(MainApp.getCompartements().size());
+            updatePaginationStyle();
         });
         ContextMenu contextMenu = new ContextMenu();
         pagination.setPageFactory((index) -> {
@@ -292,11 +299,9 @@ public class CompartementDisplayController {
                                 spot.setBottle(src.getBottle());
 
                                 if(!Boolean.parseBoolean(s[1])) {
-                                    System.out.println("bottle moved");
                                     new Change(Change.ChangeType.BOTTLE_MOVED, src, spot, spot.getBottle());
                                     src.setBottle(null);
                                 } else {
-                                    System.out.println("spot filled");
                                     new Change(Change.ChangeType.SPOT_FILLED, spot, src, spot.getBottle());
                                 }
 
@@ -307,6 +312,8 @@ public class CompartementDisplayController {
                         stackPane.setOnMouseEntered(event -> {
                             selectedSpot = spot;
                             stackPane.requestFocus();
+                            if(spot.getBottle() != null)
+                                MainApp.getController().showBottleDetails(spot);
                         });
 
                         stackPane.setOnMouseExited(event -> {
@@ -326,11 +333,29 @@ public class CompartementDisplayController {
                     }
                 }
 
+                for(Node n : scrollPane.lookupAll(".scroll-bar")) {
+                    if(n instanceof ScrollBar) {
+                        ScrollBar scrollBar = (ScrollBar) n;
+                        if(scrollBar.getOrientation() == Orientation.VERTICAL) {
+                            String style = "";
+                            style += "-fx-background-color:  #264653;";
+                            style += "-fx-border-color: #70b0b5;";
+                            style += "-fx-border-radius: 2px;";
+                            scrollBar.setStyle(style);
+                            for(Node n1 : scrollBar.lookupAll(".thumb")) {
+                                n1.setStyle("-fx-background-color: #1f1f23;");
+                            }
+                        }
+                    }
+                }
+
             }
 
             return new AnchorPane();
         });
         pagination.setCurrentPageIndex(0);
+
+        updatePaginationStyle();
 
         final LocalDateTime[] lastClick = {LocalDateTime.now()};
         final boolean[] doubleClick = {false};
@@ -386,6 +411,28 @@ public class CompartementDisplayController {
                     doubleClick[0] = false;
 
                 lastClick[0] = LocalDateTime.now();
+            }
+        });
+    }
+
+    private void updatePaginationStyle() {
+        Platform.runLater(() ->  {
+            for(Node n : pagination.lookupAll(".pagination-control")) {
+                for(Node n1 : n.lookupAll(".number-button")) {
+                    final String[] style = {""};
+                    style[0] += "-fx-background-color: #264653;";
+                    style[0] += "-fx-border-color: #70b0b5;";
+                    style[0] += "-fx-border-radius: 5px;";
+                    n1.setStyle(style[0] + (((ToggleButton) n1).isSelected() ? "-fx-text-fill: #70b0b5;" : "-fx-text-fill: aliceblue;"));
+                    ((ToggleButton) n1).selectedProperty().addListener((observable, oldValue, newValue) -> {
+                        if(newValue) {
+                            style[0] += "-fx-text-fill: #70b0b5;";
+                        } else {
+                            style[0] += "-fx-text-fill: aliceblue;";
+                        }
+                        n1.setStyle(style[0]);
+                    });
+                }
             }
         });
     }
