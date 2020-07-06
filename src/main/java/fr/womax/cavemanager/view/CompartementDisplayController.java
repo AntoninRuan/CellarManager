@@ -70,7 +70,6 @@ public class CompartementDisplayController {
 
     @FXML
     private void initialize() {
-        pagination.setPageCount(MainApp.getCompartements().size());
         MainApp.getCompartements().addListener((MapChangeListener <? super Integer, ? super Compartement>) c -> {
             pagination.setPageCount(MainApp.getCompartements().size());
         });
@@ -79,6 +78,9 @@ public class CompartementDisplayController {
 
             if(!MainApp.getCompartements().isEmpty()) {
                 Compartement toDisplay = MainApp.getCompartement(index);
+                if(toDisplay == null && index == 0) {
+                    return new AnchorPane();
+                }
                 name.setText(toDisplay.getName());
 
                 Spot[][] spots = toDisplay.getSpots();
@@ -438,14 +440,14 @@ public class CompartementDisplayController {
         int currentPage = pagination.getCurrentPageIndex();
         int newPage = currentPage - 1;
         if(newPage < 0)
-            newPage = pagination.getPageCount() - 1;
+            newPage = MainApp.getCompartements().size() - 1;
         pagination.setCurrentPageIndex(newPage);
     }
 
     public void handleRight() {
         int currentPage = pagination.getCurrentPageIndex();
         int newPage = currentPage + 1;
-        if(newPage > pagination.getPageCount() - 1)
+        if(newPage > MainApp.getCompartements().size() - 1)
             newPage = 0;
         pagination.setCurrentPageIndex(newPage);
     }
@@ -455,8 +457,10 @@ public class CompartementDisplayController {
     }
 
     public void setCurrentCompartementDisplayed(int index) {
-        if(index == pagination.getCurrentPageIndex())
+        if(index == pagination.getCurrentPageIndex()) {
             pagination.getPageFactory().call(index);
+            return;
+        }
         pagination.setCurrentPageIndex(index);
     }
 

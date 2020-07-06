@@ -1,6 +1,7 @@
 package fr.womax.cavemanager.model;
 
 import fr.womax.cavemanager.MainApp;
+import javafx.application.Platform;
 
 /**
  * @author Antonin Ruan
@@ -41,7 +42,6 @@ public class CompartementInfo {
         }
 
         Compartement compartement = new Compartement(name, raw, column, index);
-        System.out.println("id=" + compartement.getId() + ", index=" + index);
         if(!before) {
             for(Compartement c : MainApp.getCompartements().values()) {
                 if(c.getIndex() >= index) {
