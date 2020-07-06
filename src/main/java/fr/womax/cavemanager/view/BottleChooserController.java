@@ -48,7 +48,7 @@ public class BottleChooserController {
     private TableColumn<Bottle, String> consumeYearColumn;
 
     @FXML
-    private TableColumn<Bottle, String> countColumn;
+    private TableColumn<Bottle, Number> countColumn;
 
     @FXML
     private Button cancelButton;

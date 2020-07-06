@@ -21,7 +21,7 @@ public class Bottle {
     private StringProperty year;
     private StringProperty consumeYear;
     private ObjectProperty <WineType> type;
-    private StringProperty count = new SimpleStringProperty();
+    private IntegerProperty count = new SimpleIntegerProperty();
 
     public Bottle(int id, String name, String region, String edition, String domain, String comment, int year, int consumeYear, WineType type) {
         this.id = id;
@@ -113,8 +113,8 @@ public class Bottle {
         return type;
     }
 
-    public StringProperty countProperty() {
-        count.setValue(String.valueOf(getCount()));
+    public IntegerProperty countProperty() {
+        count.setValue(getCount());
         return count;
     }
 
