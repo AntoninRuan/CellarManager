@@ -7,6 +7,7 @@ import fr.womax.cavemanager.model.*;
 import fr.womax.cavemanager.utils.DialogUtils;
 import fr.womax.cavemanager.utils.Saver;
 import fr.womax.cavemanager.utils.Updater;
+import fr.womax.cavemanager.utils.mobile_sync.MobileSyncManager;
 import fr.womax.cavemanager.view.CompartementDisplayController;
 import fr.womax.cavemanager.view.RootLayoutController;
 import javafx.application.Application;
@@ -222,6 +223,9 @@ public class MainApp extends Application {
     }
 
     public void stop() {
+        if(MobileSyncManager.isActivate()) {
+            MobileSyncManager.toggleState();
+        }
         saveFiles();
         Saver.cancelTask();
     }
@@ -332,6 +336,10 @@ public class MainApp extends Application {
             Saver.doChange();
         });
 
+    }
+
+    public static File getBottleFile() {
+        return bottleFile;
     }
 
     public static ObservableMap <Integer, Compartement> getCompartements() {

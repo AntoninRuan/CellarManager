@@ -6,6 +6,8 @@ import fr.womax.cavemanager.model.BottleInfo;
 import fr.womax.cavemanager.model.CompartementInfo;
 import fr.womax.cavemanager.model.WineType;
 import fr.womax.cavemanager.utils.javafx.CustomSpinnerValueFactory;
+import fr.womax.cavemanager.utils.javafx.SuggestionMenu;
+import fr.womax.cavemanager.utils.mobile_sync.MobileSyncManager;
 import fr.womax.cavemanager.utils.report.BugInfo;
 import fr.womax.cavemanager.utils.report.DropboxUtils;
 import fr.womax.cavemanager.utils.report.SuggestionInfo;
@@ -502,6 +504,19 @@ public class DialogUtils {
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
 
         alert.showAndWait();
+    }
+
+    public static void mobileSyncInfo(String header) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Synchronisation mobile");
+        alert.setHeaderText(header);
+        alert.setContentText("Code de connection: " + MobileSyncManager.LINK_CODE + "\n" +
+                "Version de MobileSync: " + MobileSyncManager.VERSION);
+
+        ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
+
+        alert.showAndWait();
+
     }
 
     public static void infoMessage(String title, String header, String message) {

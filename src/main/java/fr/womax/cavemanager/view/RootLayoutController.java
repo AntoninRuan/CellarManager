@@ -8,6 +8,7 @@ import fr.womax.cavemanager.utils.BottleFilter;
 import fr.womax.cavemanager.utils.DialogUtils;
 import fr.womax.cavemanager.utils.Updater;
 import fr.womax.cavemanager.utils.change.Change;
+import fr.womax.cavemanager.utils.mobile_sync.MobileSyncManager;
 import fr.womax.cavemanager.utils.report.BugInfo;
 import fr.womax.cavemanager.utils.report.DropboxUtils;
 import fr.womax.cavemanager.utils.report.SuggestionInfo;
@@ -51,6 +52,9 @@ public class RootLayoutController {
 
     @FXML
     private MenuItem cancelMenu;
+
+    @FXML
+    private MenuItem toggleMobileSync;
 
     private Spot displayedSpot;
 
@@ -214,6 +218,18 @@ public class RootLayoutController {
             DialogUtils.needAtLeastOneCompartement();
         }
 
+    }
+
+    public void handleToggleMobileSync() {
+        MobileSyncManager.toggleState();
+        if(MobileSyncManager.isActivate()) {
+            DialogUtils.mobileSyncInfo("Synchronisation Mobile activée, voici les informations pour vous connecter");
+        }
+        toggleMobileSync.setText(MobileSyncManager.isActivate() ? "Désactiver" : "Activer");
+    }
+
+    public void handleMobileSyncInfo() {
+        DialogUtils.mobileSyncInfo(null);
     }
 
     public void handleClose() {

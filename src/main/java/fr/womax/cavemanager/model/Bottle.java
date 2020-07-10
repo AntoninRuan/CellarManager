@@ -24,8 +24,8 @@ public class Bottle {
     private IntegerProperty count = new SimpleIntegerProperty();
 
     public Bottle(int id, String name, String region, String edition, String domain, String comment, int year, int consumeYear, WineType type) {
-        this.id = id;
         this.id = MainApp.nextBottleId();
+        this.id = id;
         this.name = new SimpleStringProperty(name);
         this.region = new SimpleStringProperty(region);
         this.edition = new SimpleStringProperty(edition);
@@ -181,6 +181,10 @@ public class Bottle {
             consumeYear = year;
         WineType type = WineType.valueOf(jsonObject.get("type").getAsString());
         return new Bottle(id, name, region, edition, domain, comment, year, consumeYear, type);
+    }
+
+    public Bottle clone() {
+        return new Bottle(id, getName(), getRegion(), getEdition(), getDomain(), getComment(), getYear(), getConsumeYear(), getType());
     }
 
     @Override
