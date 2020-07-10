@@ -37,6 +37,8 @@ public class MainApp extends Application {
 
     //FIXME position du bouton pour ajouter une étagère peu intuitive
 
+    //TODO transfer de toutes la parties update / issues sur github à l'aide de l'api github https://developer.github.com/v3/
+
     //TODO bind les boutons importer / exporter à des actions.
     //TODO ajouter la possibilité de modifier le nombre de ligne/colonne d'une étagère
     //TODO pouvoir changer l'ordre des étagères.
