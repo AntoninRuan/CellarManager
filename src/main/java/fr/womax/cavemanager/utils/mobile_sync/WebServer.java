@@ -4,7 +4,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.womax.cavemanager.MainApp;
 import fr.womax.cavemanager.model.Bottle;
+import fr.womax.cavemanager.model.Compartement;
+import fr.womax.cavemanager.model.Spot;
 import fr.womax.cavemanager.model.WineType;
+import fr.womax.cavemanager.utils.change.Change;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -21,15 +24,16 @@ import java.util.StringTokenizer;
  */
 class WebServer {
 
-    private static Thread serverThread;
     private static ServerSocket serverSocket;
     protected static boolean run;
-    private static ArrayList<Bottle> changed = new ArrayList <>();
+    private static final ArrayList<Bottle> bottlesChanged = new ArrayList <>();
+    private static final ArrayList<Change> changes = new ArrayList <>();
+
 
     public static void startWebServer() {
         run = true;
 
-        serverThread = new Thread(() -> {
+        Thread serverThread = new Thread(() -> {
             try {
                 serverSocket = new ServerSocket(MobileSyncManager.PORT);
                 serverSocket.setSoTimeout(1000);
@@ -120,7 +124,7 @@ class WebServer {
                                             }
                                         }
                                         System.out.println("id=" + toChange.getId() + ", bottle=" + toChange);
-                                        changed.add(toChange);
+                                        bottlesChanged.add(toChange);
                                     }
                                 } else if(type.equalsIgnoreCase("add")) {
                                     JsonObject add = JsonParser.parseString(arg).getAsJsonObject();
@@ -135,16 +139,16 @@ class WebServer {
                                         WineType type1 = add.has("type") ? WineType.valueOf(add.get("type").getAsString()) : WineType.ROUGE;
 
                                         Bottle bottle = new Bottle(name, region, edition, domain, comment, year, consumeYear, type1);
-                                        changed.add(bottle);
+                                        bottlesChanged.add(bottle);
                                     }
                                 } else if(type.equalsIgnoreCase("save")) {
-                                    for(Bottle bottle : changed) {
+                                    for(Bottle bottle : bottlesChanged) {
                                         System.out.println("id=" + bottle.getId() + ", bottle=" + bottle.toString());
                                         MainApp.getBottles().put(bottle.getId(), bottle);
                                     }
-                                    changed.clear();
+                                    bottlesChanged.clear();
                                 } else if(type.equalsIgnoreCase("cancel")) {
-                                    changed.clear();
+                                    bottlesChanged.clear();
                                 }
                             }
 
@@ -164,6 +168,62 @@ class WebServer {
                         String line = reader1.readLine();
                         out.println(line);
                         out.flush();
+                    } else if(fileName.endsWith("cave")) {
+
+                        if(!param.isEmpty()) {
+                            String[] params = param.split("&");
+                            for(String s : params) {
+
+                                String type = s.split("=")[0];
+                                String arg = s.split("=").length > 1 ? s.split("=")[1] : "{}";
+
+                                System.out.println("type=" + type + ", arg=" + arg);
+
+                                if(type.equalsIgnoreCase("remove") || type.equalsIgnoreCase("add")) {
+
+                                    //arg de la forme = {"compartement_id":id, "spot_id":id, ("bottle_id":id)} (dans le cas du add)
+
+                                    JsonObject jsonArg = JsonParser.parseString(arg).getAsJsonObject();
+
+                                    if(jsonArg.has("compartement_id") && jsonArg.has("spot_id")) {
+
+                                        Compartement compartement = MainApp.getCompartements().get(jsonArg.get("compartement_id").getAsInt());
+                                        int spotId = jsonArg.get("spot_id").getAsInt();
+                                        int row = spotId / 100;
+                                        int column = spotId - (row * 100);
+                                        Spot spot = compartement.getSpots()[row][column];
+
+                                        if(type.equalsIgnoreCase("remove")) {
+                                            Change change = new Change(Change.ChangeType.SPOT_EMPTIED, spot, spot, MainApp.getBottles().get(spot.getBottle().getId()));
+                                            changes.add(change);
+                                            spot.setBottle(null);
+                                        } else if(jsonArg.has("bottle_id")) {
+                                            Change change = new Change(Change.ChangeType.SPOT_FILLED, spot, spot, null);
+                                            changes.add(change);
+                                            spot.setBottle(MainApp.getBottles().get(jsonArg.get("bottle_id").getAsInt()));
+                                        }
+                                    }
+
+                                } else if(type.equalsIgnoreCase("save")) {
+                                    changes.clear();
+                                } else if(type.equalsIgnoreCase("cancel")) {
+                                    for(Change change : changes) {
+                                        change.undo();
+                                    }
+                                }
+
+                            }
+                        }
+
+                        MainApp.saveFiles();
+
+                        writeHttpHeader(out, "200 OK", "application/json", MainApp.getOpenedFile().length());
+
+                        BufferedReader reader1 = new BufferedReader(new FileReader(MainApp.getOpenedFile()));
+                        socket.getOutputStream().write(reader1.readLine().getBytes(StandardCharsets.UTF_8));
+                        socket.getOutputStream().flush();
+
+
                     } else {
                         out.println("HTTP/1.1 200 OK");
                         out.println("Server: CaveManager MobilySync: " + MobileSyncManager.VERSION);
@@ -224,6 +284,16 @@ class WebServer {
 
     public static void stopWebServer() {
         run = false;
+    }
+
+    private static void writeHttpHeader(PrintWriter out, String status, String contentType, long contentLength) {
+        out.println("HTTP/1.1 " + status);
+        out.println("Server: CaveManager MobileSync: " + MobileSyncManager.VERSION);
+        out.println("Date: " + new Date());
+        out.println("Content-type: " + contentType);
+        out.println("Content-length: " + contentLength);
+        out.println();
+        out.flush();
     }
 
 }

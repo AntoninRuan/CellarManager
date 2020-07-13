@@ -187,7 +187,6 @@ public class RootLayoutController {
         ObservableList <Change> changeHistory = Change.getChangeHistory();
         Change lastChange = changeHistory.get(changeHistory.size() - 1);
         lastChange.undo();
-        changeHistory.remove(lastChange);
     }
 
     public void handleCheckUpdate() {

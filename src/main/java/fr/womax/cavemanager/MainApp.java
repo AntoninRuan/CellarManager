@@ -340,6 +340,10 @@ public class MainApp extends Application {
 
     }
 
+    public static File getOpenedFile() {
+        return openedFile;
+    }
+
     public static File getBottleFile() {
         return bottleFile;
     }
