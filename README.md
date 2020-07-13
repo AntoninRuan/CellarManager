@@ -1,8 +1,8 @@
 # CaveManager
 
-You can find an english readme [here](https://github.com/WoMaX91/CaveManager/master?readme=1?English)
+You can find an english readme [here](https://github.com/WoMaX91/CaveManager/tree/master#english)
 
-#Français
+# Français
 
 CaveManager est un programme vous permettant de gérer votre cave.<br>
 Il vous permet de lister les bouteilles présentes dans votre cave, mais également de savoir ou elle se trouve<br>
@@ -10,9 +10,9 @@ De plus ce programme est accompagné d'une application mobile, et ce dans le but
 En effet il est peu commode voire impossible d'emmener son ordinateur dans la cave, et faire des allers-retours entre la cave et l'ordinateur n'est pas une option non plus.<br>
 C'est pour cela que l'application vous permets d'ajouter, modifier, déplacer et enlever des bouteilles via votre téléphone.<br>
 
-1. [Installation](https://github.com/WoMaX91/CaveManager/master?readme=1#installation)
-2. [License](https://github.com/WoMaX91/CaveManager/master?readme=1#license) 
-3. [Changelog](https://github.com/WoMaX91/CaveManager/master?readme=1#changelog)
+1. [Installation](https://github.com/WoMaX91/CaveManager/tree/master#installation)
+2. [License](https://github.com/WoMaX91/CaveManager/tree/master#license) 
+3. [Changelog](https://github.com/WoMaX91/CaveManager/tree/master#changelog)
 
 ## Installation
 
@@ -106,7 +106,7 @@ ___
 * Fix de bug:
 	* Problèmes lorsqu'aucun fichier de sauvegarde n'existait
 
-#English
+# English
 
 CaveManager is a software made to help you manage your cave.<br>
 He allows you to list every bottles presents in your cave and to see where they are.<br>
@@ -114,9 +114,9 @@ Moreover you can also install a smartphone app who will made updating your cave 
 Indeed it is not handy, maybe impossible to bring you computer in your cave, and do many trip to between your cave and your computer neither.<br>
 That why the application allows you to add, modify, move and remove bottle through you smartphone.<br>
 
-1. [Installation](https://github.com/WoMaX91/CaveManager/master?readme=1#installation)
-2. [License](https://github.com/WoMaX91/CaveManager/master?readme=1#license) 
-3. [Changelog](https://github.com/WoMaX91/CaveManager/master?readme=1#changelog)
+1. [Installation](https://github.com/WoMaX91/CaveManager/tree/master#installation-1)
+2. [License](https://github.com/WoMaX91/CaveManager/tree/master#license-1) 
+3. [Changelog](https://github.com/WoMaX91/CaveManager/tree/master#changelog-1)
 
 ## Installation
 
