@@ -1,6 +1,5 @@
 package fr.womax.cavemanager.utils.change;
 
-import com.sun.istack.internal.NotNull;
 import fr.womax.cavemanager.model.Bottle;
 import fr.womax.cavemanager.model.Spot;
 import fr.womax.cavemanager.utils.Saver;
@@ -19,7 +18,7 @@ public class Change {
     private Spot dest;
     private Bottle oldBottle;
 
-    public Change(@NotNull ChangeType type, @NotNull Spot src, @NotNull Spot dest, Bottle oldBottle) {
+    public Change(ChangeType type, Spot src, Spot dest, Bottle oldBottle) {
         this.type = type;
         this.src = src;
         this.dest = type == ChangeType.BOTTLE_MOVED ? dest : null;
