@@ -1,5 +1,6 @@
 package fr.womax.cavemanager.utils.change;
 
+import com.sun.istack.internal.NotNull;
 import fr.womax.cavemanager.model.Bottle;
 import fr.womax.cavemanager.model.Spot;
 import fr.womax.cavemanager.utils.Saver;
@@ -18,17 +19,22 @@ public class Change {
     private Spot dest;
     private Bottle oldBottle;
 
-    public Change(ChangeType type, Spot src, Spot dest, Bottle oldBottle) {
+    private boolean undone = false;
+
+    public Change(@NotNull ChangeType type, @NotNull Spot src, @NotNull Spot dest, Bottle oldBottle) {
         this.type = type;
         this.src = src;
         this.dest = type == ChangeType.BOTTLE_MOVED ? dest : null;
         this.oldBottle = oldBottle;
-        if(changeHistory.size() > 10)
+        if(changeHistory.size() > 20)
             changeHistory.remove(0);
         changeHistory.add(this);
     }
 
     public void undo() {
+        if(undone) {
+            return;
+        }
         switch (type) {
 
             case SPOT_FILLED:
@@ -47,6 +53,8 @@ public class Change {
                 break;
 
         }
+        changeHistory.remove(this);
+        undone = true;
         Saver.doChange();
     }
 

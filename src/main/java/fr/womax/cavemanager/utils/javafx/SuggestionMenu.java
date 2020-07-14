@@ -1,4 +1,4 @@
-package fr.womax.cavemanager.utils;
+package fr.womax.cavemanager.utils.javafx;
 
 import fr.womax.cavemanager.MainApp;
 import fr.womax.cavemanager.model.Bottle;

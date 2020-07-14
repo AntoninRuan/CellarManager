@@ -7,6 +7,7 @@ import fr.womax.cavemanager.model.*;
 import fr.womax.cavemanager.utils.DialogUtils;
 import fr.womax.cavemanager.utils.Saver;
 import fr.womax.cavemanager.utils.Updater;
+import fr.womax.cavemanager.utils.mobile_sync.MobileSyncManager;
 import fr.womax.cavemanager.view.CompartementDisplayController;
 import fr.womax.cavemanager.view.RootLayoutController;
 import javafx.application.Application;
@@ -35,6 +36,8 @@ import java.util.Optional;
 public class MainApp extends Application {
 
     //FIXME position du bouton pour ajouter une étagère peu intuitive
+
+    //TODO transfer de toutes la parties update / issues sur github à l'aide de l'api github https://developer.github.com/v3/
 
     //TODO bind les boutons importer / exporter à des actions.
     //TODO ajouter la possibilité de modifier le nombre de ligne/colonne d'une étagère
@@ -222,6 +225,9 @@ public class MainApp extends Application {
     }
 
     public void stop() {
+        if(MobileSyncManager.isActivate()) {
+            MobileSyncManager.toggleState();
+        }
         saveFiles();
         Saver.cancelTask();
     }
@@ -332,6 +338,14 @@ public class MainApp extends Application {
             Saver.doChange();
         });
 
+    }
+
+    public static File getOpenedFile() {
+        return openedFile;
+    }
+
+    public static File getBottleFile() {
+        return bottleFile;
     }
 
     public static ObservableMap <Integer, Compartement> getCompartements() {

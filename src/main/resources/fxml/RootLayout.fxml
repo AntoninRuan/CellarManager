@@ -30,6 +30,13 @@
                   <MenuItem disable="true" mnemonicParsing="false" text="Importer" />
                   <MenuItem disable="true" mnemonicParsing="false" text="Exporter" />
                   <SeparatorMenuItem mnemonicParsing="false" />
+                  <Menu mnemonicParsing="false" text="Synchronisation">
+                    <items>
+                        <CheckMenuItem fx:id="toggleMobileSync" mnemonicParsing="false" onAction="#handleToggleMobileSync" text="Activer" />
+                      <MenuItem mnemonicParsing="false" onAction="#handleMobileSyncInfo" text="Info" />
+                    </items>
+                  </Menu>
+                  <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" onAction="#handleClose" text="Fermer" />
             </items>
           </Menu>
