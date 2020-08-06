@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="layout" maxHeight="1080.0" maxWidth="1920.0" prefHeight="790.0" prefWidth="1350.0" style="-fx-background-color: #264653;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.womax.cavemanager.view.RootLayoutController">
+<BorderPane fx:id="layout" maxHeight="1080.0" maxWidth="1920.0" prefHeight="790.0" prefWidth="1350.0" style="-fx-background-color: #264653;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.antoninruan.cellarmanager.view.RootLayoutController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
