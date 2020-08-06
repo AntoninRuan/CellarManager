@@ -8,6 +8,14 @@ import fr.womax.cavemanager.utils.BottleFilter;
 import fr.womax.cavemanager.utils.DialogUtils;
 import fr.womax.cavemanager.utils.Updater;
 import fr.womax.cavemanager.utils.change.Change;
+import fr.womax.cavemanager.utils.github.GitHubAPIService;
+import fr.womax.cavemanager.utils.github.GitHubAccountConnectionInfo;
+import fr.womax.cavemanager.utils.github.exception.GitHubAPIConnectionException;
+import fr.womax.cavemanager.utils.github.exception.LabelNotFoundException;
+import fr.womax.cavemanager.utils.github.exception.RepositoryNotFoundException;
+import fr.womax.cavemanager.utils.github.model.Repository;
+import fr.womax.cavemanager.utils.github.model.issues.Issue;
+import fr.womax.cavemanager.utils.github.model.issues.Label;
 import fr.womax.cavemanager.utils.mobile_sync.MobileSyncManager;
 import fr.womax.cavemanager.utils.report.BugInfo;
 import fr.womax.cavemanager.utils.report.DropboxUtils;
@@ -21,9 +29,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.util.StringConverter;
 
-import java.util.ArrayList;
-import java.util.Date;
+import javax.swing.text.html.Option;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author Antonin Ruan
@@ -241,17 +251,81 @@ public class RootLayoutController {
     }
 
     public void handleReportBug() {
+        AtomicBoolean disconnectAfter = new AtomicBoolean(false);
+        if(!GitHubAPIService.isAuthenticated()) {
+            Optional<GitHubAccountConnectionInfo> result = DialogUtils.loginToGitHub();
+            result.ifPresent(connectionInfo -> {
+                disconnectAfter.set(!connectionInfo.isStayConnected());
+                GitHubAPIService.setAuthentication(connectionInfo.getUsername(), connectionInfo.getPassword());
+                if(connectionInfo.getUsername().equals("") && connectionInfo.getPassword().equals("")) {
+                    System.out.println("authenticate for a guest user");
+                    GitHubAPIService.authenticateForGuestUser();
+                    disconnectAfter.set(true);
+                }
+            });
+            if(!result.isPresent())
+                return;
+        }
+
         Optional<BugInfo> result = DialogUtils.sendBugReport(null);
         result.ifPresent(bugInfo -> {
-            DropboxUtils.sendBugIssue(bugInfo.getTitle(), bugInfo.getDescription(), new Date(), bugInfo.getStackTrace());
+            try {
+                Repository repository = GitHubAPIService.getRepository("womax91", "cellarmanager");
+                Label bug = repository.getLabel("bug");
+                Issue issue = repository.createIssue(bugInfo.getTitle(), "Description:" + bugInfo.getDescription() +
+                        (bugInfo.getStackTrace() == null ? "" : "\nStacktrace:" + bugInfo.getStackTrace()), new Label[]{bug});
+
+                DialogUtils.infoMessage("Report de bug effectué", "Le bug a bien été reporté", "Vous pouvez suivre l'évolution du rapport ici:\n" +
+                        issue.getHtmlUrl());
+
+
+            } catch (IOException | ParseException | GitHubAPIConnectionException | RepositoryNotFoundException | LabelNotFoundException e) {
+                DialogUtils.sendErrorWindow(e);
+            }
+
         });
+
+        if(disconnectAfter.get())
+            GitHubAPIService.removeAuthentication();
+
     }
 
     public void handleSuggestIdea() {
+        AtomicBoolean disconnectAfter = new AtomicBoolean(false);
+        if(!GitHubAPIService.isAuthenticated()) {
+            Optional<GitHubAccountConnectionInfo> result = DialogUtils.loginToGitHub();
+            result.ifPresent(connectionInfo -> {
+                disconnectAfter.set(!connectionInfo.isStayConnected());
+
+                GitHubAPIService.setAuthentication(connectionInfo.getUsername(), connectionInfo.getPassword());
+                if(connectionInfo.getUsername().equals("") && connectionInfo.getPassword().equals("")) {
+                    GitHubAPIService.authenticateForGuestUser();
+                    disconnectAfter.set(true);
+                }
+            });
+            if(!result.isPresent())
+                return;
+        }
+
         Optional<SuggestionInfo> result = DialogUtils.sendSuggestion();
         result.ifPresent(suggestionInfo -> {
-            DropboxUtils.sendSuggestion(suggestionInfo.getTitle(), suggestionInfo.getDescription(), suggestionInfo.getDate());
+            try {
+                Repository repository = GitHubAPIService.getRepository("womax91", "cellarmanager");
+                Label suggest = repository.getLabel("enhancement");
+
+                Issue issue = repository.createIssue(suggestionInfo.getTitle(), suggestionInfo.getDescription(), new Label[]{suggest});
+
+                DialogUtils.infoMessage("Suggestion envoyé", "La suggestion a bien été envoyé", "Vous pouvez suivre l'évolution de cette suggestion ici\n" +
+                        issue.getHtmlUrl());
+
+
+            } catch (IOException | ParseException | GitHubAPIConnectionException | RepositoryNotFoundException | LabelNotFoundException e) {
+                DialogUtils.sendErrorWindow(e);
+            }
+
+
         });
+
     }
 
 }

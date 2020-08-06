@@ -1,10 +1,10 @@
-# CaveManager
+# CellarManager
 
 You can find an english readme [here](https://github.com/WoMaX91/CaveManager/tree/master#english)
 
 # Français
 
-CaveManager est un programme vous permettant de gérer votre cave.<br>
+CellarManager est un programme vous permettant de gérer votre cave.<br>
 Il vous permet de lister les bouteilles présentes dans votre cave, mais également de savoir ou elle se trouve<br>
 De plus ce programme est accompagné d'une application mobile, et ce dans le but de rendre le maintien de votre cave à jour plus simple possible.<br>
 En effet il est peu commode voire impossible d'emmener son ordinateur dans la cave, et faire des allers-retours entre la cave et l'ordinateur n'est pas une option non plus.<br>
@@ -108,11 +108,11 @@ ___
 
 # English
 
-CaveManager is a software made to help you manage your cave.<br>
-He allows you to list every bottles presents in your cave and to see where they are.<br>
-Moreover you can also install a smartphone app who will made updating your cave more easier.<br>
-Indeed it is not handy, maybe impossible to bring you computer in your cave, and do many trip to between your cave and your computer neither.<br>
-That why the application allows you to add, modify, move and remove bottle through you smartphone.<br>
+CellarManager is a software made to help you manage your cellar.<br>
+He allows you to list every bottles present in your cellar and to view where they are.<br>
+Moreover you can install a smartphone app which will make your cellar more easier to update.<br>
+Indeed it is not handy, maybe impossible to bring you computer in your cellar; do many round trip between your cellar and your computer neither.<br>
+That why the application allows you to add, modify, move and remove bottles from you smartphone.<br>
 
 1. [Installation](https://github.com/WoMaX91/CaveManager/tree/master#installation-1)
 2. [License](https://github.com/WoMaX91/CaveManager/tree/master#license-1) 
@@ -120,7 +120,7 @@ That why the application allows you to add, modify, move and remove bottle throu
 
 ## Installation
 
-Go on the latest [release][latest_release_link]'s page,
+Go on the page of [latest release][latest_release_link],
 
 Download the correct file depending on you OS :
 
@@ -129,16 +129,16 @@ On Linux, you have to download the `.jar` file.
 
 Verify every program dependencies are installed on your computer. (See the dependencies section)
 
-Place the downloaded file in empty folder (name `CaveManager`, for example), and run it
+Put the downloaded file in an empty folder (named `CellarManager`, for example), and run it
 
 ### Dependencies
 
-This program need Java and JavaFX to run.<br>
+This program needs Java and JavaFX to run.<br>
 You can download Java [here][windows_java_download_en].<br>
-This Java download includes JavaFX, so once you have installed it, you can run the program without issues.
+This Java version includes JavaFX, so once you have installed it, you can run the program without issues.
 
 If you are using a newer version than Java 8, JavaFX is no longer included in it, you have to download it.<br>
-You can find a installation guide [here][javafx_download]
+You can find a installation guidance [here][javafx_download]
 
 #### Find you Java version
 
@@ -149,8 +149,8 @@ To find which Java version is installed on you computer, open the command prompt
     Java(TM) SE Runtime Environment (build 1.8.0_241-b07)
     Java HotSpot(TM) 64-Bit Server VM (build 25.241-b07, mixed mode)
     
-If the command is not defined, Java is not installed on you computer you need to installed it. Else the version is given by the first line.
-`version "1.8.0_241` indicate we are running Java 8.  
+If the command is not defined, Java is not installed on you computer you need to install it. Otherwise the version is given by the first line.
+`version "1.8.0_241"` indicate you are running Java 8.  
 
 ## License
 

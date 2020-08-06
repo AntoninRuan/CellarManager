@@ -3,6 +3,12 @@ package fr.womax.cavemanager.utils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.womax.cavemanager.MainApp;
+import fr.womax.cavemanager.utils.github.GitHubAPIService;
+import fr.womax.cavemanager.utils.github.exception.GitHubAPIConnectionException;
+import fr.womax.cavemanager.utils.github.exception.RepositoryNotFoundException;
+import fr.womax.cavemanager.utils.github.model.Repository;
+import fr.womax.cavemanager.utils.github.model.release.Asset;
+import fr.womax.cavemanager.utils.github.model.release.Release;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressBar;
@@ -13,10 +19,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.text.ParseException;
 
 /**
  * @author Antonin Ruan
@@ -28,10 +34,9 @@ public class Updater {
     public final static int VERSION_MINOR;
     public final static int VERSION_RELEASE;
 
-
     static {
 
-        InputStreamReader reader = new InputStreamReader(MainApp.class.getClassLoader().getResourceAsStream("local.info"));
+        InputStreamReader reader = new InputStreamReader(Updater.class.getClassLoader().getResourceAsStream("local.info"));
         JsonObject object = JsonParser.parseReader(reader).getAsJsonObject();
         JsonObject version = object.get("version").getAsJsonObject();
         VERSION_MAJOR = version.get("major").getAsInt();
@@ -44,31 +49,21 @@ public class Updater {
     public static boolean checkUpdate() {
 
         try {
-            URL url = new URL("https://dl.dropboxusercontent.com/s/evfes8955i9rjfs/remote.info?dl=0");
+            Repository repository = GitHubAPIService.getRepository("womax91", "cellarmanager");
+            Release latest = repository.getLatestRelease();
+            String tag = latest.getTagName();
+            tag = tag.replace("v", "");
+            String[] version = tag.split("\\.");
 
-            InputStreamReader inputStreamReader = new InputStreamReader(url.openStream());
-
-            JsonObject remote = JsonParser.parseReader(inputStreamReader).getAsJsonObject();
-            JsonObject version = remote.getAsJsonObject("version");
-
-            int remoteMajor = version.get("major").getAsInt();
-
-            if(remoteMajor > VERSION_MAJOR)
+            if(Integer.parseInt(version[0]) > VERSION_MAJOR) {
                 return true;
-
-            int remoteMinor = version.get("minor").getAsInt();
-
-            if(remoteMinor > VERSION_MINOR)
+            } else if (Integer.parseInt(version[1]) > VERSION_MINOR) {
                 return true;
-
-            int remoteRelease = version.get("release").getAsInt();
-
-            if(remoteRelease> VERSION_RELEASE)
+            } else if (Integer.parseInt(version[2]) > VERSION_RELEASE) {
                 return true;
-            else
-                return false;
+            }
 
-        } catch (IOException e) {
+        } catch (IOException | RepositoryNotFoundException | ParseException | GitHubAPIConnectionException e) {
             DialogUtils.sendErrorWindow(e);
         }
 
@@ -85,7 +80,8 @@ public class Updater {
         Thread thread = new Thread(() -> {
 
             try {
-                File currentJar = new File(MainApp.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+//                File currentJar = new File(MainApp.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+                File currentJar = new File("salut.jar");
                 String[] split = currentJar.getAbsolutePath().split("\\.");
                 String extenstion = split[split.length - 1];
                 split[split.length - 1] = "dl";
@@ -98,9 +94,20 @@ public class Updater {
 
                 File download = new File(filePath.toString());
 
-                URL url = new URL("https://dl.dropboxusercontent.com/s/dkq5ztmazo6ok4w/CaveManager.jar?dl=1");
+                Repository repository = GitHubAPIService.getRepository("womax91", "cellarmanager");
+                Release release = repository.getLatestRelease();
+                String downloadUrl = "";
+                long fileSize = 0;
+                for(Asset assets : release.getAssets()) {
+                    String[] nameSplit = assets.getName().split("\\.");
+                    if(nameSplit[nameSplit.length - 1].equalsIgnoreCase("jar")) {
+                        downloadUrl = assets.getBrowserDownloadUrl();
+                        fileSize = assets.getSize();
+                        break;
+                    }
+                }
 
-                long fileSize = getFileSize(url);
+                URL url = new URL(downloadUrl);
 
                 ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
 
@@ -115,22 +122,26 @@ public class Updater {
                     dl = fileOutputStream.getChannel().transferFrom(readableByteChannel, i , 2048);
                     i += 2048;
                     int finalI = i;
-                    Platform.runLater(() -> progressBar.setProgress((double) finalI / (double) fileSize));
+                    long finalFileSize = fileSize;
+                    Platform.runLater(() -> progressBar.setProgress((double) finalI / (double) finalFileSize));
                 } while (dl != 0);
 
-                /*Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Mise à jour téléchargée");
-                alert.setHeaderText("La mise à jour a été téléchargée");
-                alert.setContentText("Le programme va s'arrêter, relancer le pour appliquer la mise à jour");
 
-                ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
+                Platform.runLater(() ->  {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Mise à jour téléchargée");
+                    alert.setHeaderText("La mise à jour a été téléchargée");
+                    alert.setContentText("Le programme va s'arrêter, relancer le pour appliquer la mise à jour");
 
-
-                alert.showAndWait();
-                System.exit(0);*/
+                    ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
 
 
-            } catch (URISyntaxException | IOException e) {
+                    alert.showAndWait();
+                    System.exit(0);
+                });
+
+
+            } catch (IOException | ParseException | RepositoryNotFoundException | GitHubAPIConnectionException e) {
                 DialogUtils.sendErrorWindow(e);
             }
 

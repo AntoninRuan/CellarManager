@@ -15,6 +15,13 @@ public class BugInfo {
         this.description = description;
         this.stackTrace = stackTrace;
         this.date = date;
+        if(this.title == null) {
+            if (this.description.length() > 16) {
+                this.title = description.substring(0, 16) + "...";
+            } else {
+                this.title = description;
+            }
+        }
     }
 
     public String getTitle() {

@@ -56,8 +56,6 @@ class WebServer {
              PrintWriter out = new PrintWriter(socket.getOutputStream());
              BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))){
 
-            System.out.println("new connection");
-
             StringTokenizer tokenizer = new StringTokenizer(reader.readLine());
 
             String method = tokenizer.nextToken().toUpperCase();

@@ -5,6 +5,7 @@ import fr.womax.cavemanager.model.Bottle;
 import fr.womax.cavemanager.model.BottleInfo;
 import fr.womax.cavemanager.model.CompartementInfo;
 import fr.womax.cavemanager.model.WineType;
+import fr.womax.cavemanager.utils.github.GitHubAccountConnectionInfo;
 import fr.womax.cavemanager.utils.javafx.CustomSpinnerValueFactory;
 import fr.womax.cavemanager.utils.javafx.SuggestionMenu;
 import fr.womax.cavemanager.utils.mobile_sync.MobileSyncManager;
@@ -20,12 +21,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -530,6 +532,67 @@ public class DialogUtils {
         alert.showAndWait();
     }
 
+    public static Optional<GitHubAccountConnectionInfo> loginToGitHub() {
+        Dialog<GitHubAccountConnectionInfo> dialog = new Dialog<>();
+        dialog.setTitle("Se connecter à GitHub");
+        dialog.setHeaderText("Les reports de bug et suggestion d'idée se font via GitHub\n" +
+                "Vous pouvez soit vous connecter à votre compte GitHub ou continuez sans aucun compte\n");
+
+        ButtonType loginButtonType = new ButtonType("Se connecter", ButtonBar.ButtonData.OK_DONE);
+        ButtonType continueWithoutAccountButtonType = new ButtonType("Continuer sans compte", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, continueWithoutAccountButtonType,ButtonType.CANCEL);
+
+        ImageView view = new ImageView(new Image(DialogUtils.class.getClassLoader().getResource("img/github_icon.png").toString()));
+        view.setPreserveRatio(true);
+        view.setFitHeight(64);
+        dialog.setGraphic(view);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField username = new TextField();
+        username.setPromptText("Username");
+        PasswordField password = new PasswordField();
+        password.setPromptText("Password");
+        CheckBox stayConnect = new CheckBox();
+
+        grid.add(new Label("Nom d'utilisateur:"), 0, 0);
+        grid.add(username, 1, 0);
+        grid.add(new Label("Mot de passe:"), 0, 1);
+        grid.add(password, 1, 1);
+        grid.add(new Label("Rester connecter"), 0, 2);
+        grid.add(stayConnect, 1, 2);
+        grid.add(new Label("Si vous rester connecter, la connection sera tout de même fermé à la fermeture du programme"), 0 ,3, 2 ,1);
+        grid.add(new Label("Même si votre mot de passe n'est pas stocké, il est recommandé de vous connecter en utilisant un token de connection"), 0, 4,2, 1);
+
+        Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
+        loginButton.setDisable(true);
+
+        username.textProperty().addListener((observable, oldValue, newValue) -> {
+            loginButton.setDisable(newValue.trim().isEmpty() || password.getText().trim().isEmpty());
+        });
+        password.textProperty().addListener((observableValue, oldValue, newValue) -> {
+            loginButton.setDisable(newValue.trim().isEmpty() || username.getText().trim().isEmpty());
+        });
+
+        dialog.getDialogPane().setContent(grid);
+
+        Platform.runLater(() -> username.requestFocus());
+
+        dialog.setResultConverter(param -> {
+            if (param == loginButtonType) {
+                return new GitHubAccountConnectionInfo(username.getText(), password.getText(), stayConnect.isSelected());
+            } else if (param == continueWithoutAccountButtonType) {
+                return new GitHubAccountConnectionInfo("", "", false);
+            }
+            return null;
+        });
+
+        return dialog.showAndWait();
+    }
+    
     public static void networkConnectionError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Erreur de connection");
@@ -562,27 +625,9 @@ public class DialogUtils {
         ProgressBar progressBar = new ProgressBar();
         progressBar.setPrefWidth(Double.MAX_VALUE);
 
-        final boolean[] displayed = {false};
-
         progressBar.progressProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue.doubleValue() >= 1 && !displayed[0]) {
-                ButtonBar buttonBar = new ButtonBar();
-
-                Button ok = new Button("Oui");
-                ok.setOnAction(event -> {
-                    System.exit(0);
-                });
-
-                buttonBar.getButtons().setAll(ok);
-
-                Label label = new Label("Le programme va s'arrêter, relancer le pour appliquer la mise à jour");
-                label.setWrapText(true);
-
-                vBox.getChildren().setAll(label, buttonBar);
-                displayed[0] = true;
-                stage.setOnCloseRequest(event -> {
-                    Platform.exit();
-                });
+            if(newValue.doubleValue() >= 1) {
+                stage.close();
             }
         });
 
