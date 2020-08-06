@@ -80,8 +80,7 @@ public class Updater {
         Thread thread = new Thread(() -> {
 
             try {
-//                File currentJar = new File(MainApp.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-                File currentJar = new File("salut.jar");
+                File currentJar = new File(MainApp.class.getProtectionDomain().getCodeSource().getLocation().toURI());
                 String[] split = currentJar.getAbsolutePath().split("\\.");
                 String extenstion = split[split.length - 1];
                 split[split.length - 1] = "dl";

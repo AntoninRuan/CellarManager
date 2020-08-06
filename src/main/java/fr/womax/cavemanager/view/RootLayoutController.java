@@ -258,7 +258,6 @@ public class RootLayoutController {
                 disconnectAfter.set(!connectionInfo.isStayConnected());
                 GitHubAPIService.setAuthentication(connectionInfo.getUsername(), connectionInfo.getPassword());
                 if(connectionInfo.getUsername().equals("") && connectionInfo.getPassword().equals("")) {
-                    System.out.println("authenticate for a guest user");
                     GitHubAPIService.authenticateForGuestUser();
                     disconnectAfter.set(true);
                 }
