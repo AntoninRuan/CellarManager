@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.antoninruan.cellarmanager.MainApp;
 import fr.antoninruan.cellarmanager.model.Bottle;
-import fr.antoninruan.cellarmanager.model.Compartement;
+import fr.antoninruan.cellarmanager.model.Compartment;
 import fr.antoninruan.cellarmanager.model.Spot;
 import fr.antoninruan.cellarmanager.model.WineType;
 import fr.antoninruan.cellarmanager.utils.change.Change;
@@ -185,11 +185,11 @@ class WebServer {
 
                                     if(jsonArg.has("compartement_id") && jsonArg.has("spot_id")) {
 
-                                        Compartement compartement = MainApp.getCompartements().get(jsonArg.get("compartement_id").getAsInt());
+                                        Compartment compartment = MainApp.getCompartements().get(jsonArg.get("compartement_id").getAsInt());
                                         int spotId = jsonArg.get("spot_id").getAsInt();
                                         int row = spotId / 100;
                                         int column = spotId - (row * 100);
-                                        Spot spot = compartement.getSpots()[row][column];
+                                        Spot spot = compartment.getSpots()[row][column];
 
                                         if(type.equalsIgnoreCase("remove")) {
                                             Change change = new Change(Change.ChangeType.SPOT_EMPTIED, spot, spot, MainApp.getBottles().get(spot.getBottle().getId()));

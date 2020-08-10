@@ -4,8 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.antoninruan.cellarmanager.model.Bottle;
-import fr.antoninruan.cellarmanager.model.Compartement;
-import fr.antoninruan.cellarmanager.model.CompartementInfo;
+import fr.antoninruan.cellarmanager.model.Compartment;
+import fr.antoninruan.cellarmanager.model.CompartmentInfo;
 import fr.antoninruan.cellarmanager.model.Spot;
 import fr.antoninruan.cellarmanager.utils.DialogUtils;
 import fr.antoninruan.cellarmanager.utils.PreferencesManager;
@@ -51,13 +51,6 @@ public class MainApp extends Application {
     //TODO ajouter un bind à une appli mobile pour afficher la bouteille séléctionner sur ordinateur sur un téléphone
     //TODO ajouter un plan global de la cave ou l'on puisse placer les étagères
 
-    /*TODO Ajouter un menu de paramètre qui permette:
-            Intégrér une gestion multilingue
-            Gérer le délai du double clic
-            Param de connection à GitHub
-            Check des updates au lancement
-     */
-
     private static Stage primaryStage;
     private static BorderPane rootLayout;
     private static RootLayoutController controller;
@@ -75,7 +68,7 @@ public class MainApp extends Application {
     public static JsonObject PREFERENCE_JSON;
     public final static Image LOGO = new Image(MainApp.class.getClassLoader().getResource("img/logo.png").toString());
 
-    private final static ObservableMap<Integer, Compartement> compartements = FXCollections.observableHashMap();
+    private final static ObservableMap<Integer, Compartment> compartements = FXCollections.observableHashMap();
     private final static ObservableList<Spot> spots = FXCollections.observableArrayList();
     private final static ObservableMap <Integer, Bottle> bottles = FXCollections.observableHashMap();
     private static int lastBottleId;
@@ -213,8 +206,8 @@ public class MainApp extends Application {
             if(compartements == null || compartements.isEmpty()) {
                 writer.write("{}");
             } else {
-                for(Compartement compartement : MainApp.compartements.values()) {
-                    jsonObject.add(String.valueOf(compartement.getId()), compartement.toJson());
+                for(Compartment compartment : MainApp.compartements.values()) {
+                    jsonObject.add(String.valueOf(compartment.getId()), compartment.toJson());
                 }
                 writer.write(jsonObject.toString());
             }
@@ -315,8 +308,8 @@ public class MainApp extends Application {
             for(Map.Entry<String, JsonElement> entry : object.entrySet()) {
 
                 int id = Integer.valueOf(entry.getKey());
-                Compartement compartement = Compartement.fromJson(entry.getValue().getAsJsonObject(), id);
-                MainApp.compartements.put(id, compartement);
+                Compartment compartment = Compartment.fromJson(entry.getValue().getAsJsonObject(), id);
+                MainApp.compartements.put(id, compartment);
                 if(MainApp.lastCompartementId < id)
                     MainApp.lastCompartementId = id;
 
@@ -331,10 +324,10 @@ public class MainApp extends Application {
 
     public void createNewCompartements(boolean cancelable) {
 
-        Optional<CompartementInfo> result = DialogUtils.createNewCompartement(cancelable);
+        Optional<CompartmentInfo> result = DialogUtils.createNewCompartement(cancelable);
 
-        result.ifPresent(compartementInfo -> {
-            compartementInfo.createCompartement();
+        result.ifPresent(compartmentInfo -> {
+            compartmentInfo.createCompartement();
             Saver.doChange();
         });
 
@@ -348,14 +341,14 @@ public class MainApp extends Application {
         return bottleFile;
     }
 
-    public static ObservableMap <Integer, Compartement> getCompartements() {
+    public static ObservableMap <Integer, Compartment> getCompartements() {
         return compartements;
     }
 
-    public static Compartement getCompartement(int index) {
-        for(Compartement compartement : compartements.values()) {
-            if(compartement.getIndex() == index) {
-                return compartement;
+    public static Compartment getCompartement(int index) {
+        for(Compartment compartment : compartements.values()) {
+            if(compartment.getIndex() == index) {
+                return compartment;
             }
         }
         return null;

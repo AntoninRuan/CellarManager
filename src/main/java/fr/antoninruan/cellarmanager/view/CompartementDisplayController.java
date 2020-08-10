@@ -1,6 +1,6 @@
 package fr.antoninruan.cellarmanager.view;
 
-import fr.antoninruan.cellarmanager.model.Compartement;
+import fr.antoninruan.cellarmanager.model.Compartment;
 import fr.antoninruan.cellarmanager.model.Spot;
 import fr.antoninruan.cellarmanager.model.WineType;
 import fr.antoninruan.cellarmanager.utils.BottleFilter;
@@ -68,14 +68,14 @@ public class CompartementDisplayController {
 
     @FXML
     private void initialize() {
-        MainApp.getCompartements().addListener((MapChangeListener <? super Integer, ? super Compartement>) c -> {
+        MainApp.getCompartements().addListener((MapChangeListener <? super Integer, ? super Compartment>) c -> {
             pagination.setPageCount(MainApp.getCompartements().size());
         });
         ContextMenu contextMenu = new ContextMenu();
         pagination.setPageFactory(index -> {
 
             if(!MainApp.getCompartements().isEmpty()) {
-                Compartement toDisplay = MainApp.getCompartement(index);
+                Compartment toDisplay = MainApp.getCompartement(index);
                 if(toDisplay == null && index == 0) {
                     return new AnchorPane();
                 }

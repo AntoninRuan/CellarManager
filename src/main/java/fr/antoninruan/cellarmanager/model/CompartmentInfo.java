@@ -5,14 +5,14 @@ import fr.antoninruan.cellarmanager.MainApp;
 /**
  * @author Antonin Ruan
  */
-public class CompartementInfo {
+public class CompartmentInfo {
 
     private String name;
     private int raw;
     private int column;
     private boolean before;
 
-    public CompartementInfo(String name, int raw, int column, boolean before) {
+    public CompartmentInfo(String name, int raw, int column, boolean before) {
         this.name = name;
         this.raw = raw;
         this.column = column;
@@ -31,24 +31,24 @@ public class CompartementInfo {
         }
 
         if(before) {
-            Compartement compartement = MainApp.getCompartement(MainApp.getCompartementDisplayController().getCurrentCompartementDisplayed());
-            for(Spot[] spotColumn : compartement.getSpots()) {
+            Compartment compartment = MainApp.getCompartement(MainApp.getCompartementDisplayController().getCurrentCompartementDisplayed());
+            for(Spot[] spotColumn : compartment.getSpots()) {
                 for(Spot spot : spotColumn) {
                     MainApp.getSpots().remove(spot);
                 }
             }
-            MainApp.getCompartements().remove(compartement.getId());
+            MainApp.getCompartements().remove(compartment.getId());
         }
 
-        Compartement compartement = new Compartement(name, raw, column, index);
+        Compartment compartment = new Compartment(name, raw, column, index);
         if(!before) {
-            for(Compartement c : MainApp.getCompartements().values()) {
+            for(Compartment c : MainApp.getCompartements().values()) {
                 if(c.getIndex() >= index) {
                     c.setIndex(c.getIndex() + 1);
                 }
             }
         }
-        MainApp.getCompartements().put(compartement.getId(), compartement);
+        MainApp.getCompartements().put(compartment.getId(), compartment);
         if(MainApp.getCompartementDisplayController() != null)
             MainApp.getCompartementDisplayController().setCurrentCompartementDisplayed(index);
     }

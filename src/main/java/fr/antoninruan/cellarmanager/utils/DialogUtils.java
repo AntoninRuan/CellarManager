@@ -11,7 +11,7 @@ import fr.antoninruan.cellarmanager.utils.javafx.SuggestionMenu;
 import fr.antoninruan.cellarmanager.MainApp;
 import fr.antoninruan.cellarmanager.model.Bottle;
 import fr.antoninruan.cellarmanager.model.BottleInfo;
-import fr.antoninruan.cellarmanager.model.CompartementInfo;
+import fr.antoninruan.cellarmanager.model.CompartmentInfo;
 import fr.antoninruan.cellarmanager.model.WineType;
 import fr.antoninruan.cellarmanager.utils.github.GitHubAccountConnectionInfo;
 import fr.antoninruan.cellarmanager.utils.mobile_sync.MobileSyncManager;
@@ -198,8 +198,8 @@ public class DialogUtils {
         return dialog.showAndWait();
     }
 
-    public static Optional<CompartementInfo> createNewCompartement(boolean cancelable) {
-        Dialog <CompartementInfo> dialog = new Dialog <>();
+    public static Optional<CompartmentInfo> createNewCompartement(boolean cancelable) {
+        Dialog <CompartmentInfo> dialog = new Dialog <>();
         dialog.setTitle("Nouvelle Etagère");
         dialog.setHeaderText("Entrez les informations de cette nouvelle étagère");
 
@@ -256,7 +256,7 @@ public class DialogUtils {
 
         dialog.setResultConverter(dialogButton -> {
             if(dialogButton == validationButtonType) {
-                return new CompartementInfo(name.getText() == null ? "Etagère" : name.getText(), row.getValue(), column.getValue(), before.isSelected());
+                return new CompartmentInfo(name.getText() == null ? "Etagère" : name.getText(), row.getValue(), column.getValue(), before.isSelected());
             }
             return null;
         });

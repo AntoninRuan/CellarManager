@@ -1,6 +1,6 @@
 package fr.antoninruan.cellarmanager.view;
 
-import fr.antoninruan.cellarmanager.model.Compartement;
+import fr.antoninruan.cellarmanager.model.Compartment;
 import fr.antoninruan.cellarmanager.model.Spot;
 import fr.antoninruan.cellarmanager.utils.BottleFilter;
 import fr.antoninruan.cellarmanager.utils.DialogUtils;
@@ -208,19 +208,19 @@ public class RootLayoutController {
 
     public void handleDeleteCompartement() {
         if(MainApp.getCompartements().size() != 1) {
-            Compartement compartement = MainApp.getCompartement(MainApp.getCompartementDisplayController().getCurrentCompartementDisplayed());
-            for(Spot[] spotColumn : compartement.getSpots()) {
+            Compartment compartment = MainApp.getCompartement(MainApp.getCompartementDisplayController().getCurrentCompartementDisplayed());
+            for(Spot[] spotColumn : compartment.getSpots()) {
                 for(Spot spot : spotColumn) {
                     MainApp.getSpots().remove(spot);
                 }
             }
-            MainApp.getCompartements().remove(compartement.getId());
-            for(Compartement c : MainApp.getCompartements().values()) {
-                if(c.getIndex() > compartement.getIndex()) {
+            MainApp.getCompartements().remove(compartment.getId());
+            for(Compartment c : MainApp.getCompartements().values()) {
+                if(c.getIndex() > compartment.getIndex()) {
                     c.setIndex(c.getIndex() - 1);
                 }
             }
-            MainApp.getCompartementDisplayController().setCurrentCompartementDisplayed(compartement.getIndex());
+            MainApp.getCompartementDisplayController().setCurrentCompartementDisplayed(compartment.getIndex());
         } else {
             DialogUtils.needAtLeastOneCompartement();
         }

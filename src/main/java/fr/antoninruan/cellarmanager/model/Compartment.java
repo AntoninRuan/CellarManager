@@ -6,7 +6,7 @@ import fr.antoninruan.cellarmanager.MainApp;
 /**
  * @author Antonin Ruan
  */
-public class Compartement {
+public class Compartment {
 
     private int id;
 
@@ -15,7 +15,7 @@ public class Compartement {
     private int row, column;
     private Spot[][] spots;
 
-    Compartement(int id, String name,int row, int column) {
+    Compartment(int id, String name, int row, int column) {
         this.id = id;
         this.row = row;
         this.column = column;
@@ -23,7 +23,7 @@ public class Compartement {
         fillEmpty();
     }
 
-    Compartement(String name, int row, int column, int index) {
+    Compartment(String name, int row, int column, int index) {
         this.name = name.trim().isEmpty() ? "Etagère" : name;
         this.id = MainApp.nextCompartementId();
         this.row = row;
@@ -33,7 +33,7 @@ public class Compartement {
         fillEmpty();
     }
 
-    Compartement(int id, String name, int raw, int column, Spot[][] spots, int index) {
+    Compartment(int id, String name, int raw, int column, Spot[][] spots, int index) {
         this.name = name;
         this.id = id;
         this.row = raw;
@@ -82,7 +82,7 @@ public class Compartement {
         return spots;
     }
 
-    public static Compartement fromJson(JsonObject jsonObject, int ids) {
+    public static Compartment fromJson(JsonObject jsonObject, int ids) {
         String name = jsonObject.get("name").getAsString();
         int index = jsonObject.has("index") ? jsonObject.get("index").getAsInt() : ids;
         int row = jsonObject.get("raw_number").getAsInt();
@@ -100,7 +100,7 @@ public class Compartement {
 
        }
 
-       return new Compartement(ids, name, row, column, spots, index);
+       return new Compartment(ids, name, row, column, spots, index);
     }
 
     public JsonObject toJson() {

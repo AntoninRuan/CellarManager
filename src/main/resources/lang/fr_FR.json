@@ -1,4 +1,26 @@
 {
+  "folder_menu": "Fichier",
+  "edition_menu": "Édition",
+  "help_menu": "Aide",
+
+  "import_menu_item": "Importer",
+  "export_menu_item": "Exporter",
+  "sync_menu": "Synchronisation",
+  "sync_active_menu_item": "Activer",
+  "sync_disable_menu_item": "Désactiver",
+  "sync_info_menu_item": "Information",
+  "close_menu_item": "Fermer",
+
+  "cancel_menu_item": "Annuler",
+  "bottle_list_menu_item": "Bouteilles",
+  "delete_compartments_menu_item": "Supprimer l'étagère",
+
+  "check_update_menu_item": "Recherche de mise à jour",
+  "check_update_on_start_menu_item": "Vérifier les mises à jour au lancement",
+  "send_bug_report_menu_item": "Envoyer un rapport de bug",
+  "send_suggestion_menu_item": "Envoyer une suggestion",
+  "about_menu_item": "A propos",
+
   "no_save_file_detected": "Aucun fichier de sauvegarde détécté",
   "select_save_file": "Veuillez choisir le fichier de sauvegarde pour votre cave",
   "select_save_file_title": "Choississez un fichier de sauvegarde pour votre cave",
