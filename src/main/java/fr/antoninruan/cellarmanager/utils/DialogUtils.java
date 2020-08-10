@@ -1,5 +1,11 @@
 package fr.antoninruan.cellarmanager.utils;
 
+import fr.antoninruan.cellarmanager.utils.github.GitHubAPIService;
+import fr.antoninruan.cellarmanager.utils.github.exception.GitHubAPIConnectionException;
+import fr.antoninruan.cellarmanager.utils.github.exception.LabelNotFoundException;
+import fr.antoninruan.cellarmanager.utils.github.exception.RepositoryNotFoundException;
+import fr.antoninruan.cellarmanager.utils.github.model.Repository;
+import fr.antoninruan.cellarmanager.utils.github.model.issues.Issue;
 import fr.antoninruan.cellarmanager.utils.javafx.CustomSpinnerValueFactory;
 import fr.antoninruan.cellarmanager.utils.javafx.SuggestionMenu;
 import fr.antoninruan.cellarmanager.MainApp;
@@ -10,7 +16,6 @@ import fr.antoninruan.cellarmanager.model.WineType;
 import fr.antoninruan.cellarmanager.utils.github.GitHubAccountConnectionInfo;
 import fr.antoninruan.cellarmanager.utils.mobile_sync.MobileSyncManager;
 import fr.antoninruan.cellarmanager.utils.report.BugInfo;
-import fr.antoninruan.cellarmanager.utils.report.DropboxUtils;
 import fr.antoninruan.cellarmanager.utils.report.SuggestionInfo;
 import fr.antoninruan.cellarmanager.view.BottleChooserController;
 import javafx.application.Platform;
@@ -38,10 +43,12 @@ import java.awt.datatransfer.StringSelection;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author Antonin Ruan
@@ -83,10 +90,43 @@ public class DialogUtils {
             Optional<ButtonType> result = alert.showAndWait();
             result.ifPresent(buttonType -> {
                 if(buttonType == reportBug) {
+                    AtomicBoolean disconnectAfter = new AtomicBoolean(false);
+                    if(!GitHubAPIService.isAuthenticated()) {
+                        if(PreferencesManager.isNeverConnectToGitHub()) {
+                            GitHubAPIService.authenticateAsGuestUser();
+                        } else {
+                            Optional<GitHubAccountConnectionInfo> result1 = DialogUtils.loginToGitHub();
+                            result1.ifPresent(connectionInfo -> {
+                                disconnectAfter.set(!connectionInfo.isStayConnected());
+                                GitHubAPIService.setAuthentication(connectionInfo.getUsername(), connectionInfo.getPassword());
+                                if(connectionInfo.getUsername().equals("") && connectionInfo.getPassword().equals("")) {
+                                    GitHubAPIService.authenticateAsGuestUser();
+                                    disconnectAfter.set(true);
+                                }
+                            });
+                            if(!result1.isPresent())
+                                return;
+                        }
+                    }
+
                     Optional<BugInfo> result1 = DialogUtils.sendBugReport(textArea.getText());
                     result1.ifPresent(bugInfo -> {
-                        DropboxUtils.sendBugIssue(e.getMessage(), bugInfo.getDescription(), bugInfo.getDate(), bugInfo.getStackTrace());
+                        try {
+                            Repository repository = GitHubAPIService.getRepository("antoninruan", "cellarmanager");
+                            fr.antoninruan.cellarmanager.utils.github.model.issues.Label bug = repository.getLabel("bug");
+                            Issue issue = repository.createIssue(bugInfo.getTitle(), "Description:" + bugInfo.getDescription() +
+                                    (bugInfo.getStackTrace() == null ? "" : "\nStacktrace:" + bugInfo.getStackTrace()), new fr.antoninruan.cellarmanager.utils.github.model.issues.Label[]{bug});
+
+                            DialogUtils.successfullySendIssue("Report de bug effectué", "Le bug a bien été reporté", issue.getHtmlUrl());
+
+                        } catch (IOException | ParseException | GitHubAPIConnectionException | RepositoryNotFoundException | LabelNotFoundException e1) {
+                            DialogUtils.sendErrorWindow(e);
+                        }
+
+                        if(disconnectAfter.get())
+                            GitHubAPIService.removeAuthentication();
                     });
+
                 }
             });
         });

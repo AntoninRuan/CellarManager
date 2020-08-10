@@ -285,8 +285,6 @@ public class RootLayoutController {
             if(disconnectAfter.get())
                 GitHubAPIService.removeAuthentication();
         });
-
-
     }
 
     public void handleSuggestIdea() {
