@@ -59,9 +59,9 @@ public class Updater {
 
             if (Integer.parseInt(version[0]) > VERSION_MAJOR) {
                 return true;
-            } else if (Integer.parseInt(version[1]) > VERSION_MINOR) {
+            } else if (Integer.parseInt(version[1]) > VERSION_MINOR && Integer.parseInt(version[0]) == VERSION_MAJOR) {
                 return true;
-            } else if (Integer.parseInt(version[2]) > VERSION_RELEASE) {
+            } else if (Integer.parseInt(version[2]) > VERSION_RELEASE && Integer.parseInt(version[1]) == VERSION_MINOR && Integer.parseInt(version[0]) == VERSION_MAJOR) {
                 return true;
             }
 

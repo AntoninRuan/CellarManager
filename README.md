@@ -54,6 +54,12 @@ Ce programme est sous la license GNU General Public License v3.0 que vous pouvez
 
 ## Changelog
 
+### 1.2.1
+
+---
+* Correction de bug:
+    * Le bouton Ne plus me demander lors de la détection d'une mise à jour au démarrage ne fait plus crasher
+
 ### 1.2.0
 
 ---

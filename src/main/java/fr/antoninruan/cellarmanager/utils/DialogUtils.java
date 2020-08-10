@@ -457,7 +457,7 @@ public class DialogUtils {
             if(buttonType == ok) {
                 Updater.update();
             } else if (buttonType == neverAsk) {
-                MainApp.getPreferenceJson().addProperty("check_update", false);
+                PreferencesManager.setCheckUpdateAtStart(false);
             }
 
         });
