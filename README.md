@@ -174,4 +174,4 @@ This software is under the GNU General Public License v3.0, you cand find it [he
 [windows_java_download_fr]: https://www.java.com/fr/download/win10.jsp
 [windows_java_download_en]: https://www.java.com/en/download/win10.jsp
 [javafx_download]: https://openjfx.io/openjfx-docs/#introduction
-[latest_release_link]: https://github.com/AntoninRuan/CaveManager/releases/latest
+[latest_release_link]: https://github.com/AntoninRuan/CellarManager/releases/latest
