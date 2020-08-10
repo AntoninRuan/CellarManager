@@ -1,6 +1,6 @@
 # CellarManager
 
-You can find an english readme [here](https://github.com/AntoninRuan/CaveManager/tree/master#english)
+You can find an english readme [here](https://github.com/AntoninRuan/CellarManager/tree/master#english)
 
 # Français
 
