@@ -25,7 +25,7 @@ public class GitHubAPIService {
     private static boolean authenticated = false;
 
     public static void authenticateAsGuestUser() {
-        username = "antoninruan";
+        username = ""; //TODO identifiant github utilisé par défault lorsque l'utilisateur ne veut/peut pas se connecter avec les siens
         token = ""; //TODO token a rentrer lors de la compilation
         authenticated = true;
     }

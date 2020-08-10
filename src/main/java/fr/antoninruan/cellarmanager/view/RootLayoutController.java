@@ -276,18 +276,16 @@ public class RootLayoutController {
                 Issue issue = repository.createIssue(bugInfo.getTitle(), "Description:" + bugInfo.getDescription() +
                         (bugInfo.getStackTrace() == null ? "" : "\nStacktrace:" + bugInfo.getStackTrace()), new Label[]{bug});
 
-                DialogUtils.infoMessage("Report de bug effectué", "Le bug a bien été reporté", "Vous pouvez suivre l'évolution du rapport ici:\n" +
-                        issue.getHtmlUrl());
-
+                DialogUtils.successfullySendIssue("Report de bug effectué", "Le bug a bien été reporté", issue.getHtmlUrl());
 
             } catch (IOException | ParseException | GitHubAPIConnectionException | RepositoryNotFoundException | LabelNotFoundException e) {
                 DialogUtils.sendErrorWindow(e);
             }
 
+            if(disconnectAfter.get())
+                GitHubAPIService.removeAuthentication();
         });
 
-        if(disconnectAfter.get())
-            GitHubAPIService.removeAuthentication();
 
     }
 
@@ -321,18 +319,17 @@ public class RootLayoutController {
 
                 Issue issue = repository.createIssue(suggestionInfo.getTitle(), suggestionInfo.getDescription(), new Label[]{suggest});
 
-                DialogUtils.infoMessage("Suggestion envoyé", "La suggestion a bien été envoyé", "Vous pouvez suivre l'évolution de cette suggestion ici\n" +
-                        issue.getHtmlUrl());
-
+                DialogUtils.successfullySendIssue("Suggestion envoyé", "La suggestion a bien été envoyé", issue.getHtmlUrl());
 
             } catch (IOException | ParseException | GitHubAPIConnectionException | RepositoryNotFoundException | LabelNotFoundException e) {
                 DialogUtils.sendErrorWindow(e);
             }
+
+            if(disconnectAfter.get()) {
+                GitHubAPIService.removeAuthentication();
+            }
         });
 
-        if(disconnectAfter.get()) {
-            GitHubAPIService.removeAuthentication();
-        }
 
     }
 

@@ -16,8 +16,8 @@ public class BugInfo {
         this.stackTrace = stackTrace;
         this.date = date;
         if(this.title == null) {
-            if (this.description.length() > 16) {
-                this.title = description.substring(0, 16) + "...";
+            if (this.description.length() > 30) {
+                this.title = description.substring(0, 30) + "...";
             } else {
                 this.title = description;
             }

@@ -28,10 +28,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -52,45 +49,46 @@ import java.util.TimerTask;
 public class DialogUtils {
 
     public static void sendErrorWindow(Exception e) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(e.getLocalizedMessage());
 
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Erreur");
-        alert.setHeaderText(e.getLocalizedMessage());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String exceptionText = sw.toString();
 
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        e.printStackTrace(pw);
-        String exceptionText = sw.toString();
+            Label label = new Label("Message d'erreur:");
 
-        Label label = new Label("Message d'erreur:");
+            TextArea textArea = new TextArea(exceptionText);
+            textArea.setEditable(false);
+            textArea.setWrapText(true);
 
-        TextArea textArea = new TextArea(exceptionText);
-        textArea.setEditable(false);
-        textArea.setWrapText(true);
+            textArea.setMaxWidth(Double.MAX_VALUE);
+            textArea.setMaxHeight(Double.MAX_VALUE);
+            GridPane.setVgrow(textArea, Priority.ALWAYS);
+            GridPane.setHgrow(textArea, Priority.ALWAYS);
 
-        textArea.setMaxWidth(Double.MAX_VALUE);
-        textArea.setMaxHeight(Double.MAX_VALUE);
-        GridPane.setVgrow(textArea, Priority.ALWAYS);
-        GridPane.setHgrow(textArea, Priority.ALWAYS);
+            GridPane expContent = new GridPane();
+            expContent.setMaxWidth(Double.MAX_VALUE);
+            expContent.add(label,0, 0);
+            expContent.add(textArea,0 ,1);
 
-        GridPane expContent = new GridPane();
-        expContent.setMaxWidth(Double.MAX_VALUE);
-        expContent.add(label,0, 0);
-        expContent.add(textArea,0 ,1);
+            alert.getDialogPane().setExpandableContent(expContent);
 
-        alert.getDialogPane().setExpandableContent(expContent);
+            ButtonType reportBug = new ButtonType("Envoyer le rapport d'erreur");
+            alert.getButtonTypes().add(reportBug);
 
-        ButtonType reportBug = new ButtonType("Envoyer le rapport d'erreur");
-        alert.getButtonTypes().add(reportBug);
-
-        Optional<ButtonType> result = alert.showAndWait();
-        result.ifPresent(buttonType -> {
-            if(buttonType == reportBug) {
-                Optional<BugInfo> result1 = DialogUtils.sendBugReport(textArea.getText());
-                result1.ifPresent(bugInfo -> {
-                    DropboxUtils.sendBugIssue(e.getMessage(), bugInfo.getDescription(), bugInfo.getDate(), bugInfo.getStackTrace());
-                });
-            }
+            Optional<ButtonType> result = alert.showAndWait();
+            result.ifPresent(buttonType -> {
+                if(buttonType == reportBug) {
+                    Optional<BugInfo> result1 = DialogUtils.sendBugReport(textArea.getText());
+                    result1.ifPresent(bugInfo -> {
+                        DropboxUtils.sendBugIssue(e.getMessage(), bugInfo.getDescription(), bugInfo.getDate(), bugInfo.getStackTrace());
+                    });
+                }
+            });
         });
     }
 
@@ -475,38 +473,43 @@ public class DialogUtils {
         Hyperlink changelog = new Hyperlink("Change Log");
         changelog.setPadding(new Insets(0));
         changelog.setOnAction(event -> {
-            try {
-                final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-                if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                    Desktop.getDesktop().browse(new URL("https://dl.dropboxusercontent.com/s/txszhrxthcuw1bw/change_log.txt?dl=0").toURI());
-                } else {
-                    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection("https://dl.dropboxusercontent.com/s/txszhrxthcuw1bw/change_log.txt?dl=0"), null);
-                    Tooltip tooltip = new Tooltip("Le lien a bien été copié");
-                    tooltip.show(alert.getDialogPane().getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y - 30);
-                    Timer timer = new Timer();
-                    timer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            Platform.runLater(tooltip::hide);
-                            timer.cancel();
-                        }
-                    }, 750);
-                }
-            } catch (IOException | URISyntaxException e) {
-                sendErrorWindow(e);
+            final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                Thread thread = new Thread(() -> {
+                    try {
+                        Desktop.getDesktop().browse(new URL("https://dl.dropboxusercontent.com/s/txszhrxthcuw1bw/change_log.txt?dl=0").toURI());
+                    } catch (IOException | URISyntaxException e) {
+                        e.printStackTrace();
+                    }
+                });
+                thread.start();
+            } else {
+                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection("https://dl.dropboxusercontent.com/s/txszhrxthcuw1bw/change_log.txt?dl=0"), null);
+                Tooltip tooltip = new Tooltip("Le lien a bien été copié");
+                tooltip.show(alert.getDialogPane().getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y - 30);
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Platform.runLater(tooltip::hide);
+                        timer.cancel();
+                    }
+                }, 750);
             }
             changelog.setVisited(false);
         });
 
         vBox.getChildren().add(changelog);
 
-        vBox.getChildren().addAll(new Label("Programme sous la license GNU GPL 3.0"), new Label("© 2020 Antonin Ruan - Théo Lasnier"));
+        vBox.getChildren().addAll(new Label(""), new Label("Programme sous la license GNU GPL 3.0"), new Label("© 2020 Antonin Ruan - Théo Lasnier"));
 
         alert.getDialogPane().setContent(vBox);
+        alert.getDialogPane().getButtonTypes().clear();
 
 //        alert.setWidth(424.0);
 
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
+        alert.getDialogPane().getScene().getWindow().setOnCloseRequest(t -> ((Stage) alert.getDialogPane().getScene().getWindow()).close());
 
         alert.showAndWait();
     }
@@ -529,6 +532,56 @@ public class DialogUtils {
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(message);
+
+        ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
+
+        alert.showAndWait();
+    }
+
+    public static void successfullySendIssue(String title, String header, String issueLink) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+
+        VBox vBox = new VBox();
+        vBox.setFillWidth(true);
+
+        HBox hBox = new HBox();
+
+        Label label = new Label("Vous pouvez suivre l'évolution du rapport ");
+        Hyperlink issue = new Hyperlink("ici");
+        issue.setPadding(new Insets(0));
+        issue.setOnAction(event -> {
+            final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                Thread thread = new Thread(() -> {
+                    try {
+                        Desktop.getDesktop().browse(new URL(issueLink).toURI());
+                    } catch (IOException | URISyntaxException e) {
+                        DialogUtils.sendErrorWindow(e);
+                    }
+                });
+                thread.start();
+            } else {
+                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(issueLink), null);
+                Tooltip tooltip = new Tooltip("Le lien a bien été copié");
+                tooltip.show(alert.getDialogPane().getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y - 30);
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Platform.runLater(tooltip::hide);
+                        timer.cancel();
+                    }
+                }, 750);
+            }
+            issue.setVisited(false);
+        });
+
+        hBox.getChildren().setAll(label, issue);
+        vBox.getChildren().setAll(hBox);
+
+        alert.getDialogPane().setContent(vBox);
 
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
 

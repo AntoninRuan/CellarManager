@@ -54,6 +54,13 @@ Ce programme est sous la license GNU General Public License v3.0 que vous pouvez
 
 ## Changelog
 
+### 1.2.0
+
+---
+* Passage des reports de bug, suggestion d'idée sur GitHub
+* Le système de mise à jour utilise désormais GitHub et le repo: https://github.com/AntoninRuan/CellarManager
+* Ajout d'un menu de paramètres
+
 ### 1.1.4
 
 ___
