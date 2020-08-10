@@ -10,9 +10,9 @@ De plus ce programme est accompagné d'une application mobile, et ce dans le but
 En effet il est peu commode voire impossible d'emmener son ordinateur dans la cave, et faire des allers-retours entre la cave et l'ordinateur n'est pas une option non plus.<br>
 C'est pour cela que l'application vous permets d'ajouter, modifier, déplacer et enlever des bouteilles via votre téléphone.<br>
 
-1. [Installation](https://github.com/AntoninRuan/CaveManager/tree/master#installation)
-2. [License](https://github.com/AntoninRuan/CaveManager/tree/master#license) 
-3. [Changelog](https://github.com/AntoninRuan/CaveManager/tree/master#changelog)
+1. [Installation](https://github.com/AntoninRuan/CellarManager/tree/master#installation)
+2. [License](https://github.com/AntoninRuan/CellarManager/tree/master#license) 
+3. [Changelog](https://github.com/AntoninRuan/CellarManager/tree/master#changelog)
 
 ## Installation
 
@@ -127,9 +127,9 @@ Moreover you can install a smartphone app which will make your cellar more easie
 Indeed it is not handy, maybe impossible to bring you computer in your cellar; do many round trip between your cellar and your computer neither.<br>
 That why the application allows you to add, modify, move and remove bottles from you smartphone.<br>
 
-1. [Installation](https://github.com/AntoninRuan/CaveManager/tree/master#installation-1)
-2. [License](https://github.com/AntoninRuan/CaveManager/tree/master#license-1) 
-3. [Changelog](https://github.com/AntoninRuan/CaveManager/tree/master#changelog-1)
+1. [Installation](https://github.com/AntoninRuan/CellarManager/tree/master#installation-1)
+2. [License](https://github.com/AntoninRuan/CellarManager/tree/master#license-1) 
+3. [Changelog](https://github.com/AntoninRuan/CellarManager/tree/master#changelog-1)
 
 ## Installation
 
