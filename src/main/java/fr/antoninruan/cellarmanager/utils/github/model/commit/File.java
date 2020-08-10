@@ -1,7 +1,7 @@
 package fr.antoninruan.cellarmanager.utils.github.model.commit;
 
 import com.google.gson.JsonObject;
-import fr.antoninruan.cellarmanager.utils.github.utils.JsonUtils;
+import fr.antoninruan.cellarmanager.utils.JsonUtils;
 
 public class File {
 

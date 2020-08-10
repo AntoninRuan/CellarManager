@@ -2,7 +2,7 @@ package fr.antoninruan.cellarmanager.utils.github.model;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import fr.antoninruan.cellarmanager.utils.github.utils.JsonUtils;
+import fr.antoninruan.cellarmanager.utils.JsonUtils;
 
 public class License {
 

@@ -4,11 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import fr.antoninruan.cellarmanager.utils.github.Test;
+import fr.antoninruan.cellarmanager.MainApp;
 import fr.antoninruan.cellarmanager.utils.github.exception.GitHubAPIConnectionException;
-import fr.antoninruan.cellarmanager.utils.github.utils.Authenticated;
+import fr.antoninruan.cellarmanager.utils.github.model.Authenticated;
 import fr.antoninruan.cellarmanager.utils.github.model.User;
-import fr.antoninruan.cellarmanager.utils.github.utils.JsonUtils;
+import fr.antoninruan.cellarmanager.utils.JsonUtils;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -170,8 +170,8 @@ public class Release extends Authenticated {
         boolean draft = object.get("draft").getAsBoolean();
         JsonObject author = object.get("author").getAsJsonObject();
         boolean prerelease = object.get("prerelease").getAsBoolean();
-        Date createdAt = Test.DATE_FORMAT.parse(object.get("created_at").getAsString());
-        Date publishedAt = Test.DATE_FORMAT.parse(object.get("published_at").getAsString());
+        Date createdAt = MainApp.GITHUB_DATE_FORMAT.parse(object.get("created_at").getAsString());
+        Date publishedAt = MainApp.GITHUB_DATE_FORMAT.parse(object.get("published_at").getAsString());
         List<Asset> assets = new ArrayList<>();
         JsonArray assetsJson = object.get("assets").getAsJsonArray();
         for(JsonElement element : assetsJson) {

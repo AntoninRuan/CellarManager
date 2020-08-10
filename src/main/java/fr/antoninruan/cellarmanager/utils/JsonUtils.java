@@ -1,8 +1,8 @@
-package fr.antoninruan.cellarmanager.utils.github.utils;
+package fr.antoninruan.cellarmanager.utils;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
-import fr.antoninruan.cellarmanager.utils.github.Test;
+import fr.antoninruan.cellarmanager.MainApp;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -22,7 +22,7 @@ public class JsonUtils {
     }
 
     public static Date getAsDate(JsonElement element) throws ParseException {
-        return element instanceof JsonNull ? null : Test.DATE_FORMAT.parse(element.getAsString());
+        return element instanceof JsonNull ? null : MainApp.GITHUB_DATE_FORMAT.parse(element.getAsString());
     }
 
 }

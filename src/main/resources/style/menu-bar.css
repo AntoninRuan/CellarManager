@@ -1,5 +1,19 @@
+.menu-bar {
+    -fx-background-color: #264653;
+    -fx-border-width: 0 0 3 0;
+    -fx-border-color: #1A2F38;
+}
 
+.menu .label {
+    -fx-text-fill: #e9c46a;
+    -fx-font-size: 17px;
+}
 
-.menu-bar .menu{
-    -fx-text: #e9c46a;
+.menu:hover {
+    -fx-background-color: #4D8EA8;
+}
+
+.menu-item .label {
+    -fx-text-fill: #000000;
+    -fx-font-size: 15px;
 }

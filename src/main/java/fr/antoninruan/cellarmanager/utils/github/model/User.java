@@ -4,10 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import fr.antoninruan.cellarmanager.utils.github.Test;
-import fr.antoninruan.cellarmanager.utils.github.utils.Authenticated;
+import fr.antoninruan.cellarmanager.MainApp;
 import fr.antoninruan.cellarmanager.utils.github.exception.GitHubAPIConnectionException;
-import fr.antoninruan.cellarmanager.utils.github.utils.JsonUtils;
+import fr.antoninruan.cellarmanager.utils.JsonUtils;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -264,8 +263,8 @@ public class User extends Authenticated {
         int publicGist = JsonUtils.getAsInt(object.get("public_gists"));
         int followers = JsonUtils.getAsInt(object.get("followers"));
         int following = JsonUtils.getAsInt(object.get("following"));
-        Date createdAt = Test.DATE_FORMAT.parse(JsonUtils.getAsString(object.get("created_at")));
-        Date updatedAt = Test.DATE_FORMAT.parse(JsonUtils.getAsString(object.get("updated_at")));
+        Date createdAt = MainApp.GITHUB_DATE_FORMAT.parse(JsonUtils.getAsString(object.get("created_at")));
+        Date updatedAt = MainApp.GITHUB_DATE_FORMAT.parse(JsonUtils.getAsString(object.get("updated_at")));
         return new User(login, id, nodeId, avatarUrl, url, htmlUrl, followersUrl, followingUrl, gistsUrl, starredUrl, subscriptionsUrl, organizationsUrl, reposUrl,
                 eventsUrl, receiveEventsUrl, type, siteAdmin, name, compagny, blog, location, email, hireable, bio, twitterUsername, publicRepos, publicGist,
                 followers, following, createdAt, updatedAt);

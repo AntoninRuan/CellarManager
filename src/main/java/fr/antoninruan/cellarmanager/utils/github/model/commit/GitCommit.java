@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import fr.antoninruan.cellarmanager.utils.github.utils.JsonUtils;
+import fr.antoninruan.cellarmanager.utils.JsonUtils;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

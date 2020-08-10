@@ -24,9 +24,9 @@ public class GitHubAPIService {
 
     private static boolean authenticated = false;
 
-    public static void authenticateForGuestUser() {
-        username = "antonin";
-        token = "4a75255538b4d65581b4ef2340c3ba282d076965";
+    public static void authenticateAsGuestUser() {
+        username = "antoninruan";
+        token = ""; //TODO token a rentrer lors de la compilation
         authenticated = true;
     }
 

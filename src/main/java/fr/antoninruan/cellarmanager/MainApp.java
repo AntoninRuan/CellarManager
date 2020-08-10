@@ -8,10 +8,12 @@ import fr.antoninruan.cellarmanager.model.Compartement;
 import fr.antoninruan.cellarmanager.model.CompartementInfo;
 import fr.antoninruan.cellarmanager.model.Spot;
 import fr.antoninruan.cellarmanager.utils.DialogUtils;
+import fr.antoninruan.cellarmanager.utils.PreferencesManager;
 import fr.antoninruan.cellarmanager.utils.Saver;
 import fr.antoninruan.cellarmanager.utils.Updater;
 import fr.antoninruan.cellarmanager.utils.mobile_sync.MobileSyncManager;
 import fr.antoninruan.cellarmanager.view.CompartementDisplayController;
+import fr.antoninruan.cellarmanager.view.PreferencesController;
 import fr.antoninruan.cellarmanager.view.RootLayoutController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -28,6 +30,8 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -48,9 +52,10 @@ public class MainApp extends Application {
     //TODO ajouter un plan global de la cave ou l'on puisse placer les étagères
 
     /*TODO Ajouter un menu de paramètre qui permette:
-            Changer la taille des cases pour pouvoir mettre plus de ligne/colonnes sur une seule étagère (pas sur que ce soit une bonne idée)
             Intégrér une gestion multilingue
             Gérer le délai du double clic
+            Param de connection à GitHub
+            Check des updates au lancement
      */
 
     private static Stage primaryStage;
@@ -60,9 +65,12 @@ public class MainApp extends Application {
     private static VBox compartementDisplay;
     private static CompartementDisplayController compartementDisplayController;
 
+    private static PreferencesController preferencesController;
+
     private static File openedFile = null;
     private static File bottleFile = null;
     private static final File preferences = new File("ma_cave.preference");
+    public static final DateFormat GITHUB_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     public static JsonObject PREFERENCE_JSON;
     public final static Image LOGO = new Image(MainApp.class.getClassLoader().getResource("img/logo.png").toString());
@@ -94,7 +102,7 @@ public class MainApp extends Application {
         }
 
         try {
-            PREFERENCE_JSON = JsonParser.parseReader(new FileReader(preferences)).getAsJsonObject();
+            PreferencesManager.loadPreferences(JsonParser.parseReader(new FileReader(preferences)).getAsJsonObject());
         } catch (FileNotFoundException e) {
             DialogUtils.sendErrorWindow(e);
         }
@@ -114,9 +122,9 @@ public class MainApp extends Application {
         boolean newFile = true;
 
         try {
-            if(PREFERENCE_JSON.get("save_file") != null) {
+            if(PreferencesManager.getSaveFilePath() != null) {
                 newFile = false;
-                openedFile = new File(PREFERENCE_JSON.get("save_file").getAsString());
+                openedFile = new File(PreferencesManager.getSaveFilePath());
             } else {
                 openedFile = null;
                 do {
@@ -135,7 +143,7 @@ public class MainApp extends Application {
                     }
                     createNewCompartements(false);
                 }
-                PREFERENCE_JSON.addProperty("save_file", openedFile.getAbsolutePath());
+                PreferencesManager.setSaveFilePath(openedFile.getAbsolutePath());
             }
 
         }  catch (IOException e) {
@@ -144,8 +152,8 @@ public class MainApp extends Application {
 
         //Récupération du fichier contenant l'ensemble des bouteilles
 
-        if(PREFERENCE_JSON.get("bottle_file") != null) {
-            registerBottle(new File(PREFERENCE_JSON.get("bottle_file").getAsString()));
+        if(PreferencesManager.getBottleFilePath() != null) {
+            registerBottle(new File(PreferencesManager.getBottleFilePath()));
         } else {
             File file = new File(openedFile.getParent() + File.separator + "bottle_file.mcv");
             if(!file.exists()) {
@@ -164,7 +172,7 @@ public class MainApp extends Application {
             } else {
                 registerBottle(file);
             }
-            PREFERENCE_JSON.addProperty("bottle_file", file.getAbsolutePath());
+            PreferencesManager.setBottleFilePath(file.getAbsolutePath());
         }
 
         initCompartementDisplayLayout();
@@ -175,11 +183,7 @@ public class MainApp extends Application {
 
         MainApp.primaryStage.setTitle("Ma Cave - " + openedFile.getName());
 
-        if(PREFERENCE_JSON.get("check_update") == null) {
-            PREFERENCE_JSON.addProperty("check_update", true);
-        }
-
-        if(PREFERENCE_JSON.get("check_update").getAsBoolean()) {
+        if(PreferencesManager.doCheckUpdateAtStart()) {
             boolean newUpdate = Updater.checkUpdate();
             if(newUpdate) {
                 DialogUtils.updateAvailable(true);
@@ -189,12 +193,7 @@ public class MainApp extends Application {
     }
 
     public static void saveFiles() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(preferences));){
-            writer.write(PREFERENCE_JSON.toString());
-            writer.flush();
-        } catch (IOException e) {
-            DialogUtils.sendErrorWindow(e);
-        }
+        PreferencesManager.savePreferences(preferences);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(bottleFile))){
             JsonObject bottlesJson = new JsonObject();
             if(bottles == null || bottles.isEmpty()) {
@@ -376,6 +375,14 @@ public class MainApp extends Application {
 
     public static CompartementDisplayController getCompartementDisplayController() {
         return compartementDisplayController;
+    }
+
+    public static PreferencesController getPreferencesController() {
+        return preferencesController;
+    }
+
+    public static void setPreferencesController(PreferencesController preferencesController) {
+        MainApp.preferencesController = preferencesController;
     }
 
     public static Stage getPrimaryStage() {

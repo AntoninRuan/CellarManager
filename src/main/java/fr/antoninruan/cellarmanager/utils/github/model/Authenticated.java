@@ -1,4 +1,4 @@
-package fr.antoninruan.cellarmanager.utils.github.utils;
+package fr.antoninruan.cellarmanager.utils.github.model;
 
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;

@@ -4,6 +4,7 @@ import fr.antoninruan.cellarmanager.model.Compartement;
 import fr.antoninruan.cellarmanager.model.Spot;
 import fr.antoninruan.cellarmanager.utils.BottleFilter;
 import fr.antoninruan.cellarmanager.utils.DialogUtils;
+import fr.antoninruan.cellarmanager.utils.PreferencesManager;
 import fr.antoninruan.cellarmanager.utils.Updater;
 import fr.antoninruan.cellarmanager.utils.github.GitHubAPIService;
 import fr.antoninruan.cellarmanager.utils.github.model.Repository;
@@ -22,10 +23,15 @@ import fr.antoninruan.cellarmanager.utils.report.SuggestionInfo;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
@@ -55,8 +61,6 @@ public class RootLayoutController {
     @FXML
     private ChoiceBox<BottleFilter.SearchCriteria> criteriaChoiceBox;
 
-    @FXML
-    private CheckMenuItem checkUpdate;
 
     @FXML
     private MenuItem cancelMenu;
@@ -144,10 +148,6 @@ public class RootLayoutController {
             } else
                 BottleFilter.searchInSpots(newValue);
 
-        });
-        checkUpdate.setSelected(MainApp.PREFERENCE_JSON.get("check_update").getAsBoolean());
-        checkUpdate.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            MainApp.PREFERENCE_JSON.addProperty("check_update", newValue);
         });
 
         cancelMenu.setDisable(Change.getChangeHistory().size() == 0);
@@ -251,17 +251,21 @@ public class RootLayoutController {
     public void handleReportBug() {
         AtomicBoolean disconnectAfter = new AtomicBoolean(false);
         if(!GitHubAPIService.isAuthenticated()) {
-            Optional<GitHubAccountConnectionInfo> result = DialogUtils.loginToGitHub();
-            result.ifPresent(connectionInfo -> {
-                disconnectAfter.set(!connectionInfo.isStayConnected());
-                GitHubAPIService.setAuthentication(connectionInfo.getUsername(), connectionInfo.getPassword());
-                if(connectionInfo.getUsername().equals("") && connectionInfo.getPassword().equals("")) {
-                    GitHubAPIService.authenticateForGuestUser();
-                    disconnectAfter.set(true);
-                }
-            });
-            if(!result.isPresent())
-                return;
+            if(PreferencesManager.isNeverConnectToGitHub()) {
+                GitHubAPIService.authenticateAsGuestUser();
+            } else {
+                Optional<GitHubAccountConnectionInfo> result = DialogUtils.loginToGitHub();
+                result.ifPresent(connectionInfo -> {
+                    disconnectAfter.set(!connectionInfo.isStayConnected());
+                    GitHubAPIService.setAuthentication(connectionInfo.getUsername(), connectionInfo.getPassword());
+                    if(connectionInfo.getUsername().equals("") && connectionInfo.getPassword().equals("")) {
+                        GitHubAPIService.authenticateAsGuestUser();
+                        disconnectAfter.set(true);
+                    }
+                });
+                if(!result.isPresent())
+                    return;
+            }
         }
 
         Optional<BugInfo> result = DialogUtils.sendBugReport(null);
@@ -289,19 +293,24 @@ public class RootLayoutController {
 
     public void handleSuggestIdea() {
         AtomicBoolean disconnectAfter = new AtomicBoolean(false);
-        if(!GitHubAPIService.isAuthenticated()) {
-            Optional<GitHubAccountConnectionInfo> result = DialogUtils.loginToGitHub();
-            result.ifPresent(connectionInfo -> {
-                disconnectAfter.set(!connectionInfo.isStayConnected());
 
-                GitHubAPIService.setAuthentication(connectionInfo.getUsername(), connectionInfo.getPassword());
-                if(connectionInfo.getUsername().equals("") && connectionInfo.getPassword().equals("")) {
-                    GitHubAPIService.authenticateForGuestUser();
-                    disconnectAfter.set(true);
-                }
-            });
-            if(!result.isPresent())
-                return;
+        if(!GitHubAPIService.isAuthenticated()) {
+            if(PreferencesManager.isNeverConnectToGitHub()) {
+                GitHubAPIService.authenticateAsGuestUser();
+            } else {
+                Optional<GitHubAccountConnectionInfo> result = DialogUtils.loginToGitHub();
+                result.ifPresent(connectionInfo -> {
+                    disconnectAfter.set(!connectionInfo.isStayConnected());
+
+                    GitHubAPIService.setAuthentication(connectionInfo.getUsername(), connectionInfo.getPassword());
+                    if(connectionInfo.getUsername().equals("") && connectionInfo.getPassword().equals("")) {
+                        GitHubAPIService.authenticateAsGuestUser();
+                        disconnectAfter.set(true);
+                    }
+                });
+                if(!result.isPresent())
+                    return;
+            }
         }
 
         Optional<SuggestionInfo> result = DialogUtils.sendSuggestion();
@@ -319,9 +328,39 @@ public class RootLayoutController {
             } catch (IOException | ParseException | GitHubAPIConnectionException | RepositoryNotFoundException | LabelNotFoundException e) {
                 DialogUtils.sendErrorWindow(e);
             }
-
-
         });
+
+        if(disconnectAfter.get()) {
+            GitHubAPIService.removeAuthentication();
+        }
+
+    }
+
+    public void handlePreferences() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(RootLayoutController.class.getClassLoader().getResource("fxml/PreferencesLayout.fxml"));
+
+            VBox root = loader.load();
+
+            PreferencesController controller = loader.getController();
+
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.getIcons().add(MainApp.LOGO);
+            stage.setTitle("Ma Cave - Paramètres");
+            stage.setResizable(false);
+            stage.initOwner(MainApp.getPrimaryStage());
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            controller.setStage(stage);
+
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

@@ -5,6 +5,7 @@ import fr.antoninruan.cellarmanager.model.Spot;
 import fr.antoninruan.cellarmanager.model.WineType;
 import fr.antoninruan.cellarmanager.utils.BottleFilter;
 import fr.antoninruan.cellarmanager.utils.DialogUtils;
+import fr.antoninruan.cellarmanager.utils.PreferencesManager;
 import fr.antoninruan.cellarmanager.utils.Saver;
 import fr.antoninruan.cellarmanager.MainApp;
 import fr.antoninruan.cellarmanager.model.Bottle;
@@ -360,7 +361,7 @@ public class CompartementDisplayController {
 
                 Duration delta = Duration.between(lastClick[0], LocalDateTime.now());
 
-                if(delta.toMillis() < 500 && !doubleClick[0]) {
+                if(delta.toMillis() < PreferencesManager.getDoubleClickDelay() && !doubleClick[0]) {
                     doubleClick[0] = true;
 
                     HBox modifyNameHbox = new HBox();

@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.text.ParseException;
@@ -56,7 +57,7 @@ public class Updater {
             tag = tag.replace("v", "");
             String[] version = tag.split("\\.");
 
-            if(Integer.parseInt(version[0]) > VERSION_MAJOR) {
+            if (Integer.parseInt(version[0]) > VERSION_MAJOR) {
                 return true;
             } else if (Integer.parseInt(version[1]) > VERSION_MINOR) {
                 return true;
@@ -64,7 +65,9 @@ public class Updater {
                 return true;
             }
 
-        } catch (IOException | RepositoryNotFoundException | ParseException | GitHubAPIConnectionException e) {
+        } catch (UnknownHostException e) {
+            DialogUtils.infoMessage("Impossible de se connecter", "Impossible de se connecter à GitHub", "Vérifier votre connection internet avant de recommencer");
+        }catch (IOException | RepositoryNotFoundException | ParseException | GitHubAPIConnectionException e) {
             DialogUtils.sendErrorWindow(e);
         }
 

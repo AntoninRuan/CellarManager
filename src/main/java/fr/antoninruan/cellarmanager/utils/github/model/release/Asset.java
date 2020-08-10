@@ -2,11 +2,11 @@ package fr.antoninruan.cellarmanager.utils.github.model.release;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import fr.antoninruan.cellarmanager.utils.github.Test;
+import fr.antoninruan.cellarmanager.MainApp;
 import fr.antoninruan.cellarmanager.utils.github.exception.GitHubAPIConnectionException;
 import fr.antoninruan.cellarmanager.utils.github.model.User;
-import fr.antoninruan.cellarmanager.utils.github.utils.Authenticated;
-import fr.antoninruan.cellarmanager.utils.github.utils.JsonUtils;
+import fr.antoninruan.cellarmanager.utils.github.model.Authenticated;
+import fr.antoninruan.cellarmanager.utils.JsonUtils;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -123,8 +123,8 @@ public class Asset extends Authenticated {
         String state = JsonUtils.getAsString(object.get("state"));
         long size = object.get("size").getAsLong();
         int downloadCount = object.get("download_count").getAsInt();
-        Date createdAt = Test.DATE_FORMAT.parse(JsonUtils.getAsString(object.get("created_at")));
-        Date updatedAt = Test.DATE_FORMAT.parse(JsonUtils.getAsString(object.get("updated_at")));
+        Date createdAt = MainApp.GITHUB_DATE_FORMAT.parse(JsonUtils.getAsString(object.get("created_at")));
+        Date updatedAt = MainApp.GITHUB_DATE_FORMAT.parse(JsonUtils.getAsString(object.get("updated_at")));
         String browserDownloadUrl = JsonUtils.getAsString(object.get("browser_download_url"));
         return new Asset(url, id, nodeId, name, label, uploader, contentType, state, size, downloadCount, createdAt, updatedAt, browserDownloadUrl);
     }

@@ -23,9 +23,9 @@
 
 <BorderPane fx:id="layout" maxHeight="1080.0" maxWidth="1920.0" prefHeight="790.0" prefWidth="1350.0" style="-fx-background-color: #264653;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.antoninruan.cellarmanager.view.RootLayoutController">
    <top>
-      <MenuBar BorderPane.alignment="CENTER">
+      <MenuBar stylesheets="@../style/menu-bar.css" BorderPane.alignment="CENTER">
         <menus>
-          <Menu mnemonicParsing="false" text="Fichier">
+          <Menu mnemonicParsing="false" styleClass="menu-item" text="Fichier">
             <items>
                   <MenuItem disable="true" mnemonicParsing="false" text="Importer" />
                   <MenuItem disable="true" mnemonicParsing="false" text="Exporter" />
@@ -36,6 +36,7 @@
                       <MenuItem mnemonicParsing="false" onAction="#handleMobileSyncInfo" text="Info" />
                     </items>
                   </Menu>
+                  <MenuItem mnemonicParsing="false" onAction="#handlePreferences" text="Paramètres" />
                   <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" onAction="#handleClose" text="Fermer" />
             </items>
@@ -59,7 +60,6 @@
           <Menu mnemonicParsing="false" text="Aide">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#handleCheckUpdate" text="Recherche de mise à jour" />
-                  <CheckMenuItem fx:id="checkUpdate" mnemonicParsing="false" text="Vérifier les mises à jour au lancement" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#handleReportBug" text="Envoyer un rapport de bug" />
                   <MenuItem mnemonicParsing="false" onAction="#handleSuggestIdea" text="Envoyer une suggestion" />

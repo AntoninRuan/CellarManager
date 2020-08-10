@@ -4,8 +4,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.antoninruan.cellarmanager.utils.github.exception.GitHubAPIConnectionException;
 import fr.antoninruan.cellarmanager.utils.github.model.User;
-import fr.antoninruan.cellarmanager.utils.github.utils.Authenticated;
-import fr.antoninruan.cellarmanager.utils.github.utils.JsonUtils;
+import fr.antoninruan.cellarmanager.utils.github.model.Authenticated;
+import fr.antoninruan.cellarmanager.utils.JsonUtils;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
