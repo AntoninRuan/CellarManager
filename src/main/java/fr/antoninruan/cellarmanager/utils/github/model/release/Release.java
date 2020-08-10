@@ -38,10 +38,11 @@ public class Release extends Authenticated {
     private List<Asset> assets;
     private String tarballUrl;
     private String zipballUrl;
+    private String body;
 
     Release(String url, String assetUrl, String uploadUrl, String html_url, int id, String nodeId, String tagName, String targetCommitish,
                    String name, boolean draft, JsonObject author, boolean prerelease, Date createdAt, Date publishedAt, List<Asset> assets,
-                   String tarballUrl, String zipballUrl) {
+                   String tarballUrl, String zipballUrl, String body) {
         this.url = url;
         this.assetUrl = assetUrl;
         this.uploadUrl = uploadUrl;
@@ -59,6 +60,7 @@ public class Release extends Authenticated {
         this.assets = assets;
         this.tarballUrl = tarballUrl;
         this.zipballUrl = zipballUrl;
+        this.body = body;
     }
 
     public String getUrl() {
@@ -141,6 +143,10 @@ public class Release extends Authenticated {
         return zipballUrl;
     }
 
+    public String getBody() {
+        return body;
+    }
+
     @Override
     public void setAuthenticateUsername(String authenticateUsername) {
         super.setAuthenticateUsername(authenticateUsername);
@@ -179,8 +185,9 @@ public class Release extends Authenticated {
         }
         String tarballUrl = JsonUtils.getAsString(object.get("tarball_url"));
         String zipballUrl = JsonUtils.getAsString(object.get("zipball_url"));
+        String body = JsonUtils.getAsString(object.get("body"));
         return new Release(url, assetsUrl, uploadUrl, htmlUrl, id, nodeId, tagName, targetCommitish, name, draft, author, prerelease,
-                createdAt, publishedAt, assets, tarballUrl, zipballUrl);
+                createdAt, publishedAt, assets, tarballUrl, zipballUrl, body);
     }
 
 }

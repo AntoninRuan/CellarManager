@@ -6,6 +6,8 @@ import fr.antoninruan.cellarmanager.model.Spot;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.Locale;
+
 /**
  * @author Antonin Ruan
  */
@@ -155,27 +157,35 @@ public class BottleFilter {
 
     public enum SearchCriteria {
 
-        NAME("Nom"),
-        REGION("Région"),
-        TYPE("Type"),
-        EDITION("Edition"),
-        DOMAIN("Domaine"),
-        YEAR("Année"),
-        APOGEE("Apogée");
+        NAME("Nom", "Name"),
+        REGION("Région", "Region"),
+        TYPE("Type", "Type"),
+        EDITION("Edition", "Edition"),
+        DOMAIN("Domaine", "Domain"),
+        YEAR("Année", "Year"),
+        APOGEE("Apogée", "Year of Consumption");
 
-        String name;
+        String fr;
+        String en;
 
-        SearchCriteria(String name) {
-            this.name = name;
+        SearchCriteria(String fr, String en) {
+            this.fr = fr;
+            this.en = en;
         }
 
-        public String getName() {
-            return name;
+        public String getNameIn(Locale locale) {
+            if (locale == Locale.FRENCH) {
+                return fr;
+            } else if (locale == Locale.ENGLISH) {
+                return en;
+            } else {
+                return fr;
+            }
         }
 
-        public static SearchCriteria fromName(String name) {
+        public static SearchCriteria fromNameIn(String name, Locale locale) {
             for(SearchCriteria criteria : SearchCriteria.values()) {
-                if (criteria.getName().equals(name)) {
+                if (criteria.getNameIn(locale).equals(name)) {
                     return criteria;
                 }
             }

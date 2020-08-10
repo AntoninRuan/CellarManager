@@ -6,6 +6,7 @@ import fr.antoninruan.cellarmanager.utils.github.exception.LabelNotFoundExceptio
 import fr.antoninruan.cellarmanager.utils.github.exception.RepositoryNotFoundException;
 import fr.antoninruan.cellarmanager.utils.github.model.Repository;
 import fr.antoninruan.cellarmanager.utils.github.model.issues.Issue;
+import fr.antoninruan.cellarmanager.utils.github.model.release.Release;
 import fr.antoninruan.cellarmanager.utils.javafx.CustomSpinnerValueFactory;
 import fr.antoninruan.cellarmanager.utils.javafx.SuggestionMenu;
 import fr.antoninruan.cellarmanager.MainApp;
@@ -34,6 +35,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -400,7 +403,7 @@ public class DialogUtils {
         return dialog.showAndWait();
     }
 
-    public static void updateAvailable(boolean neverAskButton) {
+    public static void updateAvailable(boolean neverAskButton, Release release) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Mise à jour disponible");
         alert.setHeaderText("Une nouvelle mise à jour est disponible");
@@ -414,37 +417,59 @@ public class DialogUtils {
         if(neverAskButton)
             alert.getButtonTypes().add(neverAsk);
 
+        WebView changelog = new WebView();
+        changelog.setZoom(.75);
+        changelog.setPrefWidth(500.0);
+        changelog.setPrefHeight(250.0);
 
-        TextArea textArea = new TextArea();
-        textArea.setWrapText(true);
-        textArea.setEditable(false);
+        changelog.getEngine().loadContent(MarkdownParser.parseMarkdown(release.getBody()));
+        changelog.getEngine().setUserStyleSheetLocation(DialogUtils.class.getClassLoader().getResource("style/markdown.css").toString());
 
-        int i = 0;
+        GridPane.setVgrow(changelog, Priority.ALWAYS);
+        GridPane.setHgrow(changelog, Priority.ALWAYS);
 
-        try {
-            URL url = new URL("https://dl.dropboxusercontent.com/s/txszhrxthcuw1bw/change_log.txt?dl=0");
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        hBox.setFillHeight(true);
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+        Label label = new Label("Vous pouvez retrouver le changelog complet ");
 
-            for(Object o : reader.lines().toArray()) {
-                if(o instanceof String) {
-                    textArea.appendText(o + "\n");
-                    i += 12;
-                }
+        Hyperlink hyperlink = new Hyperlink("ici");
+        hyperlink.setPadding(new Insets(0));
+        hyperlink.setOnAction(event -> {
+            final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                Thread thread = new Thread(() -> {
+                    try {
+                        Desktop.getDesktop().browse(new URL("https://github.com/AntoninRuan/CellarManager/tree/master#changelog").toURI());
+                    } catch (IOException | URISyntaxException e) {
+                        e.printStackTrace();
+                    }
+                });
+                thread.start();
+            } else {
+                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection("https://github.com/AntoninRuan/CellarManager/tree/master#changelog"), null);
+                Tooltip tooltip = new Tooltip("Le lien a bien été copié");
+                tooltip.show(alert.getDialogPane().getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y - 30);
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Platform.runLater(tooltip::hide);
+                        timer.cancel();
+                    }
+                }, 750);
             }
+            hyperlink.setVisited(false);
+        });
 
-        } catch (IOException e) {
-            sendErrorWindow(e);
-        }
-
-        textArea.positionCaret(0);
-
-        GridPane.setVgrow(textArea, Priority.ALWAYS);
-        GridPane.setHgrow(textArea, Priority.ALWAYS);
+        hBox.getChildren().setAll(label, hyperlink);
 
         GridPane expContent = new GridPane();
+        expContent.setVgap(5);
         expContent.setMaxWidth(Double.MAX_VALUE);
-        expContent.add(textArea,0 ,0);
+        expContent.add(changelog,0 ,0);
+        expContent.add(hBox, 0, 1);
 
         alert.getDialogPane().setExpandableContent(expContent);
 
@@ -517,14 +542,14 @@ public class DialogUtils {
             if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
                 Thread thread = new Thread(() -> {
                     try {
-                        Desktop.getDesktop().browse(new URL("https://dl.dropboxusercontent.com/s/txszhrxthcuw1bw/change_log.txt?dl=0").toURI());
+                        Desktop.getDesktop().browse(new URL("https://github.com/AntoninRuan/CellarManager/tree/master#changelog").toURI());
                     } catch (IOException | URISyntaxException e) {
                         e.printStackTrace();
                     }
                 });
                 thread.start();
             } else {
-                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection("https://dl.dropboxusercontent.com/s/txszhrxthcuw1bw/change_log.txt?dl=0"), null);
+                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection("https://github.com/AntoninRuan/CellarManager/tree/master#changelog"), null);
                 Tooltip tooltip = new Tooltip("Le lien a bien été copié");
                 tooltip.show(alert.getDialogPane().getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y - 30);
                 Timer timer = new Timer();

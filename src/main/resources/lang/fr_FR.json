@@ -9,6 +9,7 @@
   "sync_active_menu_item": "Activer",
   "sync_disable_menu_item": "Désactiver",
   "sync_info_menu_item": "Information",
+  "settings_menu_item": "Paramètres",
   "close_menu_item": "Fermer",
 
   "cancel_menu_item": "Annuler",
@@ -16,7 +17,6 @@
   "delete_compartments_menu_item": "Supprimer l'étagère",
 
   "check_update_menu_item": "Recherche de mise à jour",
-  "check_update_on_start_menu_item": "Vérifier les mises à jour au lancement",
   "send_bug_report_menu_item": "Envoyer un rapport de bug",
   "send_suggestion_menu_item": "Envoyer une suggestion",
   "about_menu_item": "A propos",
@@ -24,7 +24,7 @@
   "no_save_file_detected": "Aucun fichier de sauvegarde détécté",
   "select_save_file": "Veuillez choisir le fichier de sauvegarde pour votre cave",
   "select_save_file_title": "Choississez un fichier de sauvegarde pour votre cave",
-  "initial_save_file_name": "ma_cave",
+  "initial_save_file_name": "ma_cave.mcv",
   "ma_cave_file_type": "Fichier MaCave",
 
   "name": "Nom",
@@ -37,6 +37,10 @@
 
   "error": "Erreur",
   "error_message": "Message d'erreur",
-  "send_error_report": "Envoyer le message d'erreur"
+  "send_error_report": "Envoyer le message d'erreur",
+
+  "show": "Afficher",
+  "modify": "Modifier",
+  "remove": "Enlever"
 
 }

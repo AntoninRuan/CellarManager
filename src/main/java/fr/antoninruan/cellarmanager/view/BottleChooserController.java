@@ -4,6 +4,7 @@ import fr.antoninruan.cellarmanager.model.BottleInfo;
 import fr.antoninruan.cellarmanager.model.WineType;
 import fr.antoninruan.cellarmanager.utils.BottleFilter;
 import fr.antoninruan.cellarmanager.utils.DialogUtils;
+import fr.antoninruan.cellarmanager.utils.PreferencesManager;
 import fr.antoninruan.cellarmanager.utils.Saver;
 import fr.antoninruan.cellarmanager.MainApp;
 import fr.antoninruan.cellarmanager.model.Bottle;
@@ -146,12 +147,12 @@ public class BottleChooserController {
         criteriaChoiceBox.setConverter(new StringConverter <BottleFilter.SearchCriteria>() {
             @Override
             public String toString(BottleFilter.SearchCriteria object) {
-                return object.getName();
+                return object.getNameIn(PreferencesManager.getLang());
             }
 
             @Override
             public BottleFilter.SearchCriteria fromString(String string) {
-                return BottleFilter.SearchCriteria.fromName(string);
+                return BottleFilter.SearchCriteria.fromNameIn(string, PreferencesManager.getLang());
             }
         });
         criteriaChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {

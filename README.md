@@ -75,7 +75,7 @@ ___
 * Lors de la saisie des valeurs du nombre de lignes et de colonnes d'une étagère, un message est affiché lorsque la valeur est tronqué
 * Lors de la duplication d'une bouteille, la fenêtre pour la modifier s'ouvre directement, s'il celle-ci est fermé sans validation, la bouteille est supprimée
 * Fix de bug:
-	* Le tri par nombre marche désormais correctement
+    * Le tri par nombre marche désormais correctement
 	
 ### 1.1.3
 
@@ -162,7 +162,7 @@ To find which Java version is installed on you computer, open the command prompt
     Java(TM) SE Runtime Environment (build 1.8.0_241-b07)
     Java HotSpot(TM) 64-Bit Server VM (build 25.241-b07, mixed mode)
     
-If the command is not defined, Java is not installed on you computer you need to install it. Otherwise the version is given by the first line.
+If the command is not defined, J~~~~~~~~~~~~~~~~ava is not installed on you computer you need to install it. Otherwise the version is given by the first line.
 `version "1.8.0_241"` indicate you are running Java 8.  
 
 ## License

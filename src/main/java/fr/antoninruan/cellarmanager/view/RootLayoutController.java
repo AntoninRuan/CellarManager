@@ -8,6 +8,7 @@ import fr.antoninruan.cellarmanager.utils.PreferencesManager;
 import fr.antoninruan.cellarmanager.utils.Updater;
 import fr.antoninruan.cellarmanager.utils.github.GitHubAPIService;
 import fr.antoninruan.cellarmanager.utils.github.model.Repository;
+import fr.antoninruan.cellarmanager.utils.github.model.release.Release;
 import fr.antoninruan.cellarmanager.utils.mobile_sync.MobileSyncManager;
 import fr.antoninruan.cellarmanager.utils.report.BugInfo;
 import fr.antoninruan.cellarmanager.MainApp;
@@ -32,6 +33,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
@@ -129,12 +131,12 @@ public class RootLayoutController {
         criteriaChoiceBox.setConverter(new StringConverter <BottleFilter.SearchCriteria>() {
             @Override
             public String toString(BottleFilter.SearchCriteria object) {
-                return object.getName();
+                return object.getNameIn(PreferencesManager.getLang());
             }
 
             @Override
             public BottleFilter.SearchCriteria fromString(String string) {
-                return BottleFilter.SearchCriteria.fromName(string);
+                return BottleFilter.SearchCriteria.fromNameIn(string, PreferencesManager.getLang());
             }
         });
         BottleFilter.setCriteria(BottleFilter.SearchCriteria.NAME);
@@ -166,13 +168,13 @@ public class RootLayoutController {
         if(displayedSpot != null && displayedSpot.equals(spot) && descriptionPane.isExpanded()) {
             descriptionPane.setExpanded(false);
         } else {
-            description.setText("Nom: " + spot.getBottle().getName() + "\n"+
-                    "Domaine: " + spot.getBottle().getDomain() + "\n"+
-                    "Edition: " + spot.getBottle().getEdition() + "\n"+
-                    "Année: " + spot.getBottle().getYear() + "\n"+
-                    "Année de consommation: " + spot.getBottle().getConsumeYear() + "\n" +
-                    "Type: " + spot.getBottle().getType() + "\n"+
-                    "Région: " + spot.getBottle().getRegion() + "\n"+
+            description.setText(BottleFilter.SearchCriteria.NAME + ": " + spot.getBottle().getName() + "\n"+
+                    BottleFilter.SearchCriteria.DOMAIN + ": " + spot.getBottle().getDomain() + "\n"+
+                    BottleFilter.SearchCriteria.EDITION + ": " + spot.getBottle().getEdition() + "\n"+
+                    BottleFilter.SearchCriteria.YEAR + ": " + spot.getBottle().getYear() + "\n"+
+                    BottleFilter.SearchCriteria.APOGEE + ": " + spot.getBottle().getConsumeYear() + "\n" +
+                    BottleFilter.SearchCriteria.TYPE + ": " + spot.getBottle().getType() + "\n"+
+                    BottleFilter.SearchCriteria.REGION + ": " + spot.getBottle().getRegion() + "\n"+
                     "Commentaire: " + spot.getBottle().getComment() + "\n");
 
             if(!descriptionPane.isExpanded()) {
@@ -198,9 +200,9 @@ public class RootLayoutController {
     }
 
     public void handleCheckUpdate() {
-        boolean newUpdate = Updater.checkUpdate();
-        if(newUpdate) {
-            DialogUtils.updateAvailable(false);
+        Pair<Boolean, Release> result = Updater.checkUpdate();
+        if(result.getKey()) {
+            DialogUtils.updateAvailable(false, result.getValue());
         } else {
             DialogUtils.noUpdateAvailable();
         }

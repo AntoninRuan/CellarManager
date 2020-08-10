@@ -13,6 +13,7 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -48,7 +49,7 @@ public class Updater {
 
     }
 
-    public static boolean checkUpdate() {
+    public static Pair<Boolean, Release> checkUpdate() {
 
         try {
             Repository repository = GitHubAPIService.getRepository("antoninruan", "cellarmanager");
@@ -58,11 +59,11 @@ public class Updater {
             String[] version = tag.split("\\.");
 
             if (Integer.parseInt(version[0]) > VERSION_MAJOR) {
-                return true;
+                return new Pair <>(true, latest);
             } else if (Integer.parseInt(version[1]) > VERSION_MINOR && Integer.parseInt(version[0]) == VERSION_MAJOR) {
-                return true;
+                return new Pair <>(true, latest);
             } else if (Integer.parseInt(version[2]) > VERSION_RELEASE && Integer.parseInt(version[1]) == VERSION_MINOR && Integer.parseInt(version[0]) == VERSION_MAJOR) {
-                return true;
+                return new Pair <>(true, latest);
             }
 
         } catch (UnknownHostException e) {
@@ -71,7 +72,7 @@ public class Updater {
             DialogUtils.sendErrorWindow(e);
         }
 
-        return false;
+        return new Pair <>(false, null);
     }
 
     public static void update() {

@@ -11,6 +11,7 @@ import fr.antoninruan.cellarmanager.utils.DialogUtils;
 import fr.antoninruan.cellarmanager.utils.PreferencesManager;
 import fr.antoninruan.cellarmanager.utils.Saver;
 import fr.antoninruan.cellarmanager.utils.Updater;
+import fr.antoninruan.cellarmanager.utils.github.model.release.Release;
 import fr.antoninruan.cellarmanager.utils.mobile_sync.MobileSyncManager;
 import fr.antoninruan.cellarmanager.view.CompartementDisplayController;
 import fr.antoninruan.cellarmanager.view.PreferencesController;
@@ -27,6 +28,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -177,9 +179,9 @@ public class MainApp extends Application {
         MainApp.primaryStage.setTitle("Ma Cave - " + openedFile.getName());
 
         if(PreferencesManager.doCheckUpdateAtStart()) {
-            boolean newUpdate = Updater.checkUpdate();
-            if(newUpdate) {
-                DialogUtils.updateAvailable(true);
+            Pair<Boolean, Release> result = Updater.checkUpdate();
+            if(result.getKey()) {
+                DialogUtils.updateAvailable(true, result.getValue());
             }
         }
 
