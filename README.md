@@ -54,6 +54,14 @@ Ce programme est sous la license GNU General Public License v3.0 que vous pouvez
 
 ## Changelog
 
+### 1.2.2
+
+---
+* Ajout de style dans toutes l'application
+* Correction de bug:
+    Le champ de recherche et la barre de déploiement de la description d'une bouteille est désormais clicable sans aucun problèmes
+
+
 ### 1.2.1
 
 ---
@@ -74,7 +82,7 @@ ___
 * Ajout d'un style sur la pagination
 * Lors de la saisie des valeurs du nombre de lignes et de colonnes d'une étagère, un message est affiché lorsque la valeur est tronqué
 * Lors de la duplication d'une bouteille, la fenêtre pour la modifier s'ouvre directement, s'il celle-ci est fermé sans validation, la bouteille est supprimée
-* Fix de bug:
+* Correction de bug:
     * Le tri par nombre marche désormais correctement
 	
 ### 1.1.3
@@ -97,7 +105,7 @@ ___
 * Ajout d'un copier coller à l'aide des raccourcis ctrl+c, ctrl+v pour les bouteilles
 * Une bouteille drag&drop à l'aide du clique molette est dupliqué dans l'emplacement d'arrivée
 * Ajout d'une recherche dans la liste des bouteilles
-* Fix de bug:
+* Correction de bug:
 	* Lors de l'édition d'une bouteille les champs domaine et édition était inversé
 	* L'année de consommation ne peut plus être antérieur à celle de production
 	
@@ -109,15 +117,56 @@ ___
 * Changement du délai de sauvegarde (5min -> 30 secondes)
 * Ajout d'une barre de chargement lors du téléchargement de mise à jour
 * Lors de la création d'une bouteille le type Rouge est désormais sélectionné par défaut
-* Fix de bug:
+* Correction de bug:
 	* Le fichier téléchargé n'arrivait pas au bon emplacement
 
 ### 1.0.5
 
 ---
 * Le titre de la fenêtre inclut désormais le nom du fichier de stockage
-* Fix de bug:
+* Correction de bug:
 	* Problèmes lorsqu'aucun fichier de sauvegarde n'existait
+
+### 1.0.4
+
+---
+* Changement de l'image de highlight
+* Ajout d'un critère de recherche: année de consomation
+* Les bouteilles ont désormais différentes images selon leur type
+* Lors de l'édition du nom d'une étagère, appuyé sur entrée permet valider la modification
+* Correction d'une faute d'orthographe dans la fenêtre de fin de mise à jour
+* Ajout d'un système de sauvegarde automatique
+* Correction de bug:
+	* Le remplacement d'une étagère provoqué des problèmes au niveau du nom et des bouteilles
+
+### 1.0.3
+
+---
+* Ajout d'un système de suggestion d'idée
+* Ajout d'un système de report de bug
+* Modification du contenu du menu Aide:
+	* La version est désormais affiché dans une pop-up contenant d'autres informations sur le logiciel
+	* Ajout d'un bouton report de bug et envoie d'idées.
+* Correction de bug:
+	* La suppresion d'étagère remarche de nouveau
+	* Correction de bugs liées au élément de selection de valeurs numérique
+
+### 1.0.2
+
+---
+* Ajout d'une donnée année de consomation sur les bouteilles
+* Correction de bug:
+	* Lorsqu'une mise à jour était trouvé au lancement, si celle ci n'était pas faite les étagères ne s'affichait pas
+
+### 1.0.1
+
+---
+* Ajout d'un système de mise à jour
+* Ajout d'un nom sur les étagères
+* Ajout d'une possibilité de modifier le nom des étagères après leur création
+* Correction de bug:
+	* La recherche par type fonctionne correctement: elle ne trouve plus toutes les bouteilles de la cave
+	* Lorsqu'une bouteille est ajouté avec la recherche active, la recherche la prend également en compte
 
 # English
 
@@ -170,6 +219,91 @@ If the command is not defined, Java is not installed on you computer you need to
 This software is under the GNU General Public License v3.0, you cand find it [here](LICENSE.txt)
 
 ## Changelog
+
+### 1.2.2
+
+---
+* Add style everywhere in the software
+* Bug fixed:
+    The search field and the expandable content displaying the description of a bottle are now clickable where they are supposed to be
+
+
+### 1.2.1
+
+---
+* Bug fixed:
+    * The "Don't ask me anymore" button in the pop up displayed when an update is found at start no longue crash the software
+
+### 1.2.0
+
+---
+* Transfering bug report and enhancement systems on GitHub
+* The update system now use GitHub with the repo: https://github.com/AntoninRuan/CellarManager
+* Add a settings windows which includes languages settings and some others
+
+### 1.1.4
+
+___
+* Add a scroll bar allowing compartments with more than 10 rows. They can now have up to 40
+* Add a style on the pagination under the compartments
+* Typing a forbidden value in the "Add a compartment" windows, display a message before truncate the value to the closer one allowed
+* When duplicating a bottle, the windows to edit it is instantly opened, if this one is closed without validation, the duplicate bottle is delete.
+* Bug fixed:
+    * Sorting bottle by numbers now works correctly
+	
+### 1.1.3
+
+---
+* Add the possibility to cancel up to the last 10 change done
+* Duplicating with drag&drop is now also bind with shift + clic
+* Add a suggestion menu based on the bottles already presents in you cellar when typing value for a new bottle
+* Add the possibility to duplicate a bottle	
+
+### 1.1.2
+
+---
+* Add a changelog
+* Add a link to the changelog in the About Popup
+
+### 1.1.1
+
+---
+* Add a copy-paste by means of ctrl+c, ctrl+v shortcuts for the bottles
+* A bottle move with drag&drop while middle clic pressed is duplicate in the arrival location
+* Add research in the bottle list
+* Bug fixed:
+	* Domain and Edition field were swapped in the "Modify a bottle" window
+	* The consumption year can no longue precede the production year
+	
+### 1.1.0	
+
+---
+* Add drag&dropping to move bottles in their compartments
+* Add a button to re activate the search for updates at start 
+* Change save delay (5min -> 30 secondes)
+* Add a loading bar while downloading updates
+* When creating a bottle, RED type is now selected by default
+* Bug fixed:
+	* The downloaded file was arriving in the wrong location
+
+### 1.0.5
+
+---
+* The title of the windows now include the save file name.
+* Bug fixed:
+	* The software encountered issue if there was no save file
+
+### 1.0.4
+
+---
+* Change highligh image
+* Add search criteria: consumption year
+* Bottles now have a different image based on their type
+* When editing a compartment name pressing 'enter' validate the change
+* Add an auto save system
+* Bug fixed:
+	* Replacing a compartments with a new one was creating issue with names and bottles
+
 
 [windows_java_download_fr]: https://www.java.com/fr/download/win10.jsp
 [windows_java_download_en]: https://www.java.com/en/download/win10.jsp
