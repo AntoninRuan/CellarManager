@@ -646,8 +646,14 @@ import fr.antoninruan.cellarmanager.utils.mobile_sync.MobileSyncManager;
 import fr.antoninruan.cellarmanager.utils.report.BugInfo;
 import fr.antoninruan.cellarmanager.utils.report.SuggestionInfo;
 import fr.antoninruan.cellarmanager.view.BottleChooserController;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
+import javafx.css.PseudoClass;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -666,6 +672,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import javafx.util.Pair;
 
 import java.awt.*;
@@ -1422,6 +1429,41 @@ public class DialogUtils {
 
         Label label = new Label("Lancement du téléchargements");
         vBox.getChildren().addAll(progressBar, label);
+
+        Timeline task = new Timeline(
+                new KeyFrame(
+                        Duration.ZERO,
+                        new KeyValue(progressBar.progressProperty(), 0)
+                ),
+                new KeyFrame(
+                        Duration.seconds(2),
+                        new KeyValue(progressBar.progressProperty(), 1)
+                )
+        );
+
+        // Set the max status
+        int maxStatus = 12;
+        // Create the Property that holds the current status count
+        IntegerProperty statusCountProperty = new SimpleIntegerProperty(1);
+        // Create the timeline that loops the statusCount till the maxStatus
+        Timeline timelineBar = new Timeline(
+                new KeyFrame(
+                        // Set this value for the speed of the animation
+                        Duration.millis(1000),
+                        new KeyValue(statusCountProperty, maxStatus)
+                )
+        );
+        // The animation should be infinite
+        timelineBar.setCycleCount(Timeline.INDEFINITE);
+        timelineBar.play();
+        // Add a listener to the statusproperty
+        statusCountProperty.addListener((ov, statusOld, statusNewNumber) -> {
+            int statusNew = statusNewNumber.intValue();
+            // Remove old status pseudo from progress-bar
+            progressBar.pseudoClassStateChanged(PseudoClass.getPseudoClass("status" + statusOld.intValue()), false);
+            // Add current status pseudo from progress-bar
+            progressBar.pseudoClassStateChanged(PseudoClass.getPseudoClass("status" + statusNew), true);
+        });
 
         Scene scene = new Scene(vBox);
         stage.setScene(scene);
