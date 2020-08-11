@@ -60,6 +60,7 @@ Ce programme est sous la license GNU General Public License v3.0 que vous pouvez
 * Ajout de style dans toutes l'application
 * Correction de bug:
     Le champ de recherche et la barre de déploiement de la description d'une bouteille est désormais clicable sans aucun problèmes
+    Si la connection a GitHub était impossible la popup l'affichant ne s'ouvrait pas
 
 
 ### 1.2.1
@@ -226,6 +227,7 @@ This software is under the GNU General Public License v3.0, you cand find it [he
 * Add style everywhere in the software
 * Bug fixed:
     The search field and the expandable content displaying the description of a bottle are now clickable where they are supposed to be
+    If the connection to GitHub was impossible, the popup saying it was not opening
 
 
 ### 1.2.1
