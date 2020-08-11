@@ -666,6 +666,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Pair;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
@@ -781,7 +782,11 @@ public class DialogUtils {
         gridPane.add(description, 0, 0);
 
         dialog.getDialogPane().setContent(gridPane);
+
+        dialog.getDialogPane().getStylesheets().add(DialogUtils.class.getClassLoader().getResource("style/dialog.css").toString());
+        dialog.getDialogPane().getStyleClass().add("myDialog");
         ((Stage) dialog.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
+
         dialog.setResultConverter(param -> {
             if(param == validationButtonType) {
                 return new BugInfo(null, description.getText(), stackTrace, new Date());
@@ -817,6 +822,8 @@ public class DialogUtils {
 
         dialog.getDialogPane().setContent(gridPane);
 
+        dialog.getDialogPane().getStylesheets().add(DialogUtils.class.getClassLoader().getResource("style/dialog.css").toString());
+        dialog.getDialogPane().getStyleClass().add("myDialog");
         ((Stage) dialog.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
 
         dialog.setResultConverter(param -> {
@@ -883,6 +890,8 @@ public class DialogUtils {
         cancel.setDisable(!cancelable);
 
         dialog.getDialogPane().setContent(gridPane);
+        dialog.getDialogPane().getStylesheets().add(DialogUtils.class.getClassLoader().getResource("style/dialog.css").toString());
+        dialog.getDialogPane().getStyleClass().add("myDialog");
         ((Stage)dialog.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
 
         dialog.setResultConverter(dialogButton -> {
@@ -967,8 +976,10 @@ public class DialogUtils {
         comment.setPromptText("Commentaire");
         Spinner<Integer> yearSpinner = new Spinner <>(1950, 3000, year, 1);
         yearSpinner.setEditable(true);
+        yearSpinner.getStyleClass().add("spinner");
         Spinner<Integer> consumeYearSpinner = new Spinner <>(1950, 3000, consumeYear, 1);
         consumeYearSpinner.setEditable(true);
+        consumeYearSpinner.getStyleClass().add("spinner");
         yearSpinner.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue)
                 yearSpinner.increment(0);
@@ -1017,6 +1028,9 @@ public class DialogUtils {
         gridPane.add(wineType, 1, 7);
 
         dialog.getDialogPane().setContent(gridPane);
+
+        dialog.getDialogPane().getStylesheets().add(DialogUtils.class.getClassLoader().getResource("style/dialog.css").toString());
+        dialog.getDialogPane().getStyleClass().add("myDialog");
         ((Stage)dialog.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
 
         dialog.setResultConverter(dialogButton -> {
@@ -1036,6 +1050,7 @@ public class DialogUtils {
         alert.setTitle("Mise à jour disponible");
         alert.setHeaderText("Une nouvelle mise à jour est disponible");
         alert.setContentText("Voulez vous la faire? (Cliquez pour consulter le change log)");
+        alert.getDialogPane().setPrefWidth(700.0);
 
         ButtonType ok = new ButtonType("Oui");
         ButtonType no = new ButtonType("Non");
@@ -1047,7 +1062,7 @@ public class DialogUtils {
 
         WebView changelog = new WebView();
         changelog.setZoom(.75);
-        changelog.setPrefWidth(500.0);
+        changelog.setPrefWidth(550.0);
         changelog.setPrefHeight(250.0);
 
         changelog.getEngine().loadContent(MarkdownParser.parseMarkdown(release.getBody()));
@@ -1101,6 +1116,8 @@ public class DialogUtils {
 
         alert.getDialogPane().setExpandableContent(expContent);
 
+        alert.getDialogPane().getStylesheets().add(DialogUtils.class.getClassLoader().getResource("style/dialog.css").toString());
+        alert.getDialogPane().getStyleClass().add("myDialog");
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
 
         Optional<ButtonType> result = alert.showAndWait();
@@ -1108,7 +1125,7 @@ public class DialogUtils {
         result.ifPresent(buttonType -> {
 
             if(buttonType == ok) {
-                Updater.update();
+                Updater.update(release);
             } else if (buttonType == neverAsk) {
                 PreferencesManager.setCheckUpdateAtStart(false);
             }
@@ -1124,6 +1141,8 @@ public class DialogUtils {
         alert.setContentText("Aucune mise à jour n'a été trouvée");
 
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
+        alert.getDialogPane().getStylesheets().add(DialogUtils.class.getClassLoader().getResource("style/dialog.css").toString());
+        alert.getDialogPane().getStyleClass().add("myDialog");
 
         alert.showAndWait();
     }
@@ -1135,6 +1154,8 @@ public class DialogUtils {
         alert.setContentText(null);
 
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().addAll(MainApp.LOGO);
+        alert.getDialogPane().getStylesheets().add(DialogUtils.class.getClassLoader().getResource("style/dialog.css").toString());
+        alert.getDialogPane().getStyleClass().add("myDialog");
 
         alert.showAndWait();
     }
@@ -1146,6 +1167,8 @@ public class DialogUtils {
         alert.setContentText("Veuillez l'enlever de tous les emplacements si vous souhaitez vraiment la supprimer");
 
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
+        alert.getDialogPane().getStylesheets().add(DialogUtils.class.getClassLoader().getResource("style/dialog.css").toString());
+        alert.getDialogPane().getStyleClass().add("myDialog");
 
         alert.showAndWait();
     }
@@ -1200,7 +1223,8 @@ public class DialogUtils {
         alert.getDialogPane().getButtonTypes().clear();
 
 //        alert.setWidth(424.0);
-
+        alert.getDialogPane().getStylesheets().add(DialogUtils.class.getClassLoader().getResource("style/dialog.css").toString());
+        alert.getDialogPane().getStyleClass().add("myDialog");
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
         alert.getDialogPane().getScene().getWindow().setOnCloseRequest(t -> ((Stage) alert.getDialogPane().getScene().getWindow()).close());
 
@@ -1215,6 +1239,8 @@ public class DialogUtils {
                 "Version de MobileSync: " + MobileSyncManager.VERSION);
 
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
+        alert.getDialogPane().getStylesheets().add(DialogUtils.class.getClassLoader().getResource("style/dialog.css").toString());
+        alert.getDialogPane().getStyleClass().add("myDialog");
 
         alert.showAndWait();
 
@@ -1227,6 +1253,8 @@ public class DialogUtils {
         alert.setContentText(message);
 
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
+        alert.getDialogPane().getStylesheets().add(DialogUtils.class.getClassLoader().getResource("style/dialog.css").toString());
+        alert.getDialogPane().getStyleClass().add("myDialog");
 
         alert.showAndWait();
     }
@@ -1243,6 +1271,7 @@ public class DialogUtils {
 
         Label label = new Label("Vous pouvez suivre l'évolution du rapport ");
         Hyperlink issue = new Hyperlink("ici");
+        issue.setTranslateY(-1);
         issue.setPadding(new Insets(0));
         issue.setOnAction(event -> {
             final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
@@ -1276,6 +1305,8 @@ public class DialogUtils {
 
         alert.getDialogPane().setContent(vBox);
 
+        alert.getDialogPane().getStylesheets().add(DialogUtils.class.getClassLoader().getResource("style/dialog.css").toString());
+        alert.getDialogPane().getStyleClass().add("myDialog");
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
 
         alert.showAndWait();
@@ -1293,7 +1324,6 @@ public class DialogUtils {
 
         ImageView view = new ImageView(new Image(DialogUtils.class.getClassLoader().getResource("img/github_icon.png").toString()));
         view.setPreserveRatio(true);
-        view.setFitHeight(64);
         dialog.setGraphic(view);
 
         GridPane grid = new GridPane();
@@ -1328,6 +1358,11 @@ public class DialogUtils {
 
         dialog.getDialogPane().setContent(grid);
 
+        dialog.getDialogPane().getStylesheets().add(DialogUtils.class.getClassLoader().getResource("style/dialog.css").toString());
+        dialog.getDialogPane().getStyleClass().add("myDialog");
+
+        ((Stage) dialog.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
+
         Platform.runLater(() -> username.requestFocus());
 
         dialog.setResultConverter(param -> {
@@ -1349,11 +1384,13 @@ public class DialogUtils {
         alert.setContentText("Une erreur de connection s'est produite, veuillez vérifiez votre connection et réessayer");
 
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
+        alert.getDialogPane().getStylesheets().add(DialogUtils.class.getClassLoader().getResource("style/dialog.css").toString());
+        alert.getDialogPane().getStyleClass().add("myDialog");
 
         alert.showAndWait();
     }
 
-    public static ProgressBar downloadInfo() {
+    public static Pair<ProgressBar, Label> downloadInfo() {
 
         Stage stage = new Stage();
         stage.setTitle("Téléchargement en cours");
@@ -1371,6 +1408,9 @@ public class DialogUtils {
         vBox.setFillWidth(true);
         vBox.setAlignment(Pos.CENTER);
 
+        vBox.getStyleClass().add("vbox");
+        vBox.getStylesheets().add(DialogUtils.class.getClassLoader().getResource("style/download-progress.css").toString());
+
         ProgressBar progressBar = new ProgressBar();
         progressBar.setPrefWidth(Double.MAX_VALUE);
 
@@ -1380,14 +1420,15 @@ public class DialogUtils {
             }
         });
 
-        vBox.getChildren().addAll(progressBar, new Label("Téléchargement en cours"));
+        Label label = new Label("Lancement du téléchargements");
+        vBox.getChildren().addAll(progressBar, label);
 
         Scene scene = new Scene(vBox);
         stage.setScene(scene);
 
         stage.show();
 
-        return progressBar;
+        return new Pair <>(progressBar, label);
     }
 
 }

@@ -660,6 +660,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
 
@@ -795,14 +796,14 @@ public class RootLayoutController {
         if(displayedSpot != null && displayedSpot.equals(spot) && descriptionPane.isExpanded()) {
             descriptionPane.setExpanded(false);
         } else {
-            description.setText(BottleFilter.SearchCriteria.NAME + ": " + spot.getBottle().getName() + "\n"+
-                    BottleFilter.SearchCriteria.DOMAIN + ": " + spot.getBottle().getDomain() + "\n"+
-                    BottleFilter.SearchCriteria.EDITION + ": " + spot.getBottle().getEdition() + "\n"+
-                    BottleFilter.SearchCriteria.YEAR + ": " + spot.getBottle().getYear() + "\n"+
-                    BottleFilter.SearchCriteria.APOGEE + ": " + spot.getBottle().getConsumeYear() + "\n" +
-                    BottleFilter.SearchCriteria.TYPE + ": " + spot.getBottle().getType() + "\n"+
-                    BottleFilter.SearchCriteria.REGION + ": " + spot.getBottle().getRegion() + "\n"+
-                    "Commentaire: " + spot.getBottle().getComment() + "\n");
+            description.setText(BottleFilter.SearchCriteria.NAME.getNameIn(PreferencesManager.getLang()) + ": " + spot.getBottle().getName() + "\n"+
+                    BottleFilter.SearchCriteria.DOMAIN.getNameIn(PreferencesManager.getLang()) + ": " + spot.getBottle().getDomain() + "\n"+
+                    BottleFilter.SearchCriteria.EDITION.getNameIn(PreferencesManager.getLang()) + ": " + spot.getBottle().getEdition() + "\n"+
+                    BottleFilter.SearchCriteria.YEAR.getNameIn(PreferencesManager.getLang()) + ": " + spot.getBottle().getYear() + "\n"+
+                    BottleFilter.SearchCriteria.APOGEE.getNameIn(PreferencesManager.getLang()) + ": " + spot.getBottle().getConsumeYear() + "\n" +
+                    BottleFilter.SearchCriteria.TYPE.getNameIn(PreferencesManager.getLang()) + ": " + spot.getBottle().getType() + "\n"+
+                    BottleFilter.SearchCriteria.REGION.getNameIn(PreferencesManager.getLang()) + ": " + spot.getBottle().getRegion() + "\n"+
+                    "Commentaire: " + spot.getBottle().getComment());
 
             if(!descriptionPane.isExpanded()) {
                 descriptionPane.setExpanded(true);
@@ -977,6 +978,7 @@ public class RootLayoutController {
             stage.setResizable(false);
             stage.initOwner(MainApp.getPrimaryStage());
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
 
             controller.setStage(stage);
 

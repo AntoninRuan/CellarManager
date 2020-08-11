@@ -644,14 +644,17 @@ import fr.antoninruan.cellarmanager.view.CompartementDisplayController;
 import fr.antoninruan.cellarmanager.view.PreferencesController;
 import fr.antoninruan.cellarmanager.view.RootLayoutController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -805,12 +808,17 @@ public class MainApp extends Application {
 
         MainApp.primaryStage.setTitle("Ma Cave - " + openedFile.getName());
 
-        if(PreferencesManager.doCheckUpdateAtStart()) {
-            Pair<Boolean, Release> result = Updater.checkUpdate();
-            if(result.getKey()) {
-                DialogUtils.updateAvailable(true, result.getValue());
+
+        Thread checkUpdate = new Thread(() -> {
+            if(PreferencesManager.doCheckUpdateAtStart()) {
+                Pair<Boolean, Release> result = Updater.checkUpdate();
+                if(result.getKey()) {
+                    Platform.runLater(() -> DialogUtils.updateAvailable(true, result.getValue()));
+                }
             }
-        }
+        });
+
+        checkUpdate.start();
 
     }
 
@@ -883,7 +891,11 @@ public class MainApp extends Application {
             loader.setLocation(MainApp.class.getClassLoader().getResource("fxml/CompartementDisplayLayout.fxml"));
 
             VBox vBox = loader.load();
+
+            Node right = rootLayout.getRight();
+            rootLayout.setRight(null);
             rootLayout.setCenter(vBox);
+            rootLayout.setRight(right);
 
             compartementDisplayController = loader.getController();
 
@@ -906,7 +918,7 @@ public class MainApp extends Application {
         fileChooser.setTitle("Choissisez un fichier pour sauvegarder votre cave");
         File currentJar = new File(MainApp.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         fileChooser.setInitialDirectory(currentJar.getParentFile());
-        fileChooser.setInitialFileName("ma_cave");
+        fileChooser.setInitialFileName("ma_cave.mcv");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Fichier MaCave", "*.mcv")
         );

@@ -627,6 +627,9 @@
 
 package fr.antoninruan.cellarmanager.utils;
 
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+
 import java.util.Scanner;
 
 /**
@@ -639,116 +642,12 @@ public class MarkdownParser {
         String header = "<html>\n <body class=\"markdown-body\">\n";
         String footer = "</body>\n </html>\n";
 
-        Scanner scan = new Scanner(markdown);
-        StringBuilder builder = new StringBuilder();
+        Parser parser = Parser.builder().build();
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
 
+        String body = renderer.render(parser.parse(markdown));
 
-        /*
-         * premier passage:
-         *      Remplacer les headers # -> <h1> ## -> <h2>, etc
-         *      Remplacer les --- par <hr>
-         */
-
-        boolean[] inList = new boolean[] {false, false};
-
-        while (scan.hasNext()) {
-
-            String line = scan.nextLine();
-            if(line.startsWith("# ")) {
-                for(int i = inList.length - 1; i >= 0; i --) {
-                    if(inList[i]) {
-                        inList[i] = false;
-                        builder.append("</ul>\n");
-                    }
-                }
-                line = line.substring(2);
-                builder.append("<h1>").append(line).append("</h1> \n");
-            } else if (line.startsWith("## ")) {
-                for(int i = inList.length - 1; i >= 0; i --) {
-                    if(inList[i]) {
-                        inList[i] = false;
-                        builder.append("</ul>\n");
-                    }
-                }
-                line = line.substring(3);
-                builder.append("<h2>").append(line).append("</h2> \n");
-            } else if (line.startsWith("### ")) {
-                for(int i = inList.length - 1; i >= 0; i --) {
-                    if(inList[i]) {
-                        inList[i] = false;
-                        builder.append("</ul>\n");
-                    }
-                }
-                line = line.substring(4);
-                builder.append("<h3>").append(line).append("</h3> \n");
-            } else if (line.startsWith("---")) {
-                for(int i = inList.length - 1; i >= 0; i --) {
-                    if(inList[i]) {
-                        inList[i] = false;
-                        builder.append("</ul>\n");
-                    }
-                }
-                builder.append("<hr/> \n");
-            } else if (line.startsWith("* ")) {
-                for(int i = inList.length - 1; i >= 1; i --) {
-                    if(inList[i]) {
-                        inList[i] = false;
-                        builder.append("</ul>\n");
-                    }
-                }
-                if(!inList[0]) {
-                    inList[0] = true;
-                    builder.append("<ul>").append("\n");
-                }
-                builder.append("<li>").append(line.substring(2).replace("<br/>", "")).append("</li> \n");
-            } else if (line.startsWith("    * ")) {
-                if(!inList[0]) {
-                    builder.append(line).append("<br/> \n");
-                } else {
-                    if(!inList[1]) {
-                        inList[1] = true;
-                        builder.append("<ul>\n");
-                    }
-                    builder.append("<li>").append(line.substring(6).replace("<br/>", "")).append("</li> \n");
-                }
-            } else {
-                inList[0] = false;
-                inList[1] = false;
-                builder.append(line).append("<br/> \n");
-            }
-
-        }
-
-        String modifiedText = builder.toString();
-
-        /*
-         * second passage:
-         *      Formatage du text (gras, souligné, etc)
-         *
-         */
-
-        String[] symbols = {"**", "``", "__", "~~"};
-        String[] tagNames = {"b", "i", "u", "s"};
-
-        for(int i = 0; i < symbols.length; i ++) {
-            String symbol = symbols[i];
-            String tagName = tagNames[i];
-            boolean tagStart = true;
-            while (modifiedText.contains(symbol)) {
-                int index = modifiedText.indexOf(symbol);
-
-                String beforeSymbol = modifiedText.substring(0, index);
-                String afterSymbol = modifiedText.substring(index + 2);
-
-                String tag = tagStart ? ("<" + tagName + ">") :  ("</" + tagName + ">");
-
-                modifiedText = beforeSymbol + tag + afterSymbol;
-
-                tagStart = !tagStart;
-            }
-        }
-
-        String html = header + modifiedText + footer;
+        String html = header + body + footer;
 
         return html;
     }

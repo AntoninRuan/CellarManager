@@ -625,194 +625,194 @@
  *
  */
 
-package fr.antoninruan.cellarmanager.utils;
+.myDialog{
+    -fx-background-color: #264653;
+}
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import fr.antoninruan.cellarmanager.utils.github.GitHubAPIService;
-import fr.antoninruan.cellarmanager.utils.github.model.Repository;
-import fr.antoninruan.cellarmanager.MainApp;
-import fr.antoninruan.cellarmanager.utils.github.exception.GitHubAPIConnectionException;
-import fr.antoninruan.cellarmanager.utils.github.exception.RepositoryNotFoundException;
-import fr.antoninruan.cellarmanager.utils.github.model.release.Asset;
-import fr.antoninruan.cellarmanager.utils.github.model.release.Release;
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.stage.Stage;
-import javafx.util.Pair;
+.myDialog > *.button-bar > *.container{
+    -fx-background-color: #264653;
+}
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.time.Duration;
-import java.time.LocalDateTime;
+.myDialog > *.button-bar .button {
+    -fx-background-color: #203B46;
+    -fx-border-color: #1A2F38;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-text-fill: #E9C46A;
+    -fx-font-size: 14px;
+}
 
-/**
- * @author Antonin Ruan
- */
-public class Updater {
+.myDialog > *.button-bar .button:armed {
+    -fx-background-color: #13242A;
+}
 
-    public final static String VERSION;
-    public final static int VERSION_MAJOR;
-    public final static int VERSION_MINOR;
-    public final static int VERSION_RELEASE;
+.myDialog > *.label.content{
+    -fx-font-size: 16px;
+    -fx-text-fill: #E9C46A;
+}
 
-    static {
+.myDialog:header *.header-panel{
+    -fx-background-color: #264653;
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: #1A2F38;
+}
 
-        InputStreamReader reader = new InputStreamReader(Updater.class.getClassLoader().getResourceAsStream("local.info"));
-        JsonObject object = JsonParser.parseReader(reader).getAsJsonObject();
-        JsonObject version = object.get("version").getAsJsonObject();
-        VERSION_MAJOR = version.get("major").getAsInt();
-        VERSION_MINOR = version.get("minor").getAsInt();
-        VERSION_RELEASE = version.get("release").getAsInt();
-        VERSION = String.format("%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_RELEASE);
+.myDialog:header *.header-panel *.label{
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #E9C46A;
+}
 
-    }
+.myDialog .label, .myDialog .hyperlink {
+    -fx-text-fill: #E9C46A;
+    -fx-font-size: 15px;
+}
 
-    public static Pair<Boolean, Release> checkUpdate() {
+.myDialog .choice-box {
+    -fx-background-color: #203B46;
+    -fx-border-color: #1A2F38;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
 
-        try {
-            Repository repository = GitHubAPIService.getRepository("antoninruan", "cellarmanager");
-            Release latest = repository.getLatestRelease();
-            String tag = latest.getTagName();
-            tag = tag.replace("v", "");
-            String[] version = tag.split("\\.");
+.myDialog .choice-box .label {
+    -fx-text-fill: #D5A220;
+}
 
-            if (Integer.parseInt(version[0]) > VERSION_MAJOR) {
-                return new Pair <>(true, latest);
-            } else if (Integer.parseInt(version[1]) > VERSION_MINOR && Integer.parseInt(version[0]) == VERSION_MAJOR) {
-                return new Pair <>(true, latest);
-            } else if (Integer.parseInt(version[2]) > VERSION_RELEASE && Integer.parseInt(version[1]) == VERSION_MINOR && Integer.parseInt(version[0]) == VERSION_MAJOR) {
-                return new Pair <>(true, latest);
-            }
+.myDialog .context-menu {
+    -fx-background-color: #4D8EA8;
+    -fx-background-radius: 5px;
+    -fx-border-color: #40768C;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
 
-        } catch (UnknownHostException e) {
-            DialogUtils.infoMessage("Impossible de se connecter", "Impossible de se connecter à GitHub", "Vérifier votre connection internet avant de recommencer");
-        }catch (IOException | RepositoryNotFoundException | ParseException | GitHubAPIConnectionException e) {
-            DialogUtils.sendErrorWindow(e);
-        }
+.myDialog .choice-box .menu-item:focused {
+    -fx-background-color: #2A9D8F;
+}
 
-        return new Pair <>(false, null);
-    }
+.myDialog .choice-box .menu-item > .label {
+    -fx-text-fill: #EFD595;
+}
 
-    public static void update(Release release) {
+.myDialog .text-field {
+    -fx-background-color: #203B46;
+    -fx-background-radius: 5px;
+    -fx-text-fill: #D5A220;
+    -fx-border-color: #1A2F38;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
 
-        MainApp.saveFiles();
-        Saver.cancelTask();
+.myDialog .text-area {
+    -fx-background-color: #203B46;
+    -fx-background-radius: 5px;
+    -fx-text-fill: #D5A220;
+}
 
-        Pair<ProgressBar, Label> pair = DialogUtils.downloadInfo();
+.myDialog .text-area .content {
+    -fx-background-color: #203B46;
+    -fx-background-radius: 5px;
+    -fx-background-insets: -1.3;
+    -fx-border-color: #1A2F38;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
 
-        Thread thread = new Thread(() -> {
+.myDialog .text-area .scroll-pane{
+    -fx-background-color: #264653;
+    -fx-font-size: 8px;
+}
 
-            try {
-                File currentJar = new File(MainApp.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-                String[] split = currentJar.getAbsolutePath().split("\\.");
-                String extenstion = split[split.length - 1];
-                split[split.length - 1] = "dl";
+.myDialog .text-area .scroll-pane .scroll-bar:vertical {
+    -fx-background-color:  #264653;
+}
 
-                StringBuilder filePath = new StringBuilder();
+.myDialog .text-area .scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #70b0b5;
+}
 
-                for(String s : split) {
-                    filePath.append(s + ".");
-                }
+.myDialog .grid-pane {
+    -fx-background-color: #203B46;
+}
 
-                File download = new File(filePath.substring(0, filePath.length() - 1));
+.myDialog .spinner {
+    -fx-background-color: #264653;
+}
 
-//                Repository repository = GitHubAPIService.getRepository("antoninruan", "cellarmanager");
-//                Release release = repository.getLatestRelease();
-                String downloadUrl = "";
-                long fileSize = 0;
-                for(Asset assets : release.getAssets()) {
-                    String[] nameSplit = assets.getName().split("\\.");
-                    if(nameSplit[nameSplit.length - 1].equalsIgnoreCase("jar")) {
-                        downloadUrl = assets.getBrowserDownloadUrl();
-                        fileSize = assets.getSize();
-                        break;
-                    }
-                }
+.myDialog .spinner:focused {
+    -fx-border-width: 0;
+}
 
-                URL url = new URL(downloadUrl);
+.myDialog .spinner .text-field {
+    -fx-border-radius: 5 0 0 5;
+    -fx-background-radius: 5 0 0 5;
+}
 
-                ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
+.myDialog .spinner .increment-arrow-button .increment-arrow {
+    -fx-background-color: #1A2F38;
+}
 
-                FileOutputStream fileOutputStream = new FileOutputStream(currentJar);
+.myDialog .spinner .increment-arrow-button {
+    -fx-background-color: #203B46;
+    -fx-text-fill: #E9C46A;
+    -fx-font-size: 14px;
+    -fx-border-color: #1A2F38;
+    -fx-border-width: 1 1 .5 0;
+    -fx-border-radius: 0 5 0 0;
+    -fx-border-insets: 0 0 -.5 0;
+}
 
-//                fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+.myDialog .spinner .increment-arrow-button:armed {
+    -fx-background-color: #13242A;
+}
 
-                int i = 0;
-                long dl;
+.myDialog .spinner .decrement-arrow-button .decrement-arrow {
+    -fx-background-color: #1A2F38;
+}
 
-                LocalDateTime start = LocalDateTime.now();
-                DecimalFormat format = new DecimalFormat("0");
+.myDialog .spinner .decrement-arrow-button {
+    -fx-background-color: #203B46;
+    -fx-text-fill: #E9C46A;
+    -fx-font-size: 14px;
+    -fx-border-color: #1A2F38;
+    -fx-border-width: .5 1 1 0;
+    -fx-border-radius: 0 0 5 0;
+    -fx-border-insets: .5 0 0 0;
+}
 
-                do {
-                    dl = fileOutputStream.getChannel().transferFrom(readableByteChannel, i , 2048);
-                    i += 2048;
-                    LocalDateTime now = LocalDateTime.now();
-                    Duration delta = Duration.between(start, now);
-                    double estimatedTotalTime = (((double) fileSize) / ((double) i)) * delta.toMillis();
-                    Duration estimatedRemainingTime = Duration.ofMillis((long) (estimatedTotalTime - delta.toMillis()));
-                    int finalI = i;
-                    long finalFileSize = fileSize;
-                    Platform.runLater(() -> {
-                        pair.getKey().setProgress((double) finalI / (double) finalFileSize);
-                        pair.getValue().setText("Temps restants estimé: " +
-                                (estimatedRemainingTime.toMinutes() != 0 ? (estimatedRemainingTime.toMinutes() + "m") : "") + format.format(estimatedRemainingTime.minusMinutes(estimatedRemainingTime.toMinutes()).getSeconds()) + "s");
-                    });
-                } while (dl != 0);
+.myDialog .spinner .decrement-arrow-button:armed {
+    -fx-background-color: #13242A;
+}
 
+.myDialog .radio-button {
+    -fx-text-fill: #E9C46A;
+}
 
-                Platform.runLater(() ->  {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Mise à jour téléchargée");
-                    alert.setHeaderText("La mise à jour a été téléchargée");
-                    alert.setContentText("Le programme va s'arrêter, relancer le pour appliquer la mise à jour");
+.myDialog .radio-button .radio {
+    -fx-background-insets: 0;
+    -fx-background-color: #203B46;
+    -fx-border-color: #1A2F38;
+    -fx-border-width: 1;
+    -fx-border-radius: 100%;
+}
 
-                    alert.getDialogPane().getStylesheets().add(Updater.class.getClassLoader().getResource("style/dialog.css").toString());
-                    alert.getDialogPane().getStyleClass().add("myDialog");
-                    ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
+.myDialog .radio-button:selected .dot {
+    -fx-background-insets: 0;
+    -fx-background-color: #D5A220;
+}
 
+.myDialog .check-box .box {
+    -fx-background-color: #203B46;
+    -fx-border-color: #1A2F38;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
 
-                    alert.showAndWait();
-                    System.exit(0);
-                });
+.myDialog .check-box:selected .mark {
+    -fx-background-color: #D5A220;
+}
 
-
-            } catch (IOException | URISyntaxException e) {
-                DialogUtils.sendErrorWindow(e);
-            }
-
-        });
-
-        thread.start();
-
-
-    }
-
-    private static long getFileSize(URL url) {
-        HttpURLConnection conn = null;
-        try {
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("HEAD");
-            return conn.getContentLengthLong();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
-        }
-    }
-
+.myDialog .web-view {
+    -fx-context-menu-enabled: false;
 }

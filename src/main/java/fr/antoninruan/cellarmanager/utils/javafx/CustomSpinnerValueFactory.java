@@ -696,7 +696,7 @@ public class CustomSpinnerValueFactory extends SpinnerValueFactory<Integer> {
             String style = "";
             style += "-fx-border-color: #ee291b;";
             style += "-fx-border-width: 1px;";
-            style += "-fx-border-radius: 2px;";
+            style += "-fx-border-radius: 5px;";
 //            style += "-fx-border-insets: 1px;";
 
             spinner.getEditor().setStyle(style);

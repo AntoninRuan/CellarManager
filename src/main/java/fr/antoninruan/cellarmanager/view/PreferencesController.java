@@ -667,7 +667,7 @@ public class PreferencesController {
 
     @FXML
     private void initialize() {
-        lang.getItems().add(Locale.FRENCH);
+        lang.getItems().addAll(Locale.FRENCH);
         lang.setConverter(new StringConverter<Locale>() {
             @Override
             public String toString(Locale locale) {
@@ -721,6 +721,7 @@ public class PreferencesController {
         PreferencesManager.setDoubleClickDelay((int) doubleClickDelay.getValue() * 50);
         PreferencesManager.setLang(lang.getValue());
         PreferencesManager.setNeverConnectToGitHub(neverConnectOnGitHub.isSelected());
+        noChange.set(true);
     }
 
     @FXML
