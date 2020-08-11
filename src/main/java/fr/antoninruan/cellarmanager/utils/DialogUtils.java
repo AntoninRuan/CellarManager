@@ -627,7 +627,13 @@
 
 package fr.antoninruan.cellarmanager.utils;
 
+import fr.antoninruan.cellarmanager.MainApp;
+import fr.antoninruan.cellarmanager.model.Bottle;
+import fr.antoninruan.cellarmanager.model.BottleInfo;
+import fr.antoninruan.cellarmanager.model.CompartmentInfo;
+import fr.antoninruan.cellarmanager.model.WineType;
 import fr.antoninruan.cellarmanager.utils.github.GitHubAPIService;
+import fr.antoninruan.cellarmanager.utils.github.GitHubAccountConnectionInfo;
 import fr.antoninruan.cellarmanager.utils.github.exception.GitHubAPIConnectionException;
 import fr.antoninruan.cellarmanager.utils.github.exception.LabelNotFoundException;
 import fr.antoninruan.cellarmanager.utils.github.exception.RepositoryNotFoundException;
@@ -636,12 +642,6 @@ import fr.antoninruan.cellarmanager.utils.github.model.issues.Issue;
 import fr.antoninruan.cellarmanager.utils.github.model.release.Release;
 import fr.antoninruan.cellarmanager.utils.javafx.CustomSpinnerValueFactory;
 import fr.antoninruan.cellarmanager.utils.javafx.SuggestionMenu;
-import fr.antoninruan.cellarmanager.MainApp;
-import fr.antoninruan.cellarmanager.model.Bottle;
-import fr.antoninruan.cellarmanager.model.BottleInfo;
-import fr.antoninruan.cellarmanager.model.CompartmentInfo;
-import fr.antoninruan.cellarmanager.model.WineType;
-import fr.antoninruan.cellarmanager.utils.github.GitHubAccountConnectionInfo;
 import fr.antoninruan.cellarmanager.utils.mobile_sync.MobileSyncManager;
 import fr.antoninruan.cellarmanager.utils.report.BugInfo;
 import fr.antoninruan.cellarmanager.utils.report.SuggestionInfo;
@@ -662,7 +662,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -670,7 +669,9 @@ import javafx.stage.StageStyle;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
-import java.io.*;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
