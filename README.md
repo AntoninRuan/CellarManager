@@ -5,7 +5,7 @@ You can find an english readme [here](https://github.com/AntoninRuan/CellarManag
 # Français
 
 CellarManager est un programme vous permettant de gérer votre cave.<br>
-Il vous permet de lister les bouteilles présentes dans votre cave, mais également de savoir ou elle se trouve<br>
+Il vous permet de lister les bouteilles présentes dans votre cave, mais également de savoir où elle se trouve<br>
 De plus ce programme est accompagné d'une application mobile, et ce dans le but de rendre le maintien de votre cave à jour plus simple possible.<br>
 En effet il est peu commode voire impossible d'emmener son ordinateur dans la cave, et faire des allers-retours entre la cave et l'ordinateur n'est pas une option non plus.<br>
 C'est pour cela que l'application vous permets d'ajouter, modifier, déplacer et enlever des bouteilles via votre téléphone.<br>
