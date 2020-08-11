@@ -698,7 +698,9 @@ public class Updater {
             }
 
         } catch (UnknownHostException e) {
-            DialogUtils.infoMessage("Impossible de se connecter", "Impossible de se connecter à GitHub", "Vérifier votre connection internet avant de recommencer");
+            Platform.runLater(() -> {
+                DialogUtils.infoMessage("Impossible de se connecter", "Impossible de se connecter à GitHub", "Vérifier votre connection internet avant de recommencer");
+            });
         }catch (IOException | RepositoryNotFoundException | ParseException | GitHubAPIConnectionException e) {
             DialogUtils.sendErrorWindow(e);
         }
