@@ -677,6 +677,37 @@ public class RootLayoutController {
     private MainApp mainApp;
 
     @FXML
+    private Menu folder;
+    @FXML
+    private MenuItem importM;
+    @FXML
+    private MenuItem export;
+    @FXML
+    private Menu syncMenu;
+    @FXML
+    private MenuItem info;
+    @FXML
+    private MenuItem settings;
+    @FXML
+    private MenuItem close;
+    @FXML
+    private Menu edit;
+    @FXML
+    private MenuItem bottles;
+    @FXML
+    private MenuItem deleteCompartment;
+    @FXML
+    private Menu help;
+    @FXML
+    private MenuItem checkUpdate;
+    @FXML
+    private MenuItem sendBugReport;
+    @FXML
+    private MenuItem sendSuggestion;
+    @FXML
+    private MenuItem about;
+
+    @FXML
     private BorderPane layout;
 
     @FXML
@@ -696,7 +727,7 @@ public class RootLayoutController {
     private MenuItem cancelMenu;
 
     @FXML
-    private MenuItem toggleMobileSync;
+    private CheckMenuItem toggleMobileSync;
 
     private Spot displayedSpot;
 
@@ -706,6 +737,32 @@ public class RootLayoutController {
 
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
+    }
+
+    public void updateLang() {
+        folder.setText(PreferencesManager.getLangBundle().getString("folder"));
+        importM.setText(PreferencesManager.getLangBundle().getString("import_menu_item"));
+        export.setText(PreferencesManager.getLangBundle().getString("export_menu_item"));
+        syncMenu.setText(PreferencesManager.getLangBundle().getString("sync_menu"));
+        toggleMobileSync.setText(MobileSyncManager.isActivate() ? PreferencesManager.getLangBundle().getString("deactivate")
+                : PreferencesManager.getLangBundle().getString("activate"));
+        info.setText(PreferencesManager.getLangBundle().getString("info"));
+        settings.setText(PreferencesManager.getLangBundle().getString("settings"));
+        close.setText(PreferencesManager.getLangBundle().getString("close"));
+        edit.setText(PreferencesManager.getLangBundle().getString("edit"));
+        cancelMenu.setText(PreferencesManager.getLangBundle().getString("undo"));
+        bottles.setText(PreferencesManager.getLangBundle().getString("bottles"));
+        deleteCompartment.setText(PreferencesManager.getLangBundle().getString("delete_compartments"));
+        help.setText(PreferencesManager.getLangBundle().getString("help"));
+        checkUpdate.setText(PreferencesManager.getLangBundle().getString("check_update"));
+        sendBugReport.setText(PreferencesManager.getLangBundle().getString("send_bug_report"));
+        sendSuggestion.setText(PreferencesManager.getLangBundle().getString("send_suggestion"));
+        about.setText(PreferencesManager.getLangBundle().getString("about"));
+        searchField.setPromptText(PreferencesManager.getLangBundle().getString("search_by"));
+        BottleFilter.SearchCriteria selected = criteriaChoiceBox.getValue();
+        criteriaChoiceBox.getItems().clear();
+        criteriaChoiceBox.getItems().addAll(BottleFilter.SearchCriteria.values());
+        criteriaChoiceBox.setValue(selected);
     }
 
     @FXML
@@ -759,12 +816,12 @@ public class RootLayoutController {
         criteriaChoiceBox.setConverter(new StringConverter <BottleFilter.SearchCriteria>() {
             @Override
             public String toString(BottleFilter.SearchCriteria object) {
-                return object.getNameIn(PreferencesManager.getLang());
+                return PreferencesManager.getLangBundle().getString(object.getId());
             }
 
             @Override
             public BottleFilter.SearchCriteria fromString(String string) {
-                return BottleFilter.SearchCriteria.fromNameIn(string, PreferencesManager.getLang());
+                return BottleFilter.SearchCriteria.fromId(string);
             }
         });
         BottleFilter.setCriteria(BottleFilter.SearchCriteria.NAME);
@@ -791,23 +848,22 @@ public class RootLayoutController {
         return shiftPressed;
     }
 
-    public void showBottleDetails(Spot spot) {
+    public void showBottleDetails(Spot spot, boolean closeIfOpen) {
 
-        if(displayedSpot != null && displayedSpot.equals(spot) && descriptionPane.isExpanded()) {
+        if(displayedSpot != null && displayedSpot.equals(spot) && descriptionPane.isExpanded() && closeIfOpen) {
             descriptionPane.setExpanded(false);
         } else {
-            description.setText(BottleFilter.SearchCriteria.NAME.getNameIn(PreferencesManager.getLang()) + ": " + spot.getBottle().getName() + "\n"+
-                    BottleFilter.SearchCriteria.DOMAIN.getNameIn(PreferencesManager.getLang()) + ": " + spot.getBottle().getDomain() + "\n"+
-                    BottleFilter.SearchCriteria.EDITION.getNameIn(PreferencesManager.getLang()) + ": " + spot.getBottle().getEdition() + "\n"+
-                    BottleFilter.SearchCriteria.YEAR.getNameIn(PreferencesManager.getLang()) + ": " + spot.getBottle().getYear() + "\n"+
-                    BottleFilter.SearchCriteria.APOGEE.getNameIn(PreferencesManager.getLang()) + ": " + spot.getBottle().getConsumeYear() + "\n" +
-                    BottleFilter.SearchCriteria.TYPE.getNameIn(PreferencesManager.getLang()) + ": " + spot.getBottle().getType() + "\n"+
-                    BottleFilter.SearchCriteria.REGION.getNameIn(PreferencesManager.getLang()) + ": " + spot.getBottle().getRegion() + "\n"+
-                    "Commentaire: " + spot.getBottle().getComment());
+            description.setText(PreferencesManager.getLangBundle().getString("name") + ": " + spot.getBottle().getName() + "\n"+
+                    PreferencesManager.getLangBundle().getString("domain") + ": " + spot.getBottle().getDomain() + "\n"+
+                    PreferencesManager.getLangBundle().getString("edition") + ": " + spot.getBottle().getEdition() + "\n"+
+                    PreferencesManager.getLangBundle().getString("year") + ": " + spot.getBottle().getYear() + "\n"+
+                    PreferencesManager.getLangBundle().getString("consumption_year") + ": " + spot.getBottle().getConsumeYear() + "\n" +
+                    PreferencesManager.getLangBundle().getString("type") + ": " + spot.getBottle().getType() + "\n"+
+                    PreferencesManager.getLangBundle().getString("region") + ": " + spot.getBottle().getRegion() + "\n"+
+                    PreferencesManager.getLangBundle().getString("comment") + ": " + spot.getBottle().getComment());
 
-            if(!descriptionPane.isExpanded()) {
+            if(!descriptionPane.isExpanded())
                 descriptionPane.setExpanded(true);
-            }
         }
 
         displayedSpot = spot;
@@ -860,9 +916,10 @@ public class RootLayoutController {
     public void handleToggleMobileSync() {
         MobileSyncManager.toggleState();
         if(MobileSyncManager.isActivate()) {
-            DialogUtils.mobileSyncInfo("Synchronisation Mobile activée, voici les informations pour vous connecter");
+            DialogUtils.mobileSyncInfo(PreferencesManager.getLangBundle().getString("mobile_sync_info_window_header"));
         }
-        toggleMobileSync.setText(MobileSyncManager.isActivate() ? "Désactiver" : "Activer");
+        toggleMobileSync.setText(MobileSyncManager.isActivate() ? PreferencesManager.getLangBundle().getString("deactivate")
+                : PreferencesManager.getLangBundle().getString("activate"));
     }
 
     public void handleMobileSyncInfo() {
@@ -906,7 +963,8 @@ public class RootLayoutController {
                 Issue issue = repository.createIssue(bugInfo.getTitle(), "Description:" + bugInfo.getDescription() +
                         (bugInfo.getStackTrace() == null ? "" : "\nStacktrace:" + bugInfo.getStackTrace()), new Label[]{bug});
 
-                DialogUtils.successfullySendIssue("Report de bug effectué", "Le bug a bien été reporté", issue.getHtmlUrl());
+                DialogUtils.successfullySendIssue(PreferencesManager.getLangBundle().getString("bug_report_confirmation_title"),
+                        PreferencesManager.getLangBundle().getString("bug_report_confirmation_header"), issue.getHtmlUrl());
 
             } catch (IOException | ParseException | GitHubAPIConnectionException | RepositoryNotFoundException | LabelNotFoundException e) {
                 DialogUtils.sendErrorWindow(e);
@@ -947,7 +1005,8 @@ public class RootLayoutController {
 
                 Issue issue = repository.createIssue(suggestionInfo.getTitle(), suggestionInfo.getDescription(), new Label[]{suggest});
 
-                DialogUtils.successfullySendIssue("Suggestion envoyé", "La suggestion a bien été envoyé", issue.getHtmlUrl());
+                DialogUtils.successfullySendIssue(PreferencesManager.getLangBundle().getString("suggestion_send_title"),
+                        PreferencesManager.getLangBundle().getString("suggestion_send_header"), issue.getHtmlUrl());
 
             } catch (IOException | ParseException | GitHubAPIConnectionException | RepositoryNotFoundException | LabelNotFoundException e) {
                 DialogUtils.sendErrorWindow(e);
@@ -964,23 +1023,24 @@ public class RootLayoutController {
     public void handlePreferences() {
         try {
             FXMLLoader loader = new FXMLLoader();
+            loader.setResources(PreferencesManager.getLangBundle());
             loader.setLocation(RootLayoutController.class.getClassLoader().getResource("fxml/PreferencesLayout.fxml"));
 
             VBox root = loader.load();
 
-            PreferencesController controller = loader.getController();
+            MainApp.setPreferencesController(loader.getController());
 
             Scene scene = new Scene(root);
             Stage stage = new Stage();
             stage.setScene(scene);
             stage.getIcons().add(MainApp.LOGO);
-            stage.setTitle("Ma Cave - Paramètres");
+            stage.setTitle(PreferencesManager.getLangBundle().getString("settings_window_title"));
             stage.setResizable(false);
             stage.initOwner(MainApp.getPrimaryStage());
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initStyle(StageStyle.UTILITY);
 
-            controller.setStage(stage);
+            MainApp.getPreferencesController().setStage(stage);
 
             stage.show();
 

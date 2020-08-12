@@ -654,7 +654,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -664,10 +663,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Antonin RUAN
@@ -754,7 +750,7 @@ public class MainApp extends Application {
                 openedFile = null;
                 do {
                     try {
-                        openedFile = noSaveFile();
+                        openedFile = DialogUtils.noSaveFile();
                     } catch (URISyntaxException e) {
                         DialogUtils.sendErrorWindow(e);
                     }
@@ -806,8 +802,7 @@ public class MainApp extends Application {
             openFile(openedFile);
         }
 
-        MainApp.primaryStage.setTitle("Ma Cave - " + openedFile.getName());
-
+        MainApp.primaryStage.setTitle(String.format(PreferencesManager.getLangBundle().getString("main_window_title"), openedFile.getName()));
 
         Thread checkUpdate = new Thread(() -> {
             if(PreferencesManager.doCheckUpdateAtStart()) {
@@ -866,6 +861,7 @@ public class MainApp extends Application {
 
         try {
             FXMLLoader loader = new FXMLLoader();
+            loader.setResources(PreferencesManager.getLangBundle());
             loader.setLocation(MainApp.class.getClassLoader().getResource("fxml/RootLayout.fxml"));
             rootLayout = loader.load();
 
@@ -888,6 +884,7 @@ public class MainApp extends Application {
     public void initCompartementDisplayLayout() {
         try {
             FXMLLoader loader = new FXMLLoader();
+            loader.setResources(PreferencesManager.getLangBundle());
             loader.setLocation(MainApp.class.getClassLoader().getResource("fxml/CompartementDisplayLayout.fxml"));
 
             VBox vBox = loader.load();
@@ -902,27 +899,6 @@ public class MainApp extends Application {
         } catch (IOException e) {
             DialogUtils.sendErrorWindow(e);
         }
-    }
-
-    private File noSaveFile() throws URISyntaxException {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Aucun fichier de sauvegarde détécté");
-        alert.setHeaderText(null);
-        alert.setContentText("Veuillez choisir le fichier pour sauvegarder votre cave");
-
-        ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(LOGO);
-
-        alert.showAndWait();
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choissisez un fichier pour sauvegarder votre cave");
-        File currentJar = new File(MainApp.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-        fileChooser.setInitialDirectory(currentJar.getParentFile());
-        fileChooser.setInitialFileName("ma_cave.mcv");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Fichier MaCave", "*.mcv")
-        );
-        return fileChooser.showSaveDialog(primaryStage);
     }
 
     private void registerBottle(File file) {

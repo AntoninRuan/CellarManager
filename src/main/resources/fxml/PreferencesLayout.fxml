@@ -16,12 +16,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox styleClass="container" stylesheets="@../style/preferences.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.antoninruan.cellarmanager.view.PreferencesController">
    <children>
       <HBox alignment="CENTER_LEFT" styleClass="title" VBox.vgrow="ALWAYS">
          <children>
-            <Label text="Paramètres">
+            <Label fx:id="title" text="%settings">
                <font>
                   <Font size="24.0" />
                </font>
@@ -50,23 +49,23 @@
                         <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
                     </rowConstraints>
                      <children>
-                        <Label text="Langue">
+                        <Label fx:id="settingLanguage" text="%setting_language">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
                         <ChoiceBox fx:id="lang" prefWidth="150.0" GridPane.columnIndex="1" />
-                        <Label text="Vérifier les mises à jour au lancement" GridPane.rowIndex="1">
+                        <Label fx:id="settingCheckUpdateAtStart" text="%setting_check_update_at_start" GridPane.rowIndex="1">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Label text="Ne jamais se connecter a GitHub" GridPane.rowIndex="2">
+                        <Label fx:id="settingNeverConnectToGitHub" text="%setting_never_connect_to_github" GridPane.rowIndex="2">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Label fx:id="doubleClickDelayLabel" text="Délai du double clic" GridPane.rowIndex="3">
+                        <Label fx:id="settingDoubleClickDelay" text="%setting_double_click_delay" GridPane.rowIndex="3">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -85,9 +84,9 @@
       </AnchorPane>
       <ButtonBar prefHeight="40.0" prefWidth="200.0">
         <buttons>
-            <Button fx:id="applyButton" mnemonicParsing="false" onAction="#handleApply" text="Appliquer" />
-            <Button contentDisplay="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#handleOk" text="Ok" />
-          <Button cancelButton="true" mnemonicParsing="false" onAction="#handleClose" text="Fermer" />
+            <Button fx:id="applyButton" mnemonicParsing="false" onAction="#handleApply" text="%apply" />
+            <Button contentDisplay="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#handleOk" text="%ok" />
+          <Button cancelButton="true" mnemonicParsing="false" onAction="#handleClose" text="%close" />
         </buttons>
          <VBox.margin>
             <Insets />

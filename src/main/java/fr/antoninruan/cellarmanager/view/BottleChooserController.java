@@ -727,7 +727,7 @@ public class BottleChooserController {
 
                 contextMenu.getItems().clear();
 
-                MenuItem modify = new MenuItem("Modifier");
+                MenuItem modify = new MenuItem(PreferencesManager.getLangBundle().getString("modify"));
                 modify.setOnAction(event1 -> {
 
                     Optional<BottleInfo> result = DialogUtils.addNewBottle(bottle);
@@ -739,7 +739,7 @@ public class BottleChooserController {
 
                 });
 
-                MenuItem duplicate = new MenuItem("Dupliquer");
+                MenuItem duplicate = new MenuItem(PreferencesManager.getLangBundle().getString("duplicate"));
                 duplicate.setOnAction(event1 -> {
                     BottleInfo bottleInfo = new BottleInfo(bottle.getName(), bottle.getRegion(), bottle.getDomain(),
                             bottle.getEdition(), bottle.getComment(), bottle.getYear(), bottle.getConsumeYear(), bottle.getType());
@@ -754,10 +754,10 @@ public class BottleChooserController {
 
                 });
 
-                MenuItem delete = new MenuItem("Supprimer");
+                MenuItem delete = new MenuItem(PreferencesManager.getLangBundle().getString("delete"));
                 delete.setOnAction(event1 -> {
                     if(MainApp.hasBottle(bottle).size() != 0)
-                        DialogUtils.bottlePresentInCave();
+                        DialogUtils.bottlePresentInCellar();
                     else
                         MainApp.getBottles().remove(bottle.getId());
                 });
@@ -767,19 +767,19 @@ public class BottleChooserController {
             }
 
         });
-        tableView.setPlaceholder(new Label("Aucun résultat trouvé"));
+        tableView.setPlaceholder(new Label(PreferencesManager.getLangBundle().getString("no_result_found")));
 
         criteriaChoiceBox.getItems().setAll(BottleFilter.SearchCriteria.values());
         criteriaChoiceBox.setValue(BottleFilter.SearchCriteria.NAME);
         criteriaChoiceBox.setConverter(new StringConverter <BottleFilter.SearchCriteria>() {
             @Override
             public String toString(BottleFilter.SearchCriteria object) {
-                return object.getNameIn(PreferencesManager.getLang());
+                return PreferencesManager.getLangBundle().getString(object.getId());
             }
 
             @Override
             public BottleFilter.SearchCriteria fromString(String string) {
-                return BottleFilter.SearchCriteria.fromNameIn(string, PreferencesManager.getLang());
+                return BottleFilter.SearchCriteria.fromId(string);
             }
         });
         criteriaChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -835,9 +835,9 @@ public class BottleChooserController {
 
     public void setCancelable(boolean cancelable) {
         if(cancelable)
-            cancelButton.setText("Annuler");
+            cancelButton.setText(PreferencesManager.getLangBundle().getString("cancel"));
         else
-            cancelButton.setText("Fermer");
+            cancelButton.setText(PreferencesManager.getLangBundle().getString("close"));
     }
 
 }

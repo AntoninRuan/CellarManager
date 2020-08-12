@@ -625,124 +625,34 @@
  *
  */
 
-package fr.antoninruan.cellarmanager.view;
+package fr.antoninruan.cellarmanager.utils.javafx;
 
+import com.sun.javafx.scene.control.skin.resources.ControlResources;
 import fr.antoninruan.cellarmanager.utils.PreferencesManager;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
-import javafx.util.StringConverter;
+import javafx.beans.InvalidationListener;
+import javafx.scene.Node;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Hyperlink;
 
-import java.util.Locale;
+public class CustomDialogPane extends DialogPane {
 
-public class PreferencesController {
+    @Override
+    protected Node createDetailsButton() {
+        final Hyperlink detailsButton = new Hyperlink();
+        final String moreText = PreferencesManager.getLangBundle().getString("show_details"); //$NON-NLS-1$
+        final String lessText = PreferencesManager.getLangBundle().getString("hide_details"); //$NON-NLS-1$
 
-    @FXML
-    private Label title;
-    @FXML
-    private Label settingLanguage;
-    @FXML
-    private Label settingCheckUpdateAtStart;
-    @FXML
-    private Label settingNeverConnectToGitHub;
-    @FXML
-    private Label settingDoubleClickDelay;
+        InvalidationListener expandedListener = o -> {
+            final boolean isExpanded = isExpanded();
+            detailsButton.setText(isExpanded ? lessText : moreText);
+            detailsButton.getStyleClass().setAll("details-button", (isExpanded ? "less" : "more")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        };
 
-    @FXML
-    private ChoiceBox<Locale> lang;
+        // we call the listener immediately to ensure the state is correct at start up
+        expandedListener.invalidated(null);
+        expandedProperty().addListener(expandedListener);
 
-    @FXML
-    private CheckBox checkUpdateAtStart;
-
-    @FXML
-    private CheckBox neverConnectOnGitHub;
-
-    @FXML
-    private Slider doubleClickDelay;
-
-    @FXML
-    private Button applyButton;
-
-    private BooleanProperty noChange = new SimpleBooleanProperty(true);
-
-    private Stage stage;
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
+        detailsButton.setOnAction(ae -> setExpanded(!isExpanded()));
+        return detailsButton;
     }
-
-    @FXML
-    private void initialize() {
-        lang.getItems().addAll(Locale.FRENCH, Locale.ENGLISH);
-        lang.setConverter(new StringConverter<Locale>() {
-            @Override
-            public String toString(Locale locale) {
-                return locale.getDisplayLanguage(locale).toUpperCase();
-            }
-
-            @Override
-            public Locale fromString(String s) {
-                return null;
-            }
-        });
-        lang.setValue(PreferencesManager.getLang());
-        lang.valueProperty().addListener((observableValue, oldValue, newValue) -> {
-            if(newValue != PreferencesManager.getLang() && noChange.getValue())
-                noChange.setValue(false);
-        });
-
-        doubleClickDelay.valueProperty().addListener((observableValue, oldValue, newValue) -> {
-            settingDoubleClickDelay.setText("Délai du double clic (" + (newValue.intValue() * 50) + "ms)");
-            if(newValue.intValue() * 50 != PreferencesManager.getDoubleClickDelay() && noChange.getValue()) {
-                noChange.setValue(false);
-            }
-        });
-        doubleClickDelay.setValue(PreferencesManager.getDoubleClickDelay() / 50);
-        settingDoubleClickDelay.setText("Délai du double clic (" + PreferencesManager.getDoubleClickDelay() + "ms)");
-
-        neverConnectOnGitHub.setSelected(PreferencesManager.isNeverConnectToGitHub());
-        neverConnectOnGitHub.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
-            if(newValue != PreferencesManager.isNeverConnectToGitHub() && noChange.getValue())
-                noChange.setValue(false);
-        });
-
-        checkUpdateAtStart.setSelected(PreferencesManager.doCheckUpdateAtStart());
-        checkUpdateAtStart.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
-            if(newValue != PreferencesManager.doCheckUpdateAtStart() && noChange.getValue())
-                noChange.setValue(false);
-        });
-
-        applyButton.disableProperty().bind(noChange);
-    }
-
-    public void updateLang() {
-        title.setText(PreferencesManager.getLangBundle().getString("settings"));
-        settingLanguage.setText(PreferencesManager.getLangBundle().getString("setting_language"));
-        settingCheckUpdateAtStart.setText(PreferencesManager.getLangBundle().getString("setting_check_update_at_start"));
-        settingNeverConnectToGitHub.setText(PreferencesManager.getLangBundle().getString("setting_never_connect_to_github"));
-        settingDoubleClickDelay.setText(PreferencesManager.getLangBundle().getString("setting_double_click_delay"));
-    }
-
-    @FXML
-    public void handleOk() {
-        handleApply();
-        stage.close();
-    }
-
-    @FXML
-    public void handleApply() {
-        PreferencesManager.setCheckUpdateAtStart(checkUpdateAtStart.isSelected());
-        PreferencesManager.setDoubleClickDelay((int) doubleClickDelay.getValue() * 50);
-        PreferencesManager.setLang(lang.getValue());
-        PreferencesManager.setNeverConnectToGitHub(neverConnectOnGitHub.isSelected());
-        noChange.set(true);
-    }
-
-    @FXML
-    public void handleClose() {
-        stage.close();
-    }
-
 }

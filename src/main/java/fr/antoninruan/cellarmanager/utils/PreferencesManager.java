@@ -628,16 +628,19 @@
 package fr.antoninruan.cellarmanager.utils;
 
 import com.google.gson.JsonObject;
+import fr.antoninruan.cellarmanager.MainApp;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class PreferencesManager {
 
     private static Locale lang;
+    private static ResourceBundle langBundle;
     private static int doubleClickDelay;
     private static boolean neverConnectToGitHub;
     private static boolean checkUpdateAtStart;
@@ -652,7 +655,16 @@ public class PreferencesManager {
     public static void setLang(Locale lang) {
         if(lang != PreferencesManager.lang) {
             PreferencesManager.lang = lang;
+            PreferencesManager.langBundle = ResourceBundle.getBundle("lang", lang);
+            if(MainApp.getPreferencesController() != null)
+                MainApp.getPreferencesController().updateLang();
+            if(MainApp.getController() != null)
+                MainApp.getController().updateLang();
         }
+    }
+
+    public static ResourceBundle getLangBundle() {
+        return langBundle;
     }
 
     public static int getDoubleClickDelay() {
@@ -697,7 +709,7 @@ public class PreferencesManager {
 
     public static void loadPreferences(JsonObject object) {
         checkUpdateAtStart = object.has("check_update") ? JsonUtils.getAsBoolean(object.get("check_update")) : true;
-        lang = object.has("lang") ? Locale.forLanguageTag(JsonUtils.getAsString(object.get("lang"))) : Locale.FRENCH;
+        setLang(object.has("lang") ? Locale.forLanguageTag(JsonUtils.getAsString(object.get("lang"))) : Locale.FRENCH);
         doubleClickDelay = object.has("double_click_delay") ? JsonUtils.getAsInt(object.get("double_click_delay")): 500;
         neverConnectToGitHub = object.has("never_connect_to_github") && JsonUtils.getAsBoolean(object.get("never_connect_to_github"));
 

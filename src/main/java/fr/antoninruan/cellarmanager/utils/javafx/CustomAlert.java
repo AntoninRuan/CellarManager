@@ -625,124 +625,182 @@
  *
  */
 
-package fr.antoninruan.cellarmanager.view;
+package fr.antoninruan.cellarmanager.utils.javafx;
 
-import fr.antoninruan.cellarmanager.utils.PreferencesManager;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
-import javafx.util.StringConverter;
+import com.sun.javafx.scene.control.skin.resources.ControlResources;
+import javafx.beans.InvalidationListener;
+import javafx.beans.NamedArg;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 
-import java.util.Locale;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public class PreferencesController {
+// Classe servant seulement à pouvoir modifier les messages pour entendre/restreindre lorsqu'il du expandablecontent
+// Aucune modification à la class Alert
+public class CustomAlert extends CustomDialog {
 
-    @FXML
-    private Label title;
-    @FXML
-    private Label settingLanguage;
-    @FXML
-    private Label settingCheckUpdateAtStart;
-    @FXML
-    private Label settingNeverConnectToGitHub;
-    @FXML
-    private Label settingDoubleClickDelay;
+    private WeakReference <DialogPane> dialogPaneRef;
 
-    @FXML
-    private ChoiceBox<Locale> lang;
+    private boolean installingDefaults = false;
+    private boolean hasCustomButtons = false;
+    private boolean hasCustomTitle = false;
+    private boolean hasCustomHeaderText = false;
 
-    @FXML
-    private CheckBox checkUpdateAtStart;
+    private final InvalidationListener headerTextListener = o -> {
+        if (!installingDefaults) hasCustomHeaderText = true;
+    };
 
-    @FXML
-    private CheckBox neverConnectOnGitHub;
+    private final InvalidationListener titleListener = o -> {
+        if (!installingDefaults) hasCustomTitle = true;
+    };
 
-    @FXML
-    private Slider doubleClickDelay;
+    private final ListChangeListener <ButtonType> buttonsListener = change -> {
+        if (!installingDefaults) hasCustomButtons = true;
+    };
 
-    @FXML
-    private Button applyButton;
 
-    private BooleanProperty noChange = new SimpleBooleanProperty(true);
 
-    private Stage stage;
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    public CustomAlert(@NamedArg("alertType") Alert.AlertType alertType) {
+        this(alertType, "");
     }
 
-    @FXML
-    private void initialize() {
-        lang.getItems().addAll(Locale.FRENCH, Locale.ENGLISH);
-        lang.setConverter(new StringConverter<Locale>() {
-            @Override
-            public String toString(Locale locale) {
-                return locale.getDisplayLanguage(locale).toUpperCase();
+    public CustomAlert(@NamedArg("alertType") Alert.AlertType alertType,
+                   @NamedArg("contentText") String contentText,
+                   ButtonType... buttons) {
+        super();
+
+        final DialogPane dialogPane = getDialogPane();
+        dialogPane.setContentText(contentText);
+        getDialogPane().getStyleClass().add("alert");
+
+        dialogPaneRef = new WeakReference<>(dialogPane);
+
+        hasCustomButtons = buttons != null && buttons.length > 0;
+        if (hasCustomButtons) {
+            for (ButtonType btnType : buttons) {
+                dialogPane.getButtonTypes().addAll(btnType);
+            }
+        }
+
+        setAlertType(alertType);
+
+        // listening to property changes on Dialog and DialogPane
+        dialogPaneProperty().addListener(o -> updateListeners());
+        titleProperty().addListener(titleListener);
+        updateListeners();
+    }
+
+    // --- alertType
+    private final ObjectProperty <Alert.AlertType> alertType = new SimpleObjectProperty <Alert.AlertType>(null) {
+        final String[] styleClasses = new String[] { "information", "warning", "error", "confirmation" };
+
+        protected void invalidated() {
+            String newTitle = "";
+            String newHeader = "";
+//            Node newGraphic = null;
+            String styleClass = "";
+            ButtonType[] newButtons = new ButtonType[] { ButtonType.OK };
+            switch (getAlertType()) {
+                case NONE: {
+                    newButtons = new ButtonType[] { };
+                    break;
+                }
+                case INFORMATION: {
+                    newTitle = ControlResources.getString("Dialog.info.title");
+                    newHeader = ControlResources.getString("Dialog.info.header");
+                    styleClass = "information";
+                    break;
+                }
+                case WARNING: {
+                    newTitle = ControlResources.getString("Dialog.warning.title");
+                    newHeader = ControlResources.getString("Dialog.warning.header");
+                    styleClass = "warning";
+                    break;
+                }
+                case ERROR: {
+                    newTitle = ControlResources.getString("Dialog.error.title");
+                    newHeader = ControlResources.getString("Dialog.error.header");
+                    styleClass = "error";
+                    break;
+                }
+                case CONFIRMATION: {
+                    newTitle = ControlResources.getString("Dialog.confirm.title");
+                    newHeader = ControlResources.getString("Dialog.confirm.header");
+                    styleClass = "confirmation";
+                    newButtons = new ButtonType[] { ButtonType.OK, ButtonType.CANCEL };
+                    break;
+                }
             }
 
-            @Override
-            public Locale fromString(String s) {
-                return null;
+            installingDefaults = true;
+            if (!hasCustomTitle) setTitle(newTitle);
+            if (!hasCustomHeaderText) setHeaderText(newHeader);
+            if (!hasCustomButtons) getButtonTypes().setAll(newButtons);
+
+            // update the style class based on the alert type. We use this to
+            // specify the default graphic to use (i.e. via CSS).
+            DialogPane dialogPane = getDialogPane();
+            if (dialogPane != null) {
+                List <String> toRemove = new ArrayList <>(Arrays.asList(styleClasses));
+                toRemove.remove(styleClass);
+                dialogPane.getStyleClass().removeAll(toRemove);
+                if (! dialogPane.getStyleClass().contains(styleClass)) {
+                    dialogPane.getStyleClass().add(styleClass);
+                }
             }
-        });
-        lang.setValue(PreferencesManager.getLang());
-        lang.valueProperty().addListener((observableValue, oldValue, newValue) -> {
-            if(newValue != PreferencesManager.getLang() && noChange.getValue())
-                noChange.setValue(false);
-        });
 
-        doubleClickDelay.valueProperty().addListener((observableValue, oldValue, newValue) -> {
-            settingDoubleClickDelay.setText("Délai du double clic (" + (newValue.intValue() * 50) + "ms)");
-            if(newValue.intValue() * 50 != PreferencesManager.getDoubleClickDelay() && noChange.getValue()) {
-                noChange.setValue(false);
-            }
-        });
-        doubleClickDelay.setValue(PreferencesManager.getDoubleClickDelay() / 50);
-        settingDoubleClickDelay.setText("Délai du double clic (" + PreferencesManager.getDoubleClickDelay() + "ms)");
+            installingDefaults = false;
+        }
+    };
 
-        neverConnectOnGitHub.setSelected(PreferencesManager.isNeverConnectToGitHub());
-        neverConnectOnGitHub.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
-            if(newValue != PreferencesManager.isNeverConnectToGitHub() && noChange.getValue())
-                noChange.setValue(false);
-        });
-
-        checkUpdateAtStart.setSelected(PreferencesManager.doCheckUpdateAtStart());
-        checkUpdateAtStart.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
-            if(newValue != PreferencesManager.doCheckUpdateAtStart() && noChange.getValue())
-                noChange.setValue(false);
-        });
-
-        applyButton.disableProperty().bind(noChange);
+    public final Alert.AlertType getAlertType() {
+        return alertType.get();
     }
 
-    public void updateLang() {
-        title.setText(PreferencesManager.getLangBundle().getString("settings"));
-        settingLanguage.setText(PreferencesManager.getLangBundle().getString("setting_language"));
-        settingCheckUpdateAtStart.setText(PreferencesManager.getLangBundle().getString("setting_check_update_at_start"));
-        settingNeverConnectToGitHub.setText(PreferencesManager.getLangBundle().getString("setting_never_connect_to_github"));
-        settingDoubleClickDelay.setText(PreferencesManager.getLangBundle().getString("setting_double_click_delay"));
+    public final void setAlertType(Alert.AlertType alertType) {
+        this.alertType.setValue(alertType);
     }
 
-    @FXML
-    public void handleOk() {
-        handleApply();
-        stage.close();
+    public final ObjectProperty<Alert.AlertType> alertTypeProperty() {
+        return alertType;
     }
 
-    @FXML
-    public void handleApply() {
-        PreferencesManager.setCheckUpdateAtStart(checkUpdateAtStart.isSelected());
-        PreferencesManager.setDoubleClickDelay((int) doubleClickDelay.getValue() * 50);
-        PreferencesManager.setLang(lang.getValue());
-        PreferencesManager.setNeverConnectToGitHub(neverConnectOnGitHub.isSelected());
-        noChange.set(true);
+
+
+    // --- buttonTypes
+    public final ObservableList <ButtonType> getButtonTypes() {
+        return getDialogPane().getButtonTypes();
     }
 
-    @FXML
-    public void handleClose() {
-        stage.close();
+    private void updateListeners() {
+        DialogPane oldPane = dialogPaneRef.get();
+
+        if (oldPane != null) {
+            oldPane.headerTextProperty().removeListener(headerTextListener);
+            oldPane.getButtonTypes().removeListener(buttonsListener);
+        }
+
+        // listen to changes to properties that would be changed by alertType being
+        // changed, so that we only change values that are still at their default
+        // value (i.e. the user hasn't changed them, so we are free to set them
+        // to a new default value when the alertType changes).
+
+        DialogPane newPane = getDialogPane();
+        if (newPane != null) {
+            newPane.headerTextProperty().addListener(headerTextListener);
+            newPane.getButtonTypes().addListener(buttonsListener);
+        }
+
+        dialogPaneRef = new WeakReference<DialogPane>(newPane);
     }
 
 }

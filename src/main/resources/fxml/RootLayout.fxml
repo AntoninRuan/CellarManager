@@ -21,51 +21,50 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane fx:id="layout" maxHeight="1080.0" maxWidth="1920.0" prefHeight="790.0" prefWidth="1350.0" style="-fx-background-color: #264653;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.antoninruan.cellarmanager.view.RootLayoutController">
    <top>
       <MenuBar stylesheets="@../style/menu-bar.css" BorderPane.alignment="CENTER">
         <menus>
-          <Menu mnemonicParsing="false" styleClass="menu-item" text="Fichier">
+          <Menu fx:id="folder" mnemonicParsing="false" styleClass="menu-item" text="%folder">
             <items>
-                  <MenuItem disable="true" mnemonicParsing="false" text="Importer" />
-                  <MenuItem disable="true" mnemonicParsing="false" text="Exporter" />
+                  <MenuItem fx:id="importM" disable="true" mnemonicParsing="false" text="%import_menu_item" />
+                  <MenuItem fx:id="export" disable="true" mnemonicParsing="false" text="%export_menu_item" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <Menu mnemonicParsing="false" text="Synchronisation">
+                  <Menu fx:id="syncMenu" mnemonicParsing="false" text="%sync_menu">
                     <items>
-                        <CheckMenuItem fx:id="toggleMobileSync" mnemonicParsing="false" onAction="#handleToggleMobileSync" text="Activer" />
-                      <MenuItem mnemonicParsing="false" onAction="#handleMobileSyncInfo" text="Info" />
+                        <CheckMenuItem fx:id="toggleMobileSync" mnemonicParsing="false" onAction="#handleToggleMobileSync" text="%activate" />
+                      <MenuItem fx:id="info" mnemonicParsing="false" onAction="#handleMobileSyncInfo" text="%info" />
                     </items>
                   </Menu>
-                  <MenuItem mnemonicParsing="false" onAction="#handlePreferences" text="Paramètres" />
+                  <MenuItem fx:id="settings" mnemonicParsing="false" onAction="#handlePreferences" text="%settings" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" onAction="#handleClose" text="Fermer" />
+              <MenuItem fx:id="close" mnemonicParsing="false" onAction="#handleClose" text="%close" />
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Edition">
+            <Menu fx:id="edit" mnemonicParsing="false" text="%edit">
               <items>
-                  <MenuItem fx:id="cancelMenu" mnemonicParsing="false" onAction="#handleCancel" text="Annuler">
+                  <MenuItem fx:id="cancelMenu" mnemonicParsing="false" onAction="#handleCancel" text="%undo">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleOpenBottleList" text="Bouteille">
+                  <MenuItem fx:id="bottles" mnemonicParsing="false" onAction="#handleOpenBottleList" text="%bottles">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="B" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleDeleteCompartement" text="Supprimer l'étagère" />
+                  <MenuItem fx:id="deleteCompartment" mnemonicParsing="false" onAction="#handleDeleteCompartement" text="%delete_compartments" />
               </items>
             </Menu>
-          <Menu mnemonicParsing="false" text="Aide">
+          <Menu fx:id="help" mnemonicParsing="false" text="%help">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#handleCheckUpdate" text="Recherche de mise à jour" />
+              <MenuItem fx:id="checkUpdate" mnemonicParsing="false" onAction="#handleCheckUpdate" text="%check_update" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleReportBug" text="Envoyer un rapport de bug" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleSuggestIdea" text="Envoyer une suggestion" />
+                  <MenuItem fx:id="sendBugReport" mnemonicParsing="false" onAction="#handleReportBug" text="%send_bug_report" />
+                  <MenuItem fx:id="sendSuggestion" mnemonicParsing="false" onAction="#handleSuggestIdea" text="%send_suggestion" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="A propos" />
+                  <MenuItem fx:id="about" mnemonicParsing="false" onAction="#handleAbout" text="%about" />
             </items>
           </Menu>
         </menus>
@@ -88,7 +87,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="341.0" styleClass="search-bar" HBox.hgrow="ALWAYS">
                            <children>
-                              <TextField fx:id="searchField" prefHeight="30.0" prefWidth="329.0" promptText="Recherche par..." HBox.hgrow="ALWAYS" />
+                              <TextField fx:id="searchField" prefHeight="30.0" prefWidth="329.0" promptText="%search_by" HBox.hgrow="ALWAYS" />
                               <ChoiceBox fx:id="criteriaChoiceBox" prefHeight="29.0" prefWidth="201.0" translateY="-1.0" />
                            </children>
                         </HBox>
@@ -109,7 +108,7 @@
                         </HBox>
                      </children>
                   </HBox>
-                  <TitledPane fx:id="descriptionPane">
+                  <TitledPane fx:id="descriptionPane" expanded="false">
                      <content>
                         <TextArea fx:id="description" editable="false" prefHeight="273.0" prefWidth="400.0" wrapText="true">
                            <font>

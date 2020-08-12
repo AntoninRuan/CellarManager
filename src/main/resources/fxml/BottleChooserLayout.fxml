@@ -25,13 +25,13 @@
                   <Insets />
                </VBox.margin>
                <children>
-                  <Label text="Vos bouteilles" HBox.hgrow="ALWAYS">
+                  <Label text="%your_bottles" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
                   <Separator visible="false" HBox.hgrow="ALWAYS" />
-                  <TextField fx:id="searchField" prefHeight="26.0" prefWidth="325.0" promptText="Rechercher une bouteille par ..." style="-fx-background-radius: 0px;" />
+                  <TextField fx:id="searchField" prefHeight="26.0" prefWidth="325.0" promptText="%search_by" style="-fx-background-radius: 0px;" />
                   <ChoiceBox fx:id="criteriaChoiceBox" prefWidth="150.0" style="-fx-background-radius: 0px;" />
                </children>
                <styleClass>
@@ -44,14 +44,14 @@
             </HBox>
             <TableView fx:id="tableView" prefHeight="700.0" styleClass="container">
               <columns>
-                <TableColumn fx:id="nameColumn" editable="false" prefWidth="150.0" resizable="false" styleClass="name-column" text="Nom" />
-                <TableColumn fx:id="editionColumn" editable="false" prefWidth="150.0" resizable="false" text="Edition" />
-                  <TableColumn fx:id="domainColumn" editable="false" prefWidth="150.0" resizable="false" text="Domaine" />
-                  <TableColumn fx:id="regionColumn" prefWidth="150.0" text="Région" />
-                  <TableColumn fx:id="yearColumn" prefWidth="150.0" resizable="false" text="Année" />
-                  <TableColumn fx:id="typeColumn" prefWidth="150.0" resizable="false" text="Type" />
-                  <TableColumn fx:id="consumeYearColumn" prefWidth="150.0" text="Année de consommation" />
-                  <TableColumn fx:id="countColumn" prefWidth="100.0" resizable="false" text="Nombre" />
+                <TableColumn fx:id="nameColumn" editable="false" prefWidth="150.0" resizable="false" styleClass="name-column" text="%name" />
+                <TableColumn fx:id="editionColumn" editable="false" prefWidth="150.0" resizable="false" text="%edition" />
+                  <TableColumn fx:id="domainColumn" editable="false" prefWidth="150.0" resizable="false" text="%domain" />
+                  <TableColumn fx:id="regionColumn" prefWidth="150.0" text="%region" />
+                  <TableColumn fx:id="yearColumn" prefWidth="150.0" resizable="false" text="%year" />
+                  <TableColumn fx:id="typeColumn" prefWidth="150.0" resizable="false" text="%type" />
+                  <TableColumn fx:id="consumeYearColumn" prefWidth="150.0" text="%consumption_year" />
+                  <TableColumn fx:id="countColumn" prefWidth="100.0" resizable="false" text="%number" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -59,9 +59,9 @@
             </TableView>
             <ButtonBar>
               <buttons>
-                <Button mnemonicParsing="false" onAction="#handleNew" text="Nouveau" />
-                  <Button defaultButton="true" layoutX="525.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleOk" text="Ok" />
-                  <Button fx:id="cancelButton" cancelButton="true" layoutX="525.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleCancel" text="Annuler" />
+                <Button mnemonicParsing="false" onAction="#handleNew" text="%new" />
+                  <Button defaultButton="true" layoutX="525.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleOk" text="%ok" />
+                  <Button fx:id="cancelButton" cancelButton="true" layoutX="525.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleCancel" text="%cancel" />
               </buttons>
                <padding>
                   <Insets bottom="10.0" left="5.0" right="5.0" top="5.0" />

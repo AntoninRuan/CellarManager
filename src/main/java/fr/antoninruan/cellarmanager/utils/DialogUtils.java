@@ -640,6 +640,7 @@ import fr.antoninruan.cellarmanager.utils.github.exception.RepositoryNotFoundExc
 import fr.antoninruan.cellarmanager.utils.github.model.Repository;
 import fr.antoninruan.cellarmanager.utils.github.model.issues.Issue;
 import fr.antoninruan.cellarmanager.utils.github.model.release.Release;
+import fr.antoninruan.cellarmanager.utils.javafx.CustomAlert;
 import fr.antoninruan.cellarmanager.utils.javafx.CustomSpinnerValueFactory;
 import fr.antoninruan.cellarmanager.utils.javafx.SuggestionMenu;
 import fr.antoninruan.cellarmanager.utils.mobile_sync.MobileSyncManager;
@@ -669,6 +670,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -677,16 +679,14 @@ import javafx.util.Pair;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -696,8 +696,8 @@ public class DialogUtils {
 
     public static void sendErrorWindow(Exception e) {
         Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
+            CustomAlert alert = new CustomAlert(Alert.AlertType.ERROR);
+            alert.setTitle(PreferencesManager.getLangBundle().getString("error"));
             alert.setHeaderText(e.getLocalizedMessage());
 
             StringWriter sw = new StringWriter();
@@ -705,7 +705,7 @@ public class DialogUtils {
             e.printStackTrace(pw);
             String exceptionText = sw.toString();
 
-            Label label = new Label("Message d'erreur:");
+            Label label = new Label(PreferencesManager.getLangBundle().getString("error_message"));
 
             TextArea textArea = new TextArea(exceptionText);
             textArea.setEditable(false);
@@ -723,7 +723,7 @@ public class DialogUtils {
 
             alert.getDialogPane().setExpandableContent(expContent);
 
-            ButtonType reportBug = new ButtonType("Envoyer le rapport d'erreur");
+            ButtonType reportBug = new ButtonType(PreferencesManager.getLangBundle().getString("send_error_report"));
             alert.getButtonTypes().add(reportBug);
 
             Optional<ButtonType> result = alert.showAndWait();
@@ -756,7 +756,8 @@ public class DialogUtils {
                             Issue issue = repository.createIssue(bugInfo.getTitle(), "Description:" + bugInfo.getDescription() +
                                     (bugInfo.getStackTrace() == null ? "" : "\nStacktrace:" + bugInfo.getStackTrace()), new fr.antoninruan.cellarmanager.utils.github.model.issues.Label[]{bug});
 
-                            DialogUtils.successfullySendIssue("Report de bug effectué", "Le bug a bien été reporté", issue.getHtmlUrl());
+                            DialogUtils.successfullySendIssue(PreferencesManager.getLangBundle().getString("bug_report_confirmation_title"),
+                                    PreferencesManager.getLangBundle().getString("bug_report_confirmation_header"), issue.getHtmlUrl());
 
                         } catch (IOException | ParseException | GitHubAPIConnectionException | RepositoryNotFoundException | LabelNotFoundException e1) {
                             DialogUtils.sendErrorWindow(e);
@@ -771,19 +772,40 @@ public class DialogUtils {
         });
     }
 
+    public static File noSaveFile() throws URISyntaxException {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(PreferencesManager.getLangBundle().getString("no_save_file_window_title"));
+        alert.setHeaderText(null);
+        alert.setContentText(PreferencesManager.getLangBundle().getString("no_save_file_window_content"));
+
+        ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
+
+        alert.showAndWait();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(PreferencesManager.getLangBundle().getString("no_save_file_file_chooser_title"));
+        File currentJar = new File(MainApp.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        fileChooser.setInitialDirectory(currentJar.getParentFile());
+        fileChooser.setInitialFileName(PreferencesManager.getLangBundle().getString("initial_save_file_name"));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter(PreferencesManager.getLangBundle().getString("ma_cave_file_type"), "*.mcv")
+        );
+        return fileChooser.showSaveDialog(MainApp.getPrimaryStage());
+    }
+
     public static Optional<BugInfo> sendBugReport(String stackTrace) {
         Dialog<BugInfo> dialog = new Dialog <>();
-        dialog.setTitle("Reporter un bug");
-        dialog.setHeaderText("Veuillez décrire le bug que vous rencontrez");
+        dialog.setTitle(PreferencesManager.getLangBundle().getString("bug_report_window_title"));
+        dialog.setHeaderText(PreferencesManager.getLangBundle().getString("bug_report_confirmation_header"));
 
-        final ButtonType validationButtonType = new ButtonType("Envoyer", ButtonBar.ButtonData.OK_DONE);
-        final ButtonType cancelButtonType = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+        final ButtonType validationButtonType = new ButtonType(PreferencesManager.getLangBundle().getString("send"), ButtonBar.ButtonData.OK_DONE);
+        final ButtonType cancelButtonType = new ButtonType(PreferencesManager.getLangBundle().getString("cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(validationButtonType, cancelButtonType);
 
         GridPane gridPane = new GridPane();
 
         TextArea description = new TextArea();
-        description.setPromptText("Description");
+        description.setPromptText(PreferencesManager.getLangBundle().getString("description"));
         description.setWrapText(true);
 
         gridPane.add(description, 0, 0);
@@ -807,11 +829,11 @@ public class DialogUtils {
     public static Optional<SuggestionInfo> sendSuggestion() {
         Dialog<SuggestionInfo> dialog = new Dialog<>();
 
-        dialog.setTitle("Suggérer une idée");
-        dialog.setHeaderText("Veuillez décrire votre idée");
+        dialog.setTitle(PreferencesManager.getLangBundle().getString("suggest_idea_window_title"));
+        dialog.setHeaderText(PreferencesManager.getLangBundle().getString("suggest_idea_window_header"));
 
-        final ButtonType validationButtonType = new ButtonType("Envoyer", ButtonBar.ButtonData.OK_DONE);
-        final ButtonType cancelButtonType = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+        final ButtonType validationButtonType = new ButtonType(PreferencesManager.getLangBundle().getString("send"), ButtonBar.ButtonData.OK_DONE);
+        final ButtonType cancelButtonType = new ButtonType(PreferencesManager.getLangBundle().getString("cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(validationButtonType, cancelButtonType);
 
         GridPane gridPane = new GridPane();
@@ -819,10 +841,10 @@ public class DialogUtils {
         gridPane.setVgap(10);
 
         TextField title = new TextField();
-        title.setPromptText("Nom de l'idée");
+        title.setPromptText(PreferencesManager.getLangBundle().getString("title"));
 
         TextArea description = new TextArea();
-        description.setPromptText("Description de l'idée");
+        description.setPromptText(PreferencesManager.getLangBundle().getString("description"));
 
         gridPane.add(title, 0, 0);
         gridPane.add(description, 0, 1);
@@ -845,11 +867,11 @@ public class DialogUtils {
 
     public static Optional<CompartmentInfo> createNewCompartement(boolean cancelable) {
         Dialog <CompartmentInfo> dialog = new Dialog <>();
-        dialog.setTitle("Nouvelle Etagère");
-        dialog.setHeaderText("Entrez les informations de cette nouvelle étagère");
+        dialog.setTitle(PreferencesManager.getLangBundle().getString("new_compartment_title"));
+        dialog.setHeaderText(PreferencesManager.getLangBundle().getString("new_compartment_header"));
 
-        final ButtonType validationButtonType = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+        final ButtonType validationButtonType = new ButtonType(PreferencesManager.getLangBundle().getString("ok"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType(PreferencesManager.getLangBundle().getString("cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(validationButtonType, cancelButtonType);
 
         GridPane gridPane = new GridPane();
@@ -858,7 +880,7 @@ public class DialogUtils {
         gridPane.setPadding(new Insets(20, 150, 10, 10));
 
         TextField name = new TextField();
-        name.setPromptText("Nom");
+        name.setPromptText(PreferencesManager.getLangBundle().getString("new_compartment_name"));
 
         final Spinner <Integer> row = new Spinner <>(new CustomSpinnerValueFactory(1, 40, 1));
         row.setEditable(true);
@@ -878,17 +900,17 @@ public class DialogUtils {
         column.setEditable(true);
 
         ToggleGroup group = new ToggleGroup();
-        final RadioButton before = new RadioButton("Remplacer Actuel");
+        final RadioButton before = new RadioButton(PreferencesManager.getLangBundle().getString("new_compartment_replace_current"));
         before.setToggleGroup(group);
-        RadioButton after = new RadioButton("Mettre après");
+        RadioButton after = new RadioButton(PreferencesManager.getLangBundle().getString("new_compartment_put_after"));
         after.setSelected(true);
         after.setToggleGroup(group);
 
-        gridPane.add(new Label("Nom"), 0, 0);
+        gridPane.add(new Label(PreferencesManager.getLangBundle().getString("new_compartment_name")), 0, 0);
         gridPane.add(name, 1, 0);
-        gridPane.add(new Label("Ligne"), 0, 1);
+        gridPane.add(new Label(PreferencesManager.getLangBundle().getString("new_compartment_row")), 0, 1);
         gridPane.add(row, 1, 1);
-        gridPane.add(new Label("Colonne"), 0, 2);
+        gridPane.add(new Label(PreferencesManager.getLangBundle().getString("new_compartment_column")), 0, 2);
         gridPane.add(column, 1, 2);
         gridPane.add(before, 0, 3);
         gridPane.add(after, 1, 3);
@@ -903,7 +925,8 @@ public class DialogUtils {
 
         dialog.setResultConverter(dialogButton -> {
             if(dialogButton == validationButtonType) {
-                return new CompartmentInfo(name.getText() == null ? "Etagère" : name.getText(), row.getValue(), column.getValue(), before.isSelected());
+                return new CompartmentInfo(name.getText() == null ? PreferencesManager.getLangBundle().getString("compartment") : name.getText(),
+                        row.getValue(), column.getValue(), before.isSelected());
             }
             return null;
         });
@@ -915,6 +938,7 @@ public class DialogUtils {
         Optional<Bottle> result = Optional.ofNullable(null);
         try {
             FXMLLoader loader = new FXMLLoader();
+            loader.setResources(PreferencesManager.getLangBundle());
             loader.setLocation(DialogUtils.class.getClassLoader().getResource("fxml/BottleChooserLayout.fxml"));
 
             AnchorPane pane = loader.load();
@@ -946,11 +970,11 @@ public class DialogUtils {
 
     public static Optional<BottleInfo> addNewBottle(Bottle bottle) {
         Dialog <BottleInfo> dialog = new Dialog <>();
-        dialog.setTitle("Ajouter une bouteille");
-        dialog.setHeaderText("Entrez les informations de la bouteille");
+        dialog.setTitle(PreferencesManager.getLangBundle().getString("new_bottle_window_title"));
+        dialog.setHeaderText(PreferencesManager.getLangBundle().getString("new_bottle_window_header"));
 
-        final ButtonType validationButtonType = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+        final ButtonType validationButtonType = new ButtonType(PreferencesManager.getLangBundle().getString("ok"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType(PreferencesManager.getLangBundle().getString("cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(validationButtonType, cancelButtonType);
 
         GridPane gridPane = new GridPane();
@@ -968,19 +992,19 @@ public class DialogUtils {
             consumeYear = bottle.getConsumeYear();
 
         TextField name = new TextField();
-        name.setPromptText("Nom");
+        name.setPromptText(PreferencesManager.getLangBundle().getString("name"));
 
         TextField region = new TextField();
-        region.setPromptText("Région");
+        region.setPromptText(PreferencesManager.getLangBundle().getString("region"));
 
         TextField edition = new TextField();
-        edition.setPromptText("Édition (ou Cuvée)");
+        edition.setPromptText(PreferencesManager.getLangBundle().getString("edition"));
 
         TextField domain = new TextField();
-        domain.setPromptText("Domaine");
+        domain.setPromptText(PreferencesManager.getLangBundle().getString("domain"));
 
         TextField comment = new TextField();
-        comment.setPromptText("Commentaire");
+        comment.setPromptText(PreferencesManager.getLangBundle().getString("comment"));
         Spinner<Integer> yearSpinner = new Spinner <>(1950, 3000, year, 1);
         yearSpinner.setEditable(true);
         yearSpinner.getStyleClass().add("spinner");
@@ -1016,14 +1040,14 @@ public class DialogUtils {
         SuggestionMenu.addSuggestionMenu(edition, SuggestionMenu.getAllBottlesEdition());
         SuggestionMenu.addSuggestionMenu(domain, SuggestionMenu.getAllBottlesDomain());
 
-        gridPane.add(new Label("Nom:"), 0, 0);
-        gridPane.add(new Label("Région:"), 0, 1);
-        gridPane.add(new Label("Édition:"), 0, 2);
-        gridPane.add(new Label("Domaine:"), 0, 3);
-        gridPane.add(new Label("Commentaire:"), 0,4);
-        gridPane.add(new Label("Année:"), 0, 5);
-        gridPane.add(new Label("Année de consommation:"), 0, 6);
-        gridPane.add(new Label("Type:"), 0, 7);
+        gridPane.add(new Label(PreferencesManager.getLangBundle().getString("name") + ":"), 0, 0);
+        gridPane.add(new Label(PreferencesManager.getLangBundle().getString("region") + ":"), 0, 1);
+        gridPane.add(new Label(PreferencesManager.getLangBundle().getString("edition") + ":"), 0, 2);
+        gridPane.add(new Label(PreferencesManager.getLangBundle().getString("domain") + ":"), 0, 3);
+        gridPane.add(new Label(PreferencesManager.getLangBundle().getString("comment") + ":"), 0,4);
+        gridPane.add(new Label(PreferencesManager.getLangBundle().getString("year") + ":"), 0, 5);
+        gridPane.add(new Label(PreferencesManager.getLangBundle().getString("consumption_year") + ":"), 0, 6);
+        gridPane.add(new Label(PreferencesManager.getLangBundle().getString("type") + ":"), 0, 7);
 
         gridPane.add(name, 1, 0);
         gridPane.add(region, 1, 1);
@@ -1053,15 +1077,15 @@ public class DialogUtils {
     }
 
     public static void updateAvailable(boolean neverAskButton, Release release) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Mise à jour disponible");
-        alert.setHeaderText("Une nouvelle mise à jour est disponible");
-        alert.setContentText("Voulez vous la faire? (Cliquez pour consulter le change log)");
+        CustomAlert alert = new CustomAlert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(PreferencesManager.getLangBundle().getString("update_available_window_title"));
+        alert.setHeaderText(PreferencesManager.getLangBundle().getString("update_available_window_header"));
+        alert.setContentText(PreferencesManager.getLangBundle().getString("update_available_window_content"));
         alert.getDialogPane().setPrefWidth(700.0);
 
-        ButtonType ok = new ButtonType("Oui");
-        ButtonType no = new ButtonType("Non");
-        ButtonType neverAsk = new ButtonType("Ne plus me demander");
+        ButtonType ok = new ButtonType(PreferencesManager.getLangBundle().getString("yes"));
+        ButtonType no = new ButtonType(PreferencesManager.getLangBundle().getString("no"));
+        ButtonType neverAsk = new ButtonType(PreferencesManager.getLangBundle().getString("neverAsk"));
 
         alert.getButtonTypes().setAll(ok, no);
         if(neverAskButton)
@@ -1082,36 +1106,10 @@ public class DialogUtils {
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setFillHeight(true);
 
-        Label label = new Label("Vous pouvez retrouver le changelog complet ");
+        Label label = new Label(PreferencesManager.getLangBundle().getString("update_available_complete_changelog"));
 
-        Hyperlink hyperlink = new Hyperlink("ici");
-        hyperlink.setPadding(new Insets(0));
-        hyperlink.setOnAction(event -> {
-            final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-            if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                Thread thread = new Thread(() -> {
-                    try {
-                        Desktop.getDesktop().browse(new URL("https://github.com/AntoninRuan/CellarManager/tree/master#changelog").toURI());
-                    } catch (IOException | URISyntaxException e) {
-                        e.printStackTrace();
-                    }
-                });
-                thread.start();
-            } else {
-                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection("https://github.com/AntoninRuan/CellarManager/tree/master#changelog"), null);
-                Tooltip tooltip = new Tooltip("Le lien a bien été copié");
-                tooltip.show(alert.getDialogPane().getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y - 30);
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        Platform.runLater(tooltip::hide);
-                        timer.cancel();
-                    }
-                }, 750);
-            }
-            hyperlink.setVisited(false);
-        });
+        Hyperlink hyperlink = createHyperLink(PreferencesManager.getLangBundle().getString("here"),
+                "https://github.com/AntoninRuan/CellarManager/tree/master#changelog", alert);
 
         hBox.getChildren().setAll(label, hyperlink);
 
@@ -1143,9 +1141,9 @@ public class DialogUtils {
 
     public static void noUpdateAvailable() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Pas de mise à jour disponible");
+        alert.setTitle(PreferencesManager.getLangBundle().getString("no_update_available_window_title"));
         alert.setHeaderText(null);
-        alert.setContentText("Aucune mise à jour n'a été trouvée");
+        alert.setContentText(PreferencesManager.getLangBundle().getString("no_update_available_window_content"));
 
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
         alert.getDialogPane().getStylesheets().add(DialogUtils.class.getClassLoader().getResource("style/dialog.css").toString());
@@ -1156,8 +1154,8 @@ public class DialogUtils {
 
     public static void needAtLeastOneCompartement() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Une étagère obligatoire");
-        alert.setHeaderText("Vous devez au moins avoir une étagère");
+        alert.setTitle(PreferencesManager.getLangBundle().getString("need_at_least_one_compartment_window_title"));
+        alert.setHeaderText(PreferencesManager.getLangBundle().getString("need_at_least_one_compartment_window_header"));
         alert.setContentText(null);
 
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().addAll(MainApp.LOGO);
@@ -1167,11 +1165,11 @@ public class DialogUtils {
         alert.showAndWait();
     }
 
-    public static void bottlePresentInCave() {
+    public static void bottlePresentInCellar() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Bouteille présente dans la cave");
-        alert.setHeaderText("Cette bouteille est présente dans votre cave");
-        alert.setContentText("Veuillez l'enlever de tous les emplacements si vous souhaitez vraiment la supprimer");
+        alert.setTitle(PreferencesManager.getLangBundle().getString("bottle_present_in_cellar_window_title"));
+        alert.setHeaderText(PreferencesManager.getLangBundle().getString("bottle_present_in_cellar_window_header"));
+        alert.setContentText(PreferencesManager.getLangBundle().getString("bottle_present_in_cellar_window_content"));
 
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
         alert.getDialogPane().getStylesheets().add(DialogUtils.class.getClassLoader().getResource("style/dialog.css").toString());
@@ -1182,49 +1180,26 @@ public class DialogUtils {
 
     public static void about() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("A propos");
+        alert.setTitle(PreferencesManager.getLangBundle().getString("about_window_title"));
         alert.setHeaderText(null);
 
         VBox vBox = new VBox();
         vBox.setSpacing(3);
         vBox.setPrefWidth(424.0);
 
-        vBox.getChildren().addAll(new Label("Développé par Antonin Ruan"),
-                new Label("Design par Théo Lasnier"),
-                new Label("Version: " + Updater.VERSION));
+        vBox.getChildren().addAll(new Label(PreferencesManager.getLangBundle().getString("about_window_dev")),
+                new Label(PreferencesManager.getLangBundle().getString("about_window_design")),
+                new Label(PreferencesManager.getLangBundle().getString("about_window_version") + Updater.VERSION));
 
-        Hyperlink changelog = new Hyperlink("Change Log");
-        changelog.setPadding(new Insets(0));
-        changelog.setOnAction(event -> {
-            final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-            if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                Thread thread = new Thread(() -> {
-                    try {
-                        Desktop.getDesktop().browse(new URL("https://github.com/AntoninRuan/CellarManager/tree/master#changelog").toURI());
-                    } catch (IOException | URISyntaxException e) {
-                        e.printStackTrace();
-                    }
-                });
-                thread.start();
-            } else {
-                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection("https://github.com/AntoninRuan/CellarManager/tree/master#changelog"), null);
-                Tooltip tooltip = new Tooltip("Le lien a bien été copié");
-                tooltip.show(alert.getDialogPane().getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y - 30);
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        Platform.runLater(tooltip::hide);
-                        timer.cancel();
-                    }
-                }, 750);
-            }
-            changelog.setVisited(false);
-        });
+        Hyperlink changelog = createHyperLink(PreferencesManager.getLangBundle().getString("about_window_changelog"),
+                "https://github.com/AntoninRuan/CellarManager/tree/master#changelog" + (PreferencesManager.getLang().equals(Locale.FRENCH) ? "" : "-1"), alert);
+
 
         vBox.getChildren().add(changelog);
 
-        vBox.getChildren().addAll(new Label(""), new Label("Programme sous la license GNU GPL 3.0"), new Label("© 2020 Antonin Ruan - Théo Lasnier"));
+        vBox.getChildren().addAll(new Label(""),
+                new Label(PreferencesManager.getLangBundle().getString("about_window_license")),
+                new Label(PreferencesManager.getLangBundle().getString("about_window_copyright")));
 
         alert.getDialogPane().setContent(vBox);
         alert.getDialogPane().getButtonTypes().clear();
@@ -1240,10 +1215,10 @@ public class DialogUtils {
 
     public static void mobileSyncInfo(String header) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Synchronisation mobile");
+        alert.setTitle(PreferencesManager.getLangBundle().getString("mobile_sync_info_window_title"));
         alert.setHeaderText(header);
-        alert.setContentText("Code de connection: " + MobileSyncManager.LINK_CODE + "\n" +
-                "Version de MobileSync: " + MobileSyncManager.VERSION);
+        alert.setContentText(String.format(PreferencesManager.getLangBundle().getString("mobile_sync_info_window_content"),
+                MobileSyncManager.LINK_CODE, MobileSyncManager.VERSION));
 
         ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
         alert.getDialogPane().getStylesheets().add(DialogUtils.class.getClassLoader().getResource("style/dialog.css").toString());
@@ -1276,36 +1251,9 @@ public class DialogUtils {
 
         HBox hBox = new HBox();
 
-        Label label = new Label("Vous pouvez suivre l'évolution du rapport ");
-        Hyperlink issue = new Hyperlink("ici");
+        Label label = new Label(PreferencesManager.getLangBundle().getString("successfully_send_issue_window_content"));
+        Hyperlink issue = createHyperLink(PreferencesManager.getLangBundle().getString("here"), issueLink, alert);
         issue.setTranslateY(-1);
-        issue.setPadding(new Insets(0));
-        issue.setOnAction(event -> {
-            final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-            if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                Thread thread = new Thread(() -> {
-                    try {
-                        Desktop.getDesktop().browse(new URL(issueLink).toURI());
-                    } catch (IOException | URISyntaxException e) {
-                        DialogUtils.sendErrorWindow(e);
-                    }
-                });
-                thread.start();
-            } else {
-                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(issueLink), null);
-                Tooltip tooltip = new Tooltip("Le lien a bien été copié");
-                tooltip.show(alert.getDialogPane().getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y - 30);
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        Platform.runLater(tooltip::hide);
-                        timer.cancel();
-                    }
-                }, 750);
-            }
-            issue.setVisited(false);
-        });
 
         hBox.getChildren().setAll(label, issue);
         vBox.getChildren().setAll(hBox);
@@ -1321,13 +1269,13 @@ public class DialogUtils {
 
     public static Optional<GitHubAccountConnectionInfo> loginToGitHub() {
         Dialog<GitHubAccountConnectionInfo> dialog = new Dialog<>();
-        dialog.setTitle("Se connecter à GitHub");
-        dialog.setHeaderText("Les reports de bug et suggestion d'idée se font via GitHub\n" +
-                "Vous pouvez soit vous connecter à votre compte GitHub ou continuez sans aucun compte\n");
+        dialog.setTitle(PreferencesManager.getLangBundle().getString("login_to_github_window_title"));
+        dialog.setHeaderText(PreferencesManager.getLangBundle().getString("login_to_github_window_header"));
 
-        ButtonType loginButtonType = new ButtonType("Se connecter", ButtonBar.ButtonData.OK_DONE);
-        ButtonType continueWithoutAccountButtonType = new ButtonType("Continuer sans compte", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, continueWithoutAccountButtonType,ButtonType.CANCEL);
+        ButtonType loginButtonType = new ButtonType(PreferencesManager.getLangBundle().getString("login"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType continueWithoutAccountButtonType = new ButtonType(PreferencesManager.getLangBundle().getString("continue_without_account"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancel = new ButtonType(PreferencesManager.getLangBundle().getString("cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, continueWithoutAccountButtonType, cancel);
 
         ImageView view = new ImageView(new Image(DialogUtils.class.getClassLoader().getResource("img/github_icon.png").toString()));
         view.setPreserveRatio(true);
@@ -1339,19 +1287,19 @@ public class DialogUtils {
         grid.setPadding(new Insets(20, 150, 10, 10));
 
         TextField username = new TextField();
-        username.setPromptText("Username");
+        username.setPromptText(PreferencesManager.getLangBundle().getString("username"));
         PasswordField password = new PasswordField();
-        password.setPromptText("Password");
+        password.setPromptText(PreferencesManager.getLangBundle().getString("password"));
         CheckBox stayConnect = new CheckBox();
 
-        grid.add(new Label("Nom d'utilisateur:"), 0, 0);
+        grid.add(new Label(PreferencesManager.getLangBundle().getString("username") + ":"), 0, 0);
         grid.add(username, 1, 0);
-        grid.add(new Label("Mot de passe:"), 0, 1);
+        grid.add(new Label(PreferencesManager.getLangBundle().getString("password") + ":"), 0, 1);
         grid.add(password, 1, 1);
-        grid.add(new Label("Rester connecter"), 0, 2);
+        grid.add(new Label(PreferencesManager.getLangBundle().getString("stay_connected")), 0, 2);
         grid.add(stayConnect, 1, 2);
-        grid.add(new Label("Si vous rester connecter, la connection sera tout de même fermé à la fermeture du programme"), 0 ,3, 2 ,1);
-        grid.add(new Label("Même si votre mot de passe n'est pas stocké, il est recommandé de vous connecter en utilisant un token de connection"), 0, 4,2, 1);
+        grid.add(new Label(PreferencesManager.getLangBundle().getString("stay_connected_alert_1")), 0 ,3, 2 ,1);
+        grid.add(new Label(PreferencesManager.getLangBundle().getString("stay_connected_alert_2")), 0, 4,2, 1);
 
         Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
         loginButton.setDisable(true);
@@ -1370,7 +1318,7 @@ public class DialogUtils {
 
         ((Stage) dialog.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
 
-        Platform.runLater(() -> username.requestFocus());
+        Platform.runLater(username::requestFocus);
 
         dialog.setResultConverter(param -> {
             if (param == loginButtonType) {
@@ -1383,7 +1331,7 @@ public class DialogUtils {
 
         return dialog.showAndWait();
     }
-    
+
     public static void networkConnectionError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Erreur de connection");
@@ -1400,7 +1348,7 @@ public class DialogUtils {
     public static Pair<ProgressBar, Label> downloadInfo() {
 
         Stage stage = new Stage();
-        stage.setTitle("Téléchargement en cours");
+        stage.setTitle(PreferencesManager.getLangBundle().getString("download_info_window_title"));
         stage.initOwner(MainApp.getPrimaryStage());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.getIcons().add(MainApp.LOGO);
@@ -1427,19 +1375,8 @@ public class DialogUtils {
             }
         });
 
-        Label label = new Label("Lancement du téléchargements");
+        Label label = new Label(PreferencesManager.getLangBundle().getString("download_starting"));
         vBox.getChildren().addAll(progressBar, label);
-
-        Timeline task = new Timeline(
-                new KeyFrame(
-                        Duration.ZERO,
-                        new KeyValue(progressBar.progressProperty(), 0)
-                ),
-                new KeyFrame(
-                        Duration.seconds(2),
-                        new KeyValue(progressBar.progressProperty(), 1)
-                )
-        );
 
         // Set the max status
         int maxStatus = 12;
@@ -1471,6 +1408,38 @@ public class DialogUtils {
         stage.show();
 
         return new Pair <>(progressBar, label);
+    }
+
+    private static Hyperlink createHyperLink(String text, String link, Dialog alert) {
+        Hyperlink hyperlink = new Hyperlink(text);
+        hyperlink.setPadding(new Insets(0));
+        hyperlink.setOnAction(event -> {
+            final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                Thread thread = new Thread(() -> {
+                    try {
+                        Desktop.getDesktop().browse(new URL(link).toURI());
+                    } catch (IOException | URISyntaxException e) {
+                        e.printStackTrace();
+                    }
+                });
+                thread.start();
+            } else {
+                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(link), null);
+                Tooltip tooltip = new Tooltip("Le lien a bien été copié");
+                tooltip.show(alert.getDialogPane().getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y - 30);
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Platform.runLater(tooltip::hide);
+                        timer.cancel();
+                    }
+                }, 750);
+            }
+            hyperlink.setVisited(false);
+        });
+        return hyperlink;
     }
 
 }

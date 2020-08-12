@@ -698,7 +698,9 @@ public class Updater {
             }
 
         } catch (UnknownHostException e) {
-            DialogUtils.infoMessage("Impossible de se connecter", "Impossible de se connecter à GitHub", "Vérifier votre connection internet avant de recommencer");
+            DialogUtils.infoMessage(PreferencesManager.getLangBundle().getString("unable_to_connect_info_title"),
+                    PreferencesManager.getLangBundle().getString("unable_to_connect_info_header"),
+                    PreferencesManager.getLangBundle().getString("unable_to_connect_info_content"));
         }catch (IOException | RepositoryNotFoundException | ParseException | GitHubAPIConnectionException e) {
             DialogUtils.sendErrorWindow(e);
         }
@@ -767,8 +769,9 @@ public class Updater {
                     long finalFileSize = fileSize;
                     Platform.runLater(() -> {
                         pair.getKey().setProgress((double) finalI / (double) finalFileSize);
-                        pair.getValue().setText("Temps restants estimé: " +
-                                (estimatedRemainingTime.toMinutes() != 0 ? (estimatedRemainingTime.toMinutes() + "m") : "") + format.format(estimatedRemainingTime.minusMinutes(estimatedRemainingTime.toMinutes()).getSeconds()) + "s");
+                        pair.getValue().setText(String.format(PreferencesManager.getLangBundle().getString("estimated_remaining_time"),
+                                (estimatedRemainingTime.toMinutes() != 0 ? (estimatedRemainingTime.toMinutes() + "m") : "") +
+                                        format.format(estimatedRemainingTime.minusMinutes(estimatedRemainingTime.toMinutes()).getSeconds()) + "s"));
                     });
                 } while (dl != 0);
 

@@ -784,35 +784,27 @@ public class BottleFilter {
 
     public enum SearchCriteria {
 
-        NAME("Nom", "Name"),
-        REGION("Région", "Region"),
-        TYPE("Type", "Type"),
-        EDITION("Edition", "Edition"),
-        DOMAIN("Domaine", "Domain"),
-        YEAR("Année", "Year"),
-        APOGEE("Apogée", "Year of Consumption");
+        NAME("name"),
+        REGION("region"),
+        TYPE("type"),
+        EDITION("edition"),
+        DOMAIN("domain"),
+        YEAR("year"),
+        APOGEE("consumption_year");
 
-        String fr;
-        String en;
+        String id;
 
-        SearchCriteria(String fr, String en) {
-            this.fr = fr;
-            this.en = en;
+        SearchCriteria(String id) {
+            this.id = id;
         }
 
-        public String getNameIn(Locale locale) {
-            if (locale == Locale.FRENCH) {
-                return fr;
-            } else if (locale == Locale.ENGLISH) {
-                return en;
-            } else {
-                return fr;
-            }
+        public String getId() {
+            return id;
         }
 
-        public static SearchCriteria fromNameIn(String name, Locale locale) {
+        public static SearchCriteria fromId(String name) {
             for(SearchCriteria criteria : SearchCriteria.values()) {
-                if (criteria.getNameIn(locale).equals(name)) {
+                if (criteria.getId().equals(name)) {
                     return criteria;
                 }
             }

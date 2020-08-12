@@ -818,16 +818,16 @@ public class CompartementDisplayController {
 
                                 if (event.getButton() == MouseButton.PRIMARY) {
 
-                                    MainApp.getController().showBottleDetails(spot);
+                                    MainApp.getController().showBottleDetails(spot, true);
 
                                 } else if (event.getButton() == MouseButton.SECONDARY) {
 
-                                    MenuItem show = new MenuItem("Afficher");
+                                    MenuItem show = new MenuItem(PreferencesManager.getLangBundle().getString("show"));
                                     show.setOnAction(event1 -> {
-                                        MainApp.getController().showBottleDetails(spot);
+                                        MainApp.getController().showBottleDetails(spot, true);
                                     });
 
-                                    MenuItem modify = new MenuItem("Modifier");
+                                    MenuItem modify = new MenuItem(PreferencesManager.getLangBundle().getString("modify"));
                                     modify.setOnAction(event1 -> {
                                         Optional<Bottle> result = DialogUtils.chooseBottle(true);
                                         result.ifPresent(bottle -> {
@@ -836,12 +836,12 @@ public class CompartementDisplayController {
                                             new Change(Change.ChangeType.SPOT_FILLED, spot, spot, bottle);
 //                                            renderBottle(spot, imageView, changeListener);
                                             BottleFilter.researchInSpot();
-                                            MainApp.getController().showBottleDetails(spot);
+                                            MainApp.getController().showBottleDetails(spot, false);
                                             Saver.doChange();
                                         });
                                     });
 
-                                    MenuItem remove = new MenuItem("Enlever");
+                                    MenuItem remove = new MenuItem(PreferencesManager.getLangBundle().getString("remove"));
                                     remove.setOnAction(event1 -> {
                                         MainApp.getSpots().remove(spot);
                                         new Change(Change.ChangeType.SPOT_EMPTIED, spot, spot, spot.getBottle());
@@ -939,7 +939,7 @@ public class CompartementDisplayController {
                             selectedSpot = spot;
                             stackPane.requestFocus();
                             if(spot.getBottle() != null)
-                                MainApp.getController().showBottleDetails(spot);
+                                MainApp.getController().showBottleDetails(spot, false);
                         });
 
                         stackPane.setOnMouseExited(event -> {
@@ -998,7 +998,7 @@ public class CompartementDisplayController {
 
                     TextField modifyNameTextField = new TextField(MainApp.getCompartement(getCurrentCompartementDisplayed()).getName());
                     modifyNameTextField.setFont(Font.font(Font.getDefault().getFamily(), 16));
-                    modifyNameTextField.setPromptText("Nom");
+                    modifyNameTextField.setPromptText(PreferencesManager.getLangBundle().getString("name"));
                     modifyNameTextField.setAlignment(Pos.CENTER);
                     modifyNameTextField.setPrefWidth(compartementDisplay.getWidth() - name.getHeight());
                     modifyNameTextField.setPrefHeight(name.getHeight());
