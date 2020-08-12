@@ -709,7 +709,7 @@ public class PreferencesManager {
 
     public static void loadPreferences(JsonObject object) {
         checkUpdateAtStart = object.has("check_update") ? JsonUtils.getAsBoolean(object.get("check_update")) : true;
-        setLang(object.has("lang") ? Locale.forLanguageTag(JsonUtils.getAsString(object.get("lang"))) : Locale.FRENCH);
+        setLang(object.has("lang") ? Locale.forLanguageTag(JsonUtils.getAsString(object.get("lang"))) : Locale.forLanguageTag(Locale.getDefault().getLanguage()));
         doubleClickDelay = object.has("double_click_delay") ? JsonUtils.getAsInt(object.get("double_click_delay")): 500;
         neverConnectToGitHub = object.has("never_connect_to_github") && JsonUtils.getAsBoolean(object.get("never_connect_to_github"));
 
