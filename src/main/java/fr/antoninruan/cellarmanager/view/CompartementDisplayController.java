@@ -655,6 +655,7 @@ import javafx.scene.text.Font;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author Antonin Ruan
@@ -686,6 +687,9 @@ public class CompartementDisplayController {
     private final Image highlight = new Image(this.getClass().getClassLoader().getResource("img/highlight.png").toString());
 
     private Spot selectedSpot;
+
+    private boolean editingName = false;
+    private Button okButton;
 
     @FXML
     private void initialize() {
@@ -970,14 +974,15 @@ public class CompartementDisplayController {
         pagination.setCurrentPageIndex(0);
 
         final LocalDateTime[] lastClick = {LocalDateTime.now()};
-        final boolean[] doubleClick = {false};
+        final AtomicBoolean doubleClick = new AtomicBoolean(false);
         name.setOnMouseClicked(event -> {
             if(event.getButton() == MouseButton.PRIMARY) {
 
                 Duration delta = Duration.between(lastClick[0], LocalDateTime.now());
 
-                if(delta.toMillis() < PreferencesManager.getDoubleClickDelay() && !doubleClick[0]) {
-                    doubleClick[0] = true;
+                if(delta.toMillis() < PreferencesManager.getDoubleClickDelay() && !doubleClick.get()) {
+                    doubleClick.set(true);
+                    editingName = true;
 
                     HBox modifyNameHbox = new HBox();
                     modifyNameHbox.setPrefWidth(compartementDisplay.getWidth());
@@ -999,9 +1004,12 @@ public class CompartementDisplayController {
                     Button okButton = new Button("", view);
                     okButton.setBackground(new Background(new BackgroundFill(Color.valueOf("#264653"), new CornerRadii(0), new Insets(0))));
 
+                    this.okButton = okButton;
+
                     okButton.setOnAction(event1 -> {
                         MainApp.getCompartement(getCurrentCompartementDisplayed()).setName(modifyNameTextField.getText());
                         name.setText(modifyNameTextField.getText());
+                        editingName = false;
 
                         vBox.getChildren().remove(modifyNameHbox);
                         vBox.getChildren().add(0, name);
@@ -1021,7 +1029,7 @@ public class CompartementDisplayController {
                     });
 
                 } else
-                    doubleClick[0] = false;
+                    doubleClick.set(false);
 
                 lastClick[0] = LocalDateTime.now();
             }
@@ -1050,6 +1058,8 @@ public class CompartementDisplayController {
     }
 
     public void handleLeft() {
+        if(editingName)
+            okButton.fire();
         int currentPage = pagination.getCurrentPageIndex();
         int newPage = currentPage - 1;
         if(newPage < 0)
@@ -1058,6 +1068,8 @@ public class CompartementDisplayController {
     }
 
     public void handleRight() {
+        if(editingName)
+            okButton.fire();
         int currentPage = pagination.getCurrentPageIndex();
         int newPage = currentPage + 1;
         if(newPage > MainApp.getCompartements().size() - 1)
