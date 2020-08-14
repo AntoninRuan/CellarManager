@@ -662,9 +662,6 @@ import java.util.Optional;
 public class CompartementDisplayController {
 
     @FXML
-    private VBox layout;
-
-    @FXML
     private VBox vBox;
 
     @FXML
@@ -675,9 +672,6 @@ public class CompartementDisplayController {
 
     @FXML
     private GridPane compartementDisplay;
-
-    @FXML
-    private ScrollPane scrollPane;
 
     private final Image spotFill = new Image(this.getClass().getClassLoader().getResource("img/spot_fill.png").toString());
     private final Image spotEmpty = new Image(this.getClass().getClassLoader().getResource("img/spot_empty.png").toString());
@@ -695,9 +689,8 @@ public class CompartementDisplayController {
 
     @FXML
     private void initialize() {
-        MainApp.getCompartements().addListener((MapChangeListener <? super Integer, ? super Compartment>) c -> {
-            pagination.setPageCount(MainApp.getCompartements().size());
-        });
+        MainApp.getCompartements().addListener((MapChangeListener <? super Integer, ? super Compartment>) c ->
+                pagination.setPageCount(MainApp.getCompartements().size()));
         ContextMenu contextMenu = new ContextMenu();
         pagination.setPageFactory(index -> {
 
@@ -749,10 +742,9 @@ public class CompartementDisplayController {
                         else{
                             if(spot.isHighlighted()) {
                                 highlightView.setVisible(true);
-                            } else {
-//                                imageView.setImage(spotFill);
-                                renderBottle(spot, imageView, changeListener);
                             }
+
+                            renderBottle(spot, imageView, changeListener);
                         }
 
                         spot.bottleProperty().addListener((observable, oldValue, newValue) -> {
@@ -823,9 +815,7 @@ public class CompartementDisplayController {
                                 } else if (event.getButton() == MouseButton.SECONDARY) {
 
                                     MenuItem show = new MenuItem(PreferencesManager.getLangBundle().getString("show"));
-                                    show.setOnAction(event1 -> {
-                                        MainApp.getController().showBottleDetails(spot, true);
-                                    });
+                                    show.setOnAction(event1 -> MainApp.getController().showBottleDetails(spot, true));
 
                                     MenuItem modify = new MenuItem(PreferencesManager.getLangBundle().getString("modify"));
                                     modify.setOnAction(event1 -> {
@@ -950,9 +940,7 @@ public class CompartementDisplayController {
                         imageView.setFitWidth(64);
                         imageView.setFitHeight(64);
 
-                        spot.highlightedProperty().addListener((observable, oldValue, newValue) -> {
-                            highlightView.setVisible(newValue);
-                        });
+                        spot.highlightedProperty().addListener((observable, oldValue, newValue) -> highlightView.setVisible(newValue));
 
                         compartementDisplay.add(stackPane, j, i);
 
