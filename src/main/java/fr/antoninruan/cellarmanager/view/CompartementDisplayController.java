@@ -885,14 +885,14 @@ public class CompartementDisplayController {
                         });
 
                         stackPane.setOnDragOver(event -> {
-                            if(event.getGestureSource() != stackPane && event.getDragboard().hasString()) {
+                            if(event.getGestureSource() != stackPane && event.getDragboard().hasString() && spot.isEmpty()) {
                                 event.acceptTransferModes(TransferMode.MOVE);
                             }
                             event.consume();
                         });
 
                         stackPane.setOnDragEntered(event -> {
-                            if(event.getGestureSource() != stackPane && event.getDragboard().hasString()) {
+                            if(event.getGestureSource() != stackPane && event.getDragboard().hasString() && spot.isEmpty()) {
                                 stackPane.setOpacity(.3);
                             }
                         });

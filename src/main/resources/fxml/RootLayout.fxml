@@ -54,7 +54,11 @@
                         <KeyCodeCombination alt="UP" code="B" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="deleteCompartment" mnemonicParsing="false" onAction="#handleDeleteCompartement" text="%delete_compartments" />
+                  <MenuItem fx:id="manageCompartment" mnemonicParsing="false" onAction="#handleManageCompartment" text="%manage_compartments">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+                  <MenuItem fx:id="deleteCompartment" mnemonicParsing="false" onAction="#handleDeleteCompartement" text="%delete_compartment" />
               </items>
             </Menu>
           <Menu fx:id="help" mnemonicParsing="false" text="%help">

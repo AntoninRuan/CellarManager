@@ -695,6 +695,8 @@ public class RootLayoutController {
     @FXML
     private MenuItem bottles;
     @FXML
+    private MenuItem manageCompartment;
+    @FXML
     private MenuItem deleteCompartment;
     @FXML
     private Menu help;
@@ -752,7 +754,8 @@ public class RootLayoutController {
         edit.setText(PreferencesManager.getLangBundle().getString("edit"));
         cancelMenu.setText(PreferencesManager.getLangBundle().getString("undo"));
         bottles.setText(PreferencesManager.getLangBundle().getString("bottles"));
-        deleteCompartment.setText(PreferencesManager.getLangBundle().getString("delete_compartments"));
+        manageCompartment.setText(PreferencesManager.getLangBundle().getString("manage_compartments"));
+        deleteCompartment.setText(PreferencesManager.getLangBundle().getString("delete_compartment"));
         help.setText(PreferencesManager.getLangBundle().getString("help"));
         checkUpdate.setText(PreferencesManager.getLangBundle().getString("check_update"));
         sendBugReport.setText(PreferencesManager.getLangBundle().getString("send_bug_report"));
@@ -875,6 +878,10 @@ public class RootLayoutController {
 
     public void handleOpenBottleList() {
         DialogUtils.chooseBottle(false);
+    }
+
+    public void handleManageCompartment() {
+       DialogUtils.manageCompartments();
     }
 
     public void handleCancel() {

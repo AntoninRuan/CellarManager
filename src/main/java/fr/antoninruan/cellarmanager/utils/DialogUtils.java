@@ -647,6 +647,8 @@ import fr.antoninruan.cellarmanager.utils.mobile_sync.MobileSyncManager;
 import fr.antoninruan.cellarmanager.utils.report.BugInfo;
 import fr.antoninruan.cellarmanager.utils.report.SuggestionInfo;
 import fr.antoninruan.cellarmanager.view.BottleChooserController;
+import fr.antoninruan.cellarmanager.view.CompartmentEditController;
+import fr.antoninruan.cellarmanager.view.RootLayoutController;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -908,9 +910,9 @@ public class DialogUtils {
 
         gridPane.add(new Label(PreferencesManager.getLangBundle().getString("new_compartment_name")), 0, 0);
         gridPane.add(name, 1, 0);
-        gridPane.add(new Label(PreferencesManager.getLangBundle().getString("new_compartment_row")), 0, 1);
+        gridPane.add(new Label(PreferencesManager.getLangBundle().getString("row")), 0, 1);
         gridPane.add(row, 1, 1);
-        gridPane.add(new Label(PreferencesManager.getLangBundle().getString("new_compartment_column")), 0, 2);
+        gridPane.add(new Label(PreferencesManager.getLangBundle().getString("column")), 0, 2);
         gridPane.add(column, 1, 2);
         gridPane.add(before, 0, 3);
         gridPane.add(after, 1, 3);
@@ -932,6 +934,33 @@ public class DialogUtils {
         });
 
         return dialog.showAndWait();
+    }
+
+    public static void manageCompartments() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setResources(PreferencesManager.getLangBundle());
+            loader.setLocation(DialogUtils.class.getClassLoader().getResource("fxml/CompartmentEditLayout.fxml"));
+
+            VBox vBox = loader.load();
+
+            CompartmentEditController controller = loader.getController();
+
+            Scene scene = new Scene(vBox);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(MainApp.getPrimaryStage());
+            stage.getIcons().add(MainApp.LOGO);
+            stage.setTitle(PreferencesManager.getLangBundle().getString("manage_compartments_window_title"));
+
+            controller.setStage(stage);
+
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Optional<Bottle> chooseBottle(boolean cancelable) {

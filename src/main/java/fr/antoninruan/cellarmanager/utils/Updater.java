@@ -771,22 +771,22 @@ public class Updater {
                     long finalFileSize = fileSize;
                     Platform.runLater(() -> {
                         pair.getKey().setProgress((double) finalI / (double) finalFileSize);
-                        pair.getValue().setText("Temps restants estimé: " +
-                                (estimatedRemainingTime.toMinutes() != 0 ? (estimatedRemainingTime.toMinutes() + "m") : "") + format.format(estimatedRemainingTime.minusMinutes(estimatedRemainingTime.toMinutes()).getSeconds()) + "s");
+                        pair.getValue().setText(String.format(PreferencesManager.getLangBundle().getString("estimated_remaining_time"),
+                                (estimatedRemainingTime.toMinutes() != 0 ? (estimatedRemainingTime.toMinutes() + "m") : "") +
+                                        format.format(estimatedRemainingTime.minusMinutes(estimatedRemainingTime.toMinutes()).getSeconds()) + "s"));
                     });
                 } while (dl != 0);
 
 
                 Platform.runLater(() ->  {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Mise à jour téléchargée");
-                    alert.setHeaderText("La mise à jour a été téléchargée");
-                    alert.setContentText("Le programme va s'arrêter, relancer le pour appliquer la mise à jour");
+                    alert.setTitle(PreferencesManager.getLangBundle().getString("download_successfull_window_title"));
+                    alert.setHeaderText(PreferencesManager.getLangBundle().getString("download_successfull_window_header"));
+                    alert.setContentText(PreferencesManager.getLangBundle().getString("download_successfull_window_content"));
 
                     alert.getDialogPane().getStylesheets().add(Updater.class.getClassLoader().getResource("style/dialog.css").toString());
                     alert.getDialogPane().getStyleClass().add("myDialog");
                     ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(MainApp.LOGO);
-
 
                     alert.showAndWait();
                     System.exit(0);
