@@ -54,6 +54,16 @@ Ce programme est sous la license GNU General Public License v3.0 que vous pouvez
 
 ## Changelog
 
+### 1.3.0
+
+---
+* Ajout du support multilingue
+* Traduction de toute l'application en anglais
+* Ajout d'une fenêtre de pour modifier les étagères
+* Correction de bug:
+    * Lorsque la recherche est activée, les bouteilles sont correctement rendues lors des changements de pages
+    * Changer d'étagère alors que son nom est en édition applique désormais la modification
+
 ### 1.2.2
 
 ---
@@ -220,6 +230,16 @@ If the command is not defined, Java is not installed on you computer you need to
 This software is under the GNU General Public License v3.0, you cand find it [here](LICENSE.txt)
 
 ## Changelog
+
+### 1.3.0
+
+---
+* Add multilingual support
+* Translate all the app in english
+* Add a window to edit the compartments
+* Bug fixed:
+    * Lorsque la recherche est activée, les bouteilles sont correctement rendues lors des changements de pages
+    * Changer d'étagère alors que son nom est en édition applique désormais la modification
 
 ### 1.2.2
 
