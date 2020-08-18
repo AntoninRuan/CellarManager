@@ -640,7 +640,7 @@ import fr.antoninruan.cellarmanager.utils.github.exception.RepositoryNotFoundExc
 import fr.antoninruan.cellarmanager.utils.github.model.Repository;
 import fr.antoninruan.cellarmanager.utils.github.model.issues.Issue;
 import fr.antoninruan.cellarmanager.utils.github.model.release.Release;
-import fr.antoninruan.cellarmanager.utils.javafx.CustomAlert;
+import fr.antoninruan.cellarmanager.utils.javafx.CustomDialogPane;
 import fr.antoninruan.cellarmanager.utils.javafx.CustomSpinnerValueFactory;
 import fr.antoninruan.cellarmanager.utils.javafx.SuggestionMenu;
 import fr.antoninruan.cellarmanager.utils.mobile_sync.MobileSyncManager;
@@ -648,7 +648,6 @@ import fr.antoninruan.cellarmanager.utils.report.BugInfo;
 import fr.antoninruan.cellarmanager.utils.report.SuggestionInfo;
 import fr.antoninruan.cellarmanager.view.BottleChooserController;
 import fr.antoninruan.cellarmanager.view.CompartmentEditController;
-import fr.antoninruan.cellarmanager.view.RootLayoutController;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -698,7 +697,9 @@ public class DialogUtils {
 
     public static void sendErrorWindow(Exception e) {
         Platform.runLater(() -> {
-            CustomAlert alert = new CustomAlert(Alert.AlertType.ERROR);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setDialogPane(new CustomDialogPane());
+            alert.getDialogPane().getStyleClass().add("alert");
             alert.setTitle(PreferencesManager.getLangBundle().getString("error"));
             alert.setHeaderText(e.getLocalizedMessage());
 
@@ -1106,7 +1107,9 @@ public class DialogUtils {
     }
 
     public static void updateAvailable(boolean neverAskButton, Release release) {
-        CustomAlert alert = new CustomAlert(Alert.AlertType.CONFIRMATION);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setDialogPane(new CustomDialogPane());
+        alert.getDialogPane().getStyleClass().add("alert");
         alert.setTitle(PreferencesManager.getLangBundle().getString("update_available_window_title"));
         alert.setHeaderText(PreferencesManager.getLangBundle().getString("update_available_window_header"));
         alert.setContentText(PreferencesManager.getLangBundle().getString("update_available_window_content"));
