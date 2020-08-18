@@ -8,7 +8,7 @@ CellarManager est un programme vous permettant de gérer votre cave.<br>
 Il vous permet de lister les bouteilles présentes dans votre cave, mais également de savoir où elles se trouvent<br>
 De plus ce programme est accompagné d'une application mobile, et ce dans le but de rendre le maintien de votre cave à jour plus simple possible.<br>
 En effet il est peu commode voire impossible d'emmener son ordinateur dans la cave, et faire des allers-retours entre la cave et l'ordinateur n'est pas une option non plus.<br>
-C'est pour cela que l'application vous permets d'ajouter, modifier, déplacer et enlever des bouteilles via votre téléphone.<br>
+C'est pour cela qu'une application mobile est prévu. Elle vous permetera d'ajouter, modifier, déplacer et enlever des bouteilles depuis votre téléphone.<br>
 
 1. [Installation](https://github.com/AntoninRuan/CellarManager/tree/master#installation)
 2. [License](https://github.com/AntoninRuan/CellarManager/tree/master#license) 
@@ -185,7 +185,7 @@ CellarManager is a software made to help you manage your cellar.<br>
 He allows you to list every bottles present in your cellar and to view where they are.<br>
 Moreover you can install a smartphone app which will make your cellar more easier to update.<br>
 Indeed it is not handy, maybe impossible to bring you computer in your cellar; do many round trip between your cellar and your computer neither.<br>
-That why the application allows you to add, modify, move and remove bottles from you smartphone.<br>
+That why a mobile app is planned. It will allow you to add, modify, move and remove bottles from you smartphone.<br>
 
 1. [Installation](https://github.com/AntoninRuan/CellarManager/tree/master#installation-1)
 2. [License](https://github.com/AntoninRuan/CellarManager/tree/master#license-1) 
