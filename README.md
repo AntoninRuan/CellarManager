@@ -54,6 +54,12 @@ Ce programme est sous la license GNU General Public License v3.0 que vous pouvez
 
 ## Changelog
 
+### 1.3.1
+
+---
+* Correction de bug:
+    * Correction d'un bug qui empêchait les popups avec du contenu déployable de s'afficher
+
 ### 1.3.0
 
 ---
@@ -230,6 +236,12 @@ If the command is not defined, Java is not installed on you computer you need to
 This software is under the GNU General Public License v3.0, you cand find it [here](LICENSE.txt)
 
 ## Changelog
+
+### 1.3.1
+
+---
+* Bug fixed:
+    * Fixed a bug which prevented popup alert with expandable content to display
 
 ### 1.3.0
 
