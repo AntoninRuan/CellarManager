@@ -1123,16 +1123,6 @@ public class DialogUtils {
         if(neverAskButton)
             alert.getButtonTypes().add(neverAsk);
 
-        WebView changelog = new WebView();
-        changelog.setZoom(.75);
-        changelog.setPrefWidth(550.0);
-        changelog.setPrefHeight(250.0);
-
-        changelog.getEngine().loadContent(MarkdownParser.parseMarkdown(release.getBody()));
-        changelog.getEngine().setUserStyleSheetLocation(DialogUtils.class.getClassLoader().getResource("style/markdown.css").toString());
-
-        GridPane.setVgrow(changelog, Priority.ALWAYS);
-        GridPane.setHgrow(changelog, Priority.ALWAYS);
 
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
@@ -1148,7 +1138,24 @@ public class DialogUtils {
         GridPane expContent = new GridPane();
         expContent.setVgap(5);
         expContent.setMaxWidth(Double.MAX_VALUE);
-        expContent.add(changelog,0 ,0);
+
+        try {
+            WebView changelog = new WebView();
+            changelog.setZoom(.75);
+            changelog.setPrefWidth(550.0);
+            changelog.setPrefHeight(250.0);
+
+            changelog.getEngine().loadContent(MarkdownParser.parseMarkdown(release.getBody()));
+            changelog.getEngine().setUserStyleSheetLocation(DialogUtils.class.getClassLoader().getResource("style/markdown.css").toString());
+
+            GridPane.setVgrow(changelog, Priority.ALWAYS);
+            GridPane.setHgrow(changelog, Priority.ALWAYS);
+            expContent.add(changelog,0 ,0);
+        } catch (UnsatisfiedLinkError error) {
+            expContent.add(new Label(PreferencesManager.getLangBundle().getString("update_available_window_webview_non_supported")), 0, 0);
+        }
+
+
         expContent.add(hBox, 0, 1);
 
         alert.getDialogPane().setExpandableContent(expContent);

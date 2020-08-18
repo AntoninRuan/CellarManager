@@ -36,16 +36,6 @@ Cette version de Java comprend JavaFX vous n'aurez donc rien à d'autres à inst
 Si vous utilisez une version de Java plus récente que Java 8, JavaFX n'est plus inclut dans Java il est donc nécessaire de le télécharger.<br>
 Vous pouvez trouver un guide d'installation [ici][javafx_download]
 
-### Problèmes au lancement
-
-Si lors du lancement l'application, la cause la plus probable est que JavaFX n'a pas été pris en compte lors du lancement. <br>
-Pour corriger ce problème, créer un fichier nommé `start.bat` si vous êtes sur Windows ou `start.sh` si vous êtes Linux dans le même répertoire que le `.jar`. <br>
-Une fois le fichier créer ouvrer le avec un éditeur de texte en entrer le texte suivant
-
-    java --module-path %JAVAFX_PATH% --add-modules=javafx.controls,javafx.fxml,javafx.base,javafx.media,javafx.web,javafx.swing --add-modules javafx.base,javafx.graphics --add-reads javafx.base=ALL-UNNAMED --add-reads javafx.graphics=ALL-UNNAMED -jar %JAR_NAME%
-    
-Remplacer `%JAVAFX_PATH%` par le dossier d'installation de JavaFX et `%JAR_NAME%` par le nom du fichier `.jar` donc si vous ne l'avez pas modifié `CellarManager.jar` <br>    
-
 #### Trouver votre version de Java
 
 Pour savoir quelle version de java est installé sur votre ordinateur, ouvrer l'invite de commande et exécuter la commande suivante
@@ -63,6 +53,12 @@ que Java 8 est installé sur l'ordinateur
 Ce programme est sous la license GNU General Public License v3.0 que vous pouvez retrouver [ici](LICENSE.txt)
 
 ## Changelog
+
+### 1.3.2
+
+---
+* Correction de bug:
+    * La popup de mise à jour disponible s'ouvre correctement même lorsqu'elle ne peut pas charger l'aperçu du changelog
 
 ### 1.3.1
 
@@ -246,6 +242,12 @@ If the command is not defined, Java is not installed on you computer you need to
 This software is under the GNU General Public License v3.0, you cand find it [here](LICENSE.txt)
 
 ## Changelog
+
+### 1.3.2
+
+---
+* Bug Fixed:
+    * Update available popup shows correctly even when it can load changelog overview
 
 ### 1.3.1
 
