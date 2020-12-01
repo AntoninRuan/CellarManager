@@ -47,6 +47,7 @@
                       <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
                       <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
                         <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                        <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
                     </rowConstraints>
                      <children>
                         <Label fx:id="settingLanguage" text="%setting_language">
@@ -73,6 +74,12 @@
                         <CheckBox fx:id="checkUpdateAtStart" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <CheckBox fx:id="neverConnectOnGitHub" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Slider fx:id="doubleClickDelay" blockIncrement="1.0" majorTickUnit="1.0" max="16.0" min="4.0" minorTickCount="1" value="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="%setting_default_sort" GridPane.rowIndex="4">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <ChoiceBox fx:id="defaultSort" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                      </children>
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="20.0" top="5.0" />

@@ -725,6 +725,8 @@ public class BottleChooserController {
             if(event.getButton() == MouseButton.SECONDARY) {
                 Bottle bottle = tableView.getSelectionModel().getSelectedItem();
 
+                if (bottle == null) return;
+
                 contextMenu.getItems().clear();
 
                 MenuItem modify = new MenuItem(PreferencesManager.getLangBundle().getString("modify"));
@@ -768,6 +770,30 @@ public class BottleChooserController {
 
         });
         tableView.setPlaceholder(new Label(PreferencesManager.getLangBundle().getString("no_result_found")));
+        switch (PreferencesManager.getDefaultSort()) {
+            case NAME:
+                tableView.getSortOrder().add(nameColumn);
+                break;
+            case TYPE:
+                tableView.getSortOrder().add(typeColumn);
+                break;
+            case YEAR:
+                tableView.getSortOrder().add(yearColumn);
+                break;
+            case APOGEE:
+                tableView.getSortOrder().add(consumeYearColumn);
+                break;
+            case DOMAIN:
+                tableView.getSortOrder().add(domainColumn);
+                break;
+            case REGION:
+                tableView.getSortOrder().add(regionColumn);
+                break;
+            case EDITION:
+                tableView.getSortOrder().add(editionColumn);
+                break;
+        }
+        tableView.sort();
 
         criteriaChoiceBox.getItems().setAll(BottleFilter.SearchCriteria.values());
         criteriaChoiceBox.setValue(BottleFilter.SearchCriteria.NAME);

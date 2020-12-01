@@ -627,14 +627,18 @@
 
 package fr.antoninruan.cellarmanager.view;
 
+import fr.antoninruan.cellarmanager.utils.BottleFilter;
 import fr.antoninruan.cellarmanager.utils.PreferencesManager;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
+import java.awt.*;
 import java.util.Locale;
 
 public class PreferencesController {
@@ -661,6 +665,9 @@ public class PreferencesController {
 
     @FXML
     private Slider doubleClickDelay;
+
+    @FXML
+    private ChoiceBox<BottleFilter.SearchCriteria> defaultSort;
 
     @FXML
     private Button applyButton;
@@ -714,6 +721,24 @@ public class PreferencesController {
                 noChange.setValue(false);
         });
 
+        defaultSort.getItems().setAll(BottleFilter.SearchCriteria.values());
+        defaultSort.setValue(PreferencesManager.getDefaultSort());
+        defaultSort.setConverter(new StringConverter <BottleFilter.SearchCriteria>() {
+            @Override
+            public String toString(BottleFilter.SearchCriteria object) {
+                return PreferencesManager.getLangBundle().getString(object.getId());
+            }
+
+            @Override
+            public BottleFilter.SearchCriteria fromString(String string) {
+                return BottleFilter.SearchCriteria.fromId(string);
+            }
+        });
+        defaultSort.valueProperty().addListener((observableValue, oldValue, newValue) -> {
+            if(newValue != PreferencesManager.getDefaultSort() && noChange.getValue())
+                noChange.setValue(false);
+        });
+
         applyButton.disableProperty().bind(noChange);
     }
 
@@ -737,6 +762,8 @@ public class PreferencesController {
         PreferencesManager.setDoubleClickDelay((int) doubleClickDelay.getValue() * 50);
         PreferencesManager.setLang(lang.getValue());
         PreferencesManager.setNeverConnectToGitHub(neverConnectOnGitHub.isSelected());
+        PreferencesManager.setDefaultSort(defaultSort.getValue());
+
         noChange.set(true);
     }
 

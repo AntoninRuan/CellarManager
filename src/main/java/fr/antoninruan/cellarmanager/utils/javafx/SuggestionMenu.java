@@ -655,6 +655,10 @@ public class SuggestionMenu {
         final MaxSizedContextMenu nameSuggestion = new MaxSizedContextMenu();
         nameSuggestion.setMaxHeight(145);
         nameSuggestion.setPrefWidth(textField.getPrefWidth());
+        nameSuggestion.getItems().add(new MenuItem(""));
+        nameSuggestion.show(MainApp.getPrimaryStage());
+        nameSuggestion.hide();
+        nameSuggestion.getItems().clear();
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
 
             ObservableList <MenuItem> result = FXCollections.observableArrayList();
@@ -676,14 +680,18 @@ public class SuggestionMenu {
                 }
             }
 
-            if(result.isEmpty())
+            if(result.isEmpty()) {
+                nameSuggestion.getItems().clear();
+                nameSuggestion.hide();
                 return;
+            }
 
             if(!nameSuggestion.isShowing()) {
                 nameSuggestion.getItems().clear();
                 nameSuggestion.getItems().add(result.get(0));
                 nameSuggestion.show(textField, Side.BOTTOM, 0, 0);
                 nameSuggestion.getItems().addAll(result.stream().skip(1).collect(Collectors.toList()));
+                textField.requestFocus();
                 return;
             }
 

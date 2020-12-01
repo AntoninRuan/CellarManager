@@ -644,6 +644,7 @@ public class PreferencesManager {
     private static int doubleClickDelay;
     private static boolean neverConnectToGitHub;
     private static boolean checkUpdateAtStart;
+    private static BottleFilter.SearchCriteria defaultSort;
 
     private static String saveFilePath;
     private static String bottleFilePath;
@@ -707,11 +708,20 @@ public class PreferencesManager {
         PreferencesManager.bottleFilePath = bottleFilePath;
     }
 
+    public static BottleFilter.SearchCriteria getDefaultSort() {
+        return defaultSort;
+    }
+
+    public static void setDefaultSort(BottleFilter.SearchCriteria defaultSort) {
+        PreferencesManager.defaultSort = defaultSort;
+    }
+
     public static void loadPreferences(JsonObject object) {
         checkUpdateAtStart = object.has("check_update") ? JsonUtils.getAsBoolean(object.get("check_update")) : true;
         setLang(object.has("lang") ? Locale.forLanguageTag(JsonUtils.getAsString(object.get("lang"))) : Locale.forLanguageTag(Locale.getDefault().getLanguage()));
         doubleClickDelay = object.has("double_click_delay") ? JsonUtils.getAsInt(object.get("double_click_delay")): 500;
         neverConnectToGitHub = object.has("never_connect_to_github") && JsonUtils.getAsBoolean(object.get("never_connect_to_github"));
+        defaultSort = object.has("default_sort") ? BottleFilter.SearchCriteria.fromId(JsonUtils.getAsString(object.get("default_sort"))) : BottleFilter.SearchCriteria.NAME;
 
         saveFilePath = object.has("save_file") ? JsonUtils.getAsString(object.get("save_file")) : null;
         bottleFilePath = object.has("bottle_file") ? JsonUtils.getAsString(object.get("bottle_file")) : null;
@@ -725,6 +735,7 @@ public class PreferencesManager {
             object.addProperty("lang", lang.toLanguageTag());
             object.addProperty("double_click_delay", doubleClickDelay);
             object.addProperty("never_connect_to_github", neverConnectToGitHub);
+            object.addProperty("default_sort", defaultSort.getId());
             object.addProperty("save_file", saveFilePath);
             object.addProperty("bottle_file", bottleFilePath);
 
