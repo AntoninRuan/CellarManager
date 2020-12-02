@@ -754,6 +754,11 @@ public class CompartementDisplayController {
                         spot.bottleProperty().addListener((observable, oldValue, newValue) -> {
                             if(newValue == null) {
                                 imageView.setImage(spotEmpty);
+                                if(hoverView.isVisible()) {
+                                    hoverView.setVisible(false);
+                                    imageView.setImage(spotAdd);
+
+                                }
                             } else {
                                 renderBottle(spot, imageView, changeListener);
                             }

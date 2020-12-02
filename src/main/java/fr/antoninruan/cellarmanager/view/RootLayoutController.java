@@ -778,6 +778,14 @@ public class RootLayoutController {
                 ctrlPressed[0] = true;
             } else if(event.getCode() == KeyCode.SHIFT) {
                 shiftPressed = true;
+            } else if(event.getCode() == KeyCode.DELETE) {
+                if(MainApp.getCompartementDisplayController().getSelectedSpot() != null) {
+
+                    Spot selectedSpot = MainApp.getCompartementDisplayController().getSelectedSpot();
+                    selectedSpot.setBottle(null);
+                    if(selectedSpot.isHighlighted()) selectedSpot.setHighlighted(false);
+
+                }
             }
             if(ctrlPressed[0]) {
                 if(event.getCode() == KeyCode.V) {
