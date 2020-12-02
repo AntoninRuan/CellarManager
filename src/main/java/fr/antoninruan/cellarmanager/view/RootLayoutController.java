@@ -627,26 +627,26 @@
 
 package fr.antoninruan.cellarmanager.view;
 
+import fr.antoninruan.cellarmanager.MainApp;
+import fr.antoninruan.cellarmanager.model.Bottle;
 import fr.antoninruan.cellarmanager.model.Compartment;
 import fr.antoninruan.cellarmanager.model.Spot;
 import fr.antoninruan.cellarmanager.utils.BottleFilter;
 import fr.antoninruan.cellarmanager.utils.DialogUtils;
 import fr.antoninruan.cellarmanager.utils.PreferencesManager;
 import fr.antoninruan.cellarmanager.utils.Updater;
-import fr.antoninruan.cellarmanager.utils.github.GitHubAPIService;
-import fr.antoninruan.cellarmanager.utils.github.model.Repository;
-import fr.antoninruan.cellarmanager.utils.github.model.release.Release;
-import fr.antoninruan.cellarmanager.utils.mobile_sync.MobileSyncManager;
-import fr.antoninruan.cellarmanager.utils.report.BugInfo;
-import fr.antoninruan.cellarmanager.MainApp;
-import fr.antoninruan.cellarmanager.model.Bottle;
 import fr.antoninruan.cellarmanager.utils.change.Change;
+import fr.antoninruan.cellarmanager.utils.github.GitHubAPIService;
 import fr.antoninruan.cellarmanager.utils.github.GitHubAccountConnectionInfo;
 import fr.antoninruan.cellarmanager.utils.github.exception.GitHubAPIConnectionException;
 import fr.antoninruan.cellarmanager.utils.github.exception.LabelNotFoundException;
 import fr.antoninruan.cellarmanager.utils.github.exception.RepositoryNotFoundException;
+import fr.antoninruan.cellarmanager.utils.github.model.Repository;
 import fr.antoninruan.cellarmanager.utils.github.model.issues.Issue;
 import fr.antoninruan.cellarmanager.utils.github.model.issues.Label;
+import fr.antoninruan.cellarmanager.utils.github.model.release.Release;
+import fr.antoninruan.cellarmanager.utils.mobile_sync.MobileSyncManager;
+import fr.antoninruan.cellarmanager.utils.report.BugInfo;
 import fr.antoninruan.cellarmanager.utils.report.SuggestionInfo;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;

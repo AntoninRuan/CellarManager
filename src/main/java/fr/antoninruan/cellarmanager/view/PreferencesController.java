@@ -633,12 +633,9 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
-import java.awt.*;
 import java.util.Locale;
 
 public class PreferencesController {

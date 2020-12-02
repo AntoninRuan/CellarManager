@@ -721,8 +721,21 @@ public class BottleFilter {
                         break;
                 }
 
-                if(!spot.isEmpty())
-                    spot.setHighlighted(highlight);
+                spot.setHighlighted(highlight);
+            }
+
+        }
+    }
+
+    public static void idSearch(int id) {
+        for (Spot spots : MainApp.getSpots()) {
+
+            if(!spots.isEmpty()) {
+                spots.setHighlighted(false);
+
+                if(spots.getBottle().getId() == id) {
+                    spots.setHighlighted(true);
+                }
             }
 
         }

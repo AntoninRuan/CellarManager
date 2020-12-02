@@ -635,6 +635,7 @@ import fr.antoninruan.cellarmanager.utils.PreferencesManager;
 import fr.antoninruan.cellarmanager.utils.Saver;
 import fr.antoninruan.cellarmanager.MainApp;
 import fr.antoninruan.cellarmanager.model.Bottle;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
@@ -644,7 +645,9 @@ import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Antonin Ruan
@@ -729,6 +732,14 @@ public class BottleChooserController {
 
                 contextMenu.getItems().clear();
 
+                MenuItem search = new MenuItem(PreferencesManager.getLangBundle().getString("search"));
+                search.setOnAction(event1 -> {
+
+                    BottleFilter.idSearch(bottle.getId());
+                    dialogStage.close();
+
+                });
+
                 MenuItem modify = new MenuItem(PreferencesManager.getLangBundle().getString("modify"));
                 modify.setOnAction(event1 -> {
 
@@ -764,7 +775,7 @@ public class BottleChooserController {
                         MainApp.getBottles().remove(bottle.getId());
                 });
 
-                contextMenu.getItems().addAll(modify, duplicate, new SeparatorMenuItem(), delete);
+                contextMenu.getItems().addAll(search, modify, duplicate, new SeparatorMenuItem(), delete);
                 contextMenu.show(tableView, event.getScreenX(), event.getScreenY());
             }
 
@@ -827,6 +838,7 @@ public class BottleChooserController {
                 bottles.setAll(MainApp.getBottles().values());
             }
         });
+        searchField.requestFocus();
     }
 
     @FXML
