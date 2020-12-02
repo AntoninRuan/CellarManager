@@ -54,6 +54,15 @@ Ce programme est sous la license GNU General Public License v3.0 que vous pouvez
 
 ## Changelog
 
+### 1.3.3
+
+---
+* Correction de bug:
+	* Problèmes corrigés :
+		* [#17](https://github.com/AntoninRuan/CellarManager/issues/17)
+		* [#18](https://github.com/AntoninRuan/CellarManager/issues/18)
+		* [#20](https://github.com/AntoninRuan/CellarManager/issues/20)
+	
 ### 1.3.2
 
 ---
@@ -242,6 +251,15 @@ If the command is not defined, Java is not installed on you computer you need to
 This software is under the GNU General Public License v3.0, you cand find it [here](LICENSE.txt)
 
 ## Changelog
+
+### 1.3.3
+
+---
+* Bug Fixed:
+	* Resolve issue:
+	  * [#17](https://github.com/AntoninRuan/CellarManager/issues/17)
+	  * [#18](https://github.com/AntoninRuan/CellarManager/issues/18)
+	  * [#20](https://github.com/AntoninRuan/CellarManager/issues/20)
 
 ### 1.3.2
 
