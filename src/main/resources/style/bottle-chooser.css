@@ -743,12 +743,12 @@
     -fx-background-color: transparent;
 }
 
-.table-view > .virtual-flow > .scroll-bar:vertical {
+.table-view > .virtual-flow > .scroll-bar {
     -fx-background-color:  #264653;
     -fx-font-size: 8px;
 }
 
-.table-view > .virtual-flow > .scroll-bar:vertical .thumb {
+.table-view > .virtual-flow > .scroll-bar .thumb {
     -fx-background-color: #70b0b5;
 }
 
